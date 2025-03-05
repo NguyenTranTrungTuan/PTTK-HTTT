@@ -2,4 +2,4 @@
 Đồ án môn Phân tích thiết kế hệ thống thông tin
 
 # Thành viên:
-## gbfh
+- `52115` ~ferrgr~
