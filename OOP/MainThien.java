@@ -235,7 +235,7 @@ public class MainThien {
                 } else {
                     System.out.print("Nhap so luong mua: ");
                     int quantity = scanner.nextInt();
-                    if (quantity > 0 && quantity <= qlsp.get(productChoice).getSoLuong_SanPham()) {
+                    if (quantity > 0 && quantity <= qlsp.get(productChoice).getSoLuongTonKho()) {
                         ChitietHoaDon muaSanPham = new ChitietHoaDon(qlsp.get(productChoice), quantity);
                         gioHang.themSanPham(muaSanPham);
                         System.out.println("Da them " + quantity + " san pham " + qlsp.get(productChoice).getTen_SanPham() + " vao gio hang.");
@@ -246,7 +246,7 @@ public class MainThien {
                 break;
 
                 case 2:
-                    qlsp.timKiemSanPhamTheoThuocTinh();
+                    qlsp.timKiemSanPhamTheoThuocTinh(scanner);
                 break;
 
                 case 3: // Xóa san phẩm khỏi giỏ hàng
@@ -290,7 +290,7 @@ public class MainThien {
                         System.out.print("Nhap so luong muon mua them: ");
                         int increaseQuantity = scanner.nextInt();
                         ChitietHoaDon muaSanPham = gioHang.getDsSanPhamMua().get(increaseChoice);
-                        int soLuongConLai = muaSanPham.getThongTinSanPham().getSoLuong_SanPham() - muaSanPham.getSoLuongMua();
+                        int soLuongConLai = muaSanPham.getThongTinSanPham().getSoLuongTonKho() - muaSanPham.getSoLuongMua();
                         if (increaseQuantity > soLuongConLai) {
                             System.out.println("So luong vuot qua han muc san pham trong kho. Chi co the them toi da " + soLuongConLai);
                         } else {
@@ -336,7 +336,7 @@ public class MainThien {
                         for (SanPham sp : qlsp.getDanhSachSanPham()){
                             for (ChitietHoaDon muaSanPham : hoaDon.getDsSanPhamMua()){
                                 if (sp.getID_SanPham().equals(muaSanPham.getThongTinSanPham().getID_SanPham())){
-                                    sp.setSoLuong_SanPham(sp.getSoLuong_SanPham() - muaSanPham.getSoLuongMua());
+                                    sp.setSoLuongTonKho(sp.getSoLuongTonKho() - muaSanPham.getSoLuongMua());
                                 }
                             }
                         }

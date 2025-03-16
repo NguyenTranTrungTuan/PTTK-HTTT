@@ -4,20 +4,20 @@ abstract class SanPham{
     private String ID_SanPham;
     private String Ten_SanPham;
     private double Gia_SanPham;
-    private int SoLuong_SanPham;
+    private int SoLuongTonKho;
 
     public SanPham(){
         this.ID_SanPham="";
         this.Ten_SanPham="";
         this.Gia_SanPham=0.00;
-        this.SoLuong_SanPham=0;
+        this.SoLuongTonKho=0;
     }
 
     public SanPham(String id, String ten, double gia, int soluong){
         this.ID_SanPham = id;
         this.Ten_SanPham = ten;
         this.Gia_SanPham = gia;
-        this.SoLuong_SanPham = soluong;
+        this.SoLuongTonKho = soluong;
     }
 
     // Getter và Setter cho ID_SanPham
@@ -47,21 +47,23 @@ abstract class SanPham{
         this.Gia_SanPham = Gia_SanPham;
     }
 
-    // Getter và Setter cho SoLuong_SanPham
-    public int getSoLuong_SanPham() {
-        return SoLuong_SanPham;
+    // Getter và Setter cho SoLuongTonKho
+    public int getSoLuongTonKho() {
+        return SoLuongTonKho;
     }
 
-    public void setSoLuong_SanPham(int SoLuong_SanPham) {
-        this.SoLuong_SanPham = SoLuong_SanPham;
+    public void setSoLuongTonKho(int SoLuongTonKho) {
+        this.SoLuongTonKho = SoLuongTonKho;
     }
 
     public abstract void hienThiThongTin();
 
     @Override
     public String toString() {
-        return "ID_SanPham = " + ID_SanPham +", Ten_SanPham = " + Ten_SanPham + ", Gia_SanPham = " + Gia_SanPham
-                + ", SoLuong_SanPham_Con = " + SoLuong_SanPham;
+        return "ID:" + ID_SanPham +
+        "\nTen san pham: " + Ten_SanPham + 
+        "\nGia san pham: " + Gia_SanPham+ 
+        "\nSo luong ton kho:" + SoLuongTonKho;
     }
 
     

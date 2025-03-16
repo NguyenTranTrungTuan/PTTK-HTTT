@@ -1,0 +1,2 @@
+DT00000001, Samsung Galaxy A36 5G, 8290000.0, 90, Viet Nam, 209g, 6.67 inch, 128GB, 8GB, Samsung, 12
+DT00000002, Samsung Galaxy Tab A9 Wifi 4GB/64GB, 2490000.0, 100, Han Quoc, 332 g, 8.7 inch, 64GB, 4GB, SamSung, 12

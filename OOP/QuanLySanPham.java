@@ -1,15 +1,12 @@
 package OOP;
 
 import java.io.*;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuanLySanPham implements QuanLyFile{
     private ArrayList<SanPham> danhSachSanPham;
-    private static int sachCounter = 0;
-    private static int voCounter = 0;
-    private static int butCounter = 0;
+    private static int dtCounter = 0;
 
 
     public QuanLySanPham(){
@@ -25,17 +22,9 @@ public class QuanLySanPham implements QuanLyFile{
         int counter;
 
         switch (loai) {
-            case "Sach":
-                prefix = "SA";
-                counter = sachCounter++;
-                break;
-            case "Vo":
-                prefix = "VO";
-                counter = voCounter++;
-                break;
-            case "But":
-                prefix = "BU";
-                counter = butCounter++;
+            case "DienThoai":
+                prefix = "DT";
+                counter = dtCounter++;
                 break;
             default:
                 throw new IllegalArgumentException("Loai san pham khong hop le.");
@@ -47,89 +36,37 @@ public class QuanLySanPham implements QuanLyFile{
 
     @Override
     public void layDuLieuTuFile() {
-        // Đọc dữ liệu từ file Sach.txt
-        try (BufferedReader br = new BufferedReader(new FileReader("./file/Sach.txt"))) {
+
+        // Đọc dữ liệu từ file DienThoai.txt
+        try (BufferedReader br = new BufferedReader(new FileReader("./file/DienThoai.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(", ");
-                if (parts.length == 8) {
+                if (parts.length == 11) {
                     String id = parts[0];
                     String ten = parts[1];
                     Double gia = Double.parseDouble(parts[2]);
                     int soLuong = Integer.parseInt(parts[3]);
-                    String tacGia = parts[4];
-                    String theLoai = parts[5];
-                    String nhaXuatBan = parts[6];
-                    int NamXuatBan = Integer.parseInt(parts[7]);
-                    Sach sach = new Sach(id, ten, gia, soLuong, tacGia, theLoai, nhaXuatBan, NamXuatBan);
-                    danhSachSanPham.add(sach);
+                    String XuatXu = parts[4];
+                    String TrongLuong = parts[5];
+                    String KichThuocManHinh = parts[6];
+                    String DungLuong = parts[7];
+                    String RAM = parts[8];
+                    String ThuongHieu = parts[9];
+                    int BaoHanh = Integer.parseInt(parts[10]);
+                    DienThoai dt = new DienThoai(id, ten, gia, soLuong, XuatXu, TrongLuong, KichThuocManHinh, DungLuong, RAM, ThuongHieu, BaoHanh);
+                    danhSachSanPham.add(dt);
 
                     int idNumber = Integer.parseInt(id.substring(2));
-                    if (idNumber >= sachCounter) {
-                        sachCounter = idNumber + 1;
+                    if (idNumber >= dtCounter) {
+                        dtCounter = idNumber + 1;
                     }
                 } else {
                     System.err.println("Du lieu khong hop le o dong: " + line);
                 }
             }
         } catch (IOException e) {
-            System.err.println("Loi khi doc file Sach.txt: " + e.getMessage());
-        }
-
-        // Đọc dữ liệu từ file Vo.txt
-        try (BufferedReader br = new BufferedReader(new FileReader("./file/Vo.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(", ");
-                if (parts.length == 7) {
-                    String id = parts[0];
-                    String ten = parts[1];
-                    Double gia = Double.parseDouble(parts[2]);
-                    int soLuong = Integer.parseInt(parts[3]);
-                    String loaiVo = parts[4];
-                    String nhaSX = parts[5];
-                    String chatLieu = parts[6];
-                    Vo vo = new Vo(id, ten, gia, soLuong, loaiVo, nhaSX, chatLieu);
-                    danhSachSanPham.add(vo);
-
-                    int idNumber = Integer.parseInt(id.substring(2));
-                    if (idNumber >= voCounter) {
-                        voCounter = idNumber + 1;
-                    }
-                } else {
-                    System.err.println("Du lieu khong hop le o dong: " + line);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Loi khi doc file Vo.txt: " + e.getMessage());
-        }
-
-        // Đọc dữ liệu từ file But.txt
-        try (BufferedReader br = new BufferedReader(new FileReader("./file/But.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(", ");
-                if (parts.length == 7) {
-                    String id = parts[0];
-                    String ten = parts[1];
-                    Double gia = Double.parseDouble(parts[2]);
-                    int soLuong = Integer.parseInt(parts[3]);
-                    String mau = parts[4];
-                    String loai = parts[5];
-                    String hang = parts[6];
-                    But but = new But(id, ten, gia, soLuong, mau, loai, hang);
-                    danhSachSanPham.add(but);
-
-                    int idNumber = Integer.parseInt(id.substring(2));
-                    if (idNumber >= butCounter) {
-                        butCounter = idNumber + 1;
-                    }
-                } else {
-                    System.err.println("Du lieu khong hop le o dong: " + line);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Loi khi doc file But.txt: " + e.getMessage());
+            System.err.println("Loi khi doc file DienThoai.txt: " + e.getMessage());
         }
     }
 
@@ -155,7 +92,8 @@ public class QuanLySanPham implements QuanLyFile{
                     luuDuLieuVaoFile();
                     break;
                 case 3:
-                    timKiemSanPhamTheoID(scanner);
+                    // timKiemSanPhamTheoID(scanner);
+                    timKiemSanPhamTheoThuocTinh(scanner);
                     break;
                 case 4:
                     hienThiDanhSachSanPham();
@@ -178,94 +116,49 @@ public class QuanLySanPham implements QuanLyFile{
     //  Them moi san pham
     public void themMoiSanPham(Scanner scanner) {
         while (true) {
-            System.out.println("Chon loai san pham muon them:");
-            System.out.println("1. Sach.");
-            System.out.println("2. Vo.");
-            System.out.println("3. But.");
+            System.out.println("1. Them Dien Thoai."); // Thêm lựa chọn cho điện thoại
             System.out.println("0. Thoat.");
             System.out.print("Nhap lua chon cua ban: ");
             int luaChon = scanner.nextInt();
             scanner.nextLine();
+    
             String tenSanPham;
             int giaSanPham = 0; // khai báo int để cho vào hàm kiểm tra
             int soLuongSanPham = 0;
             String idSanPham;
-
+    
             switch (luaChon) {
                 case 1:
                     System.out.print("Nhap ten san pham: ");
                     tenSanPham = scanner.nextLine();
                     System.out.print("Nhap gia san pham: ");
                     giaSanPham = QuanLyNhanVien.kiemtraSoAm(giaSanPham, scanner);
-                    
+
                     System.out.print("Nhap so luong san pham: ");
                     soLuongSanPham = QuanLyNhanVien.kiemtraSoAm(soLuongSanPham, scanner);
-                
-                    System.out.print("Nhap ten tac gia: ");
-                    String tenTacGia = scanner.nextLine();
-                    System.out.print("Nhap the loai: ");
-                    String theLoai = scanner.nextLine();
-                    System.out.print("Nhap nha san xuat: ");
-                    String nhaSX = scanner.nextLine();
-                    System.out.print("Nhap nam xuat ban: ");
-                    
-                    int NamXuatBan;
-                    while(true){
-                        NamXuatBan = scanner.nextInt();
-                        if(NamXuatBan >= 0 && NamXuatBan <= (int)Year.now().getValue()){
-                            break;
-                        }
-                        else
-                            System.out.println("gia tri nhap sai, hay nhap lai: ");
-                    }
-                    idSanPham = taoID("Sach");
 
-                    SanPham sach = new Sach(idSanPham, tenSanPham, giaSanPham, soLuongSanPham, tenTacGia, theLoai, nhaSX, NamXuatBan);
+                    System.out.print("Nhap xuat xu: ");
+                    String xuatXu = scanner.nextLine();
+                    System.out.print("Nhap trong luong (g): ");
+                    String trongLuong = scanner.nextLine();
+                    System.out.print("Nhap kich thuoc man hinh (inch): ");
+                    String kichThuocManHinh = scanner.nextLine();
+                    System.out.print("Nhap dung luong: ");
+                    String dungLuong = scanner.nextLine();
+                    System.out.print("Nhap RAM: ");
+                    String ram = scanner.nextLine();
+                    System.out.print("Nhap thuong hieu: ");
+                    String thuongHieu = scanner.nextLine();
+                    System.out.print("Nhap thoi gian bao hanh (thang): ");
+                    int baoHanh = scanner.nextInt();
+                    scanner.nextLine();
 
-                    danhSachSanPham.add(sach);
+                    idSanPham = taoID("DienThoai");
+
+                    SanPham dienThoai = new DienThoai(idSanPham, tenSanPham, giaSanPham, soLuongSanPham, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+                    danhSachSanPham.add(dienThoai);
                     break;
-                case 3:
-                    System.out.print("Nhap ten san pham: ");
-                    tenSanPham = scanner.nextLine();
-                    System.out.print("Nhap gia san pham: ");
-                    giaSanPham = QuanLyNhanVien.kiemtraSoAm(giaSanPham, scanner);
                     
-                    System.out.print("Nhap so luong san pham: ");
-                    soLuongSanPham = QuanLyNhanVien.kiemtraSoAm(soLuongSanPham, scanner);
-                    
-                    System.out.print("Nhap mau: ");
-                    String mau  = scanner.nextLine();
-                    System.out.print("Nhap loai but: ");
-                    String loaiBut = scanner.nextLine();
-                    System.out.print("Nhap hang but: ");
-                    String hang = scanner.nextLine();
-                    idSanPham = taoID("But");
-
-                    SanPham but = new But(idSanPham, tenSanPham, giaSanPham, soLuongSanPham, mau, loaiBut, hang);
-
-                    danhSachSanPham.add(but);
-                    break;
-                case 2:
-                    System.out.print("Nhap ten san pham: ");
-                    tenSanPham = scanner.nextLine();
-                    System.out.print("Nhap gia san pham: ");
-                    giaSanPham = QuanLyNhanVien.kiemtraSoAm(giaSanPham, scanner);
-                    
-                    System.out.print("Nhap so luong san pham: ");
-                    soLuongSanPham = QuanLyNhanVien.kiemtraSoAm(soLuongSanPham, scanner);
-                    
-                    System.out.print("Nhap loai vo: ");
-                    String loaiVo = scanner.nextLine();
-                    System.out.print("Nhap nha san xuat: ");
-                    String nhaSanXuat = scanner.nextLine();
-                    System.out.print("Nhap chat lieu: ");
-                    String chatLieu = scanner.nextLine();
-                    idSanPham = taoID("Vo");
-
-                    SanPham vo = new Vo(idSanPham, tenSanPham, giaSanPham, soLuongSanPham, loaiVo, nhaSanXuat, chatLieu);
-
-                    danhSachSanPham.add(vo);
-                    break;
                 case 0:
                     System.out.println("<<<Da thoat>>>");
                     luuDuLieuVaoFile();
@@ -273,11 +166,10 @@ public class QuanLySanPham implements QuanLyFile{
                 default:
                     System.out.println("Chon sai, xin chon lai");
                     break;
-
             }
         }
-        
     }
+    
 
     // Tìm kiêms sản phẩm theo ID
     public void timKiemSanPhamTheoID(Scanner scanner){
@@ -299,180 +191,84 @@ public class QuanLySanPham implements QuanLyFile{
         }
     }
 
-    // Phương thức tìm kiếm sản phẩm theo thuộc tính
-    public void timKiemSanPhamTheoThuocTinh() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Chon loai san pham muon tim:");
-        System.out.println("1. Sach.");
-        System.out.println("2. Vo.");
-        System.out.println("3. But.");
-        System.out.print("0. Thoat. ");
-        int luaChon = scanner.nextInt();
-        scanner.nextLine(); 
-
-        switch (luaChon) {
-            case 1:
-                timKiemSach(scanner);
-                break;
-            case 2:
-                timKiemVo(scanner);
-                break;
-            case 3:
-                timKiemBut(scanner);
-                break;
-            case 0:
-                scanner.close();
-                return;
-            default:
-                System.out.println("Lua chon khong hop le.");
-                break;
-        }
-    }
-
-    // Tìm kiếm sản phẩm là sách
-    private void timKiemSach(Scanner scanner) {
-        System.out.println("Chon thuoc tinh sach muon tim:");
-        System.out.println("1. Ten sach.");
-        System.out.println("2. Tac gia.");
-        System.out.println("3. The loai.");
-        System.out.println("4. Nha xuat ban.");
-        System.out.println("5. Nam xuat ban.");
+    public void timKiemSanPhamTheoThuocTinh(Scanner scanner) {
+        System.out.println("Chon thuoc tinh dien thoai muon tim:");
+        System.out.println("1. Ten dien thoai.");
+        System.out.println("2. Xuat xu.");
+        System.out.println("3. Trong luong.");
+        System.out.println("4. Kich thuoc man hinh.");
+        System.out.println("5. Dung luong.");
+        System.out.println("6. RAM.");
+        System.out.println("7. Thuong hieu.");
+        System.out.println("8. Bao hanh.");
         int luaChon = scanner.nextInt();
         scanner.nextLine();
 
         System.out.print("Nhap gia tri tim kiem: ");
         String giaTri = scanner.nextLine();
-        
+
+        boolean timThay = false;
         for (SanPham sp : danhSachSanPham) {
-            if (sp instanceof Sach) {
-                Sach sach = (Sach) sp;
+            if (sp instanceof DienThoai) {
+                DienThoai dt = (DienThoai) sp;
                 boolean found = false;
                 switch (luaChon) {
-                    case 1 : 
-                        found = sach.getTen_SanPham().contains(giaTri); 
+                    case 1:
+                        found = dt.getTen_SanPham().contains(giaTri);
                         break;
-                    case 2 : 
-                        found = sach.getTenTacGia().contains(giaTri); 
+                    case 2:
+                        found = dt.getXuatXu().contains(giaTri);
                         break;
-                    case 3 : 
-                        found = sach.getTheLoai().contains(giaTri);
+                    case 3:
+                        found = String.valueOf(dt.getTrongLuong()).contains(giaTri);
                         break;
-                    case 4 : 
-                        found = sach.getNhaXuatBan().contains(giaTri);
+                    case 4:
+                        found = String.valueOf(dt.getKichThuocManHinh()).contains(giaTri);
                         break;
-                    case 5 : 
-                        found = sach.getNamXuatBan() == (Integer.parseInt(giaTri));
+                    case 5:
+                        found = dt.getDungLuong().contains(giaTri);
                         break;
-                    default : 
+                    case 6:
+                        found = dt.getRAM().contains(giaTri);
+                        break;
+                    case 7:
+                        found = dt.getThuongHieu().contains(giaTri);
+                        break;
+                    case 8:
+                        found = String.valueOf(dt.getBaoHanh()).contains(giaTri);
+                        break;
+                    default:
                         System.out.println("Lua chon khong hop le.");
-                        break;
+                        return;
                 }
                 if (found) {
                     System.out.println("\n");
-                    sach.hienThiThongTin();
+                    dt.hienThiThongTin();
                     System.out.println("\n");
-                    return;
+                    timThay = true;
                 }
             }
         }
-        System.out.println("\n");
-        System.out.println("Khong tim thay san pham");
-        System.out.println("\n");
-    }
-
-    // Tìm kiếm sản phẩm là vở
-    private void timKiemVo(Scanner scanner) {
-        System.out.println("Chon thuoc tinh vo muon tim:");
-        System.out.println("1. Ten vo.");
-        System.out.println("2. Loai vo.");
-        System.out.println("3. Nha san xuat.");
-        System.out.println("4. Chat lieu.");
-        int luaChon = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.print("Nhap gia tri tim kiem: ");
-        String giaTri = scanner.nextLine();
-
-        for (SanPham sp : danhSachSanPham) {
-            if (sp instanceof Vo) {
-                Vo vo = (Vo) sp;
-                boolean found = false;
-                switch (luaChon) {
-                    case 1 : found = vo.getTen_SanPham().contains(giaTri); break;
-                    case 2 : found = vo.getLoai_Vo().contains(giaTri); break;
-                    case 3 : found = vo.getNhaSanXuat().contains(giaTri); break;
-                    case 4 : found = vo.getChatLieu().contains(giaTri); break;
-                    default : System.out.println("Lua chon khong hop le."); break;
-                }
-                if (found) {
-                    System.out.println("\n");
-                    vo.hienThiThongTin();
-                    System.out.println("\n");
-                    return;
-                }
-            }
+        if (!timThay) {
+            System.out.println("\nKhong tim thay san pham\n");
         }
-        
-        System.out.println("\n");
-        System.out.println("Khong tim thay san pham");
-        System.out.println("\n");   
     }
-
-    // Tìm kiếm sản phẩm là bút
-    private void timKiemBut(Scanner scanner) {
-        System.out.println("Chon thuoc tinh but muon tim:");
-        System.out.println("1. Ten but.");
-        System.out.println("2. Mau but.");
-        System.out.println("3. Loai but.");
-        System.out.println("4. Hang san xuat.");
-        int luaChon = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.print("Nhap gia tri tim kiem: ");
-        String giaTri = scanner.nextLine();
-
-        for (SanPham sp : danhSachSanPham) {
-            if (sp instanceof But) {
-                But but = (But) sp;
-                boolean found = false;
-                switch (luaChon) {
-                    case 1 : found = but.getTen_SanPham().contains(giaTri); break;
-                    case 2 : found = but.getMau().contains(giaTri); break;
-                    case 3 : found = but.getLoai_But().contains(giaTri); break;
-                    case 4 : found = but.getHang().contains(giaTri); break;
-                    default : System.out.println("Lua chon khong hop le."); break;
-                }
-                if (found) {
-                    System.out.println("\n");
-                    but.hienThiThongTin();
-                    System.out.println("\n");
-                    return;
-                }
-            }
-        }
-        System.out.println("\n");
-        System.out.println("Khong tim thay san pham");
-        System.out.println("\n");
-    }
-
 
     // xoa san pham
     public void xoaSanPham(Scanner scanner) {
         System.out.print("Nhap ID san pham can xoa: ");
         String idSanPham = scanner.nextLine();
 
-        boolean co = false;
+        boolean found = false;
         for (int i = 0; i < danhSachSanPham.size(); i++){
             if (danhSachSanPham.get(i).getID_SanPham().equals(idSanPham)){
-                co = true;  
+                found = true;  
                 danhSachSanPham.remove(i);
                 break;
             }
             
-            
         }
-        if(co==false)
+        if(!found)
         {
             System.out.println("Khong tim thay san pham.");
         }
@@ -502,23 +298,10 @@ public class QuanLySanPham implements QuanLyFile{
     
         sanPham.hienThiThongTin();
         System.out.println("Bat dau sua thong tin san pham...");
-    
-        // Nếu là sách
-        if (sanPham instanceof Sach) {
-            Sach sach = (Sach) sanPham;
-            suaSanPham2(sach, scanner);
-        }
-    
-        // Nếu là vở
-        else if (sanPham instanceof Vo) {
-            Vo vo = (Vo) sanPham;
-            suaSanPham2(vo, scanner);
-        }
-    
-        // Nếu là bút
-        else if (sanPham instanceof But) {
-            But but = (But) sanPham;
-            suaSanPham2(but, scanner);
+        
+        if (sanPham instanceof DienThoai){
+            DienThoai dt = (DienThoai) sanPham;
+            suaChiTietSanPham(dt, scanner);
         }
     
         System.out.println("Da cap nhat thong tin san pham thanh cong!");
@@ -527,7 +310,7 @@ public class QuanLySanPham implements QuanLyFile{
     public void hienThiDanhSachSanPham() {
         int i = 1;
         for (SanPham sp : danhSachSanPham) {
-            System.out.print(i + ". ");
+            System.out.print(i + ". \n");
             sp.hienThiThongTin();
             i++;
         }
@@ -536,59 +319,30 @@ public class QuanLySanPham implements QuanLyFile{
     @Override
     public void luuDuLieuVaoFile() {
         try {
-            // Ghi dữ liệu vào file Sach.txt
-            BufferedWriter sachWriter = new BufferedWriter(new FileWriter("./file/Sach.txt"));
+
+            // Ghi dữ liệu vào file DienThoai.txt
+            BufferedWriter dtWriter = new BufferedWriter(new FileWriter("./file/DienThoai.txt"));
             for (SanPham sp : danhSachSanPham) {
-                if (sp instanceof Sach) {
-                    Sach sach = (Sach) sp;
-                    sachWriter.write(sach.getID_SanPham() + ", " + 
-                                     sach.getTen_SanPham() + ", " + 
-                                     sach.getGia_SanPham() + ", " + 
-                                     sach.getSoLuong_SanPham() + ", " + 
-                                     sach.getTenTacGia() + ", " + 
-                                     sach.getTheLoai() + ", " + 
-                                     sach.getNhaXuatBan() + ", " + 
-                                     sach.getNamXuatBan());
-                    sachWriter.newLine();
+                if (sp instanceof DienThoai) {
+                    DienThoai dt = (DienThoai) sp;
+                    dtWriter.write(dt.getID_SanPham() + ", " + 
+                                dt.getTen_SanPham() + ", " + 
+                                dt.getGia_SanPham() + ", " + 
+                                dt.getSoLuongTonKho() + ", " + 
+                                dt.getXuatXu() + ", " + 
+                                dt.getTrongLuong() + ", " + 
+                                dt.getKichThuocManHinh() + ", " + 
+                                dt.getDungLuong() + ", " + 
+                                dt.getRAM() + ", " + 
+                                dt.getThuongHieu() + ", " + 
+                                dt.getBaoHanh());
+                    dtWriter.newLine();
                 }
             }
-            sachWriter.close();
-    
-            // Ghi dữ liệu vào file Vo.txt
-            BufferedWriter voWriter = new BufferedWriter(new FileWriter("./file/Vo.txt"));
-            for (SanPham sp : danhSachSanPham) {
-                if (sp instanceof Vo) {
-                    Vo vo = (Vo) sp;
-                    voWriter.write(vo.getID_SanPham() + ", " + 
-                                   vo.getTen_SanPham() + ", " + 
-                                   vo.getGia_SanPham() + ", " + 
-                                   vo.getSoLuong_SanPham() + ", " + 
-                                   vo.getLoai_Vo() + ", " + 
-                                   vo.getNhaSanXuat() + ", " + 
-                                   vo.getChatLieu());
-                    voWriter.newLine();
-                }
-            }
-            voWriter.close();
-    
-            // Ghi dữ liệu vào file But.txt
-            BufferedWriter butWriter = new BufferedWriter(new FileWriter("./file/But.txt"));
-            for (SanPham sp : danhSachSanPham) {
-                if (sp instanceof But) {
-                    But but = (But) sp;
-                    butWriter.write(but.getID_SanPham() + ", " + 
-                                    but.getTen_SanPham() + ", " + 
-                                    but.getGia_SanPham() + ", " + 
-                                    but.getSoLuong_SanPham() + ", " + 
-                                    but.getMau() + ", " + 
-                                    but.getLoai_But() + ", " + 
-                                    but.getHang());
-                    butWriter.newLine();
-                }
-            }
-            butWriter.close();
+            dtWriter.close();
+
         } catch (IOException e) {
-            System.err.println("Lỗi khi lưu dữ liệu vào file: " + e.getMessage());
+            System.err.println("Loi khi luu du lieu vao file: " + e.getMessage());
         }
     }
 
@@ -617,19 +371,21 @@ public class QuanLySanPham implements QuanLyFile{
         return sPB;
     }
 
-    public void suaSanPham2(Sach sp, Scanner scanner){
-        while(true){
+     // Phương thức sửa thông tin sản phẩm
+     public void suaChiTietSanPham(DienThoai sp, Scanner scanner) {
+        while (true) {
             System.out.println("============================================");
             System.out.println("1. Ten san pham.");
-            System.out.println("2. Gia moi.");
-            System.out.println("3. So luong.");
-            System.out.println("4. Ten tac gia.");
-            System.out.println("5. The loai.");
-            System.out.println("6. Nha xuat ban.");
-            System.out.println("7. Nam xuat ban.");
+            System.out.println("2. Xuat xu.");
+            System.out.println("3. Trong luong.");
+            System.out.println("4. Kich thuoc man hinh.");
+            System.out.println("5. Dung luong.");
+            System.out.println("6. RAM.");
+            System.out.println("7. Thuong hieu.");
+            System.out.println("8. Bao hanh.");
             System.out.println("0. Luu lai va thoat.");
-
-            System.out.print("Nhap tuy chon: "); int choice = scanner.nextInt();
+            System.out.print("Nhap tuy chon: ");
+            int choice = scanner.nextInt();
             scanner.nextLine();
             System.out.println("============================================");
 
@@ -638,189 +394,43 @@ public class QuanLySanPham implements QuanLyFile{
                     System.out.print("Nhap ten san pham moi: ");
                     sp.setTen_SanPham(scanner.nextLine());
                     break;
-
                 case 2:
-                    System.out.print("Nhap gia moi: ");
-                    int giamoi = 0;
-                    giamoi = QuanLyNhanVien.kiemtraSoAm(giamoi, scanner);
-                    
-                    sp.setGia_SanPham(giamoi);
+                    System.out.print("Nhap xuat xu moi: ");
+                    sp.setXuatXu(scanner.nextLine());
                     break;
-
                 case 3:
-                    System.out.print("Nhap so luong moi: ");
-                    int soluongmoi = 0;
-                    soluongmoi = QuanLyNhanVien.kiemtraSoAm(soluongmoi, scanner);
-                    
-                    sp.setSoLuong_SanPham(soluongmoi); 
+                    System.out.print("Nhap trong luong moi: ");
+                    sp.setTrongLuong(scanner.nextLine());
                     break;
-                
                 case 4:
-                    System.out.print("Nhap ten tac gia moi: ");
-                    sp.setTenTacGia(scanner.nextLine());
+                    System.out.print("Nhap kich thuoc man hinh moi: ");
+                    sp.setKichThuocManHinh(scanner.nextLine());
                     break;
-                
                 case 5:
-                    System.out.print("Nhap the loai moi: ");
-                    sp.setTheLoai(scanner.nextLine());
+                    System.out.print("Nhap dung luong moi: ");
+                    sp.setDungLuong(scanner.nextLine());
                     break;
-                    
                 case 6:
-                    System.out.print("Nhap nha xuat ban moi: ");
-                    sp.setNhaXuatBan(scanner.nextLine());
+                    System.out.print("Nhap RAM moi: ");
+                    sp.setRAM(scanner.nextLine());
                     break;
-
                 case 7:
-                    System.out.print("Nhap nam xuat ban moi: ");
-                    int NamXuatBan;
-                    while (true) {
-                        NamXuatBan = scanner.nextInt();
-                        scanner.nextLine();
-                        if(NamXuatBan >= 0 && NamXuatBan <= (int)Year.now().getValue()){
-                            break;
-                        }
-                        else
-                            System.out.println("gia tri nhap sai, hay nhap lai: ");
-                    }
-                    sp.setNamXuatBan(NamXuatBan);
+                    System.out.print("Nhap thuong hieu moi: ");
+                    sp.setThuongHieu(scanner.nextLine());
                     break;
-
+                case 8:
+                    System.out.print("Nhap bao hanh moi: ");
+                    sp.setBaoHanh(scanner.nextInt());
+                    scanner.nextLine();
+                    break;
                 case 0:
                     return;
-
                 default:
                     System.out.println("Lua chon khong hop le.");
                     break;
             }
         }
     }
-
-    public void suaSanPham2(Vo sp, Scanner scanner){
-
-        while(true){
-            System.out.println("============================================");
-            System.out.println("1. Ten san pham.");
-            System.out.println("2. Gia moi.");
-            System.out.println("3. So luong.");
-            System.out.println("4. Loai.");
-            System.out.println("5. Nha san xuat.");
-            System.out.println("6. Chat lieu.");
-            System.out.println("0. Luu lai va thoat.");
-
-            System.out.print("Nhap tuy chon: "); int choice = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("============================================");
-
-            switch (choice) {
-                case 1:
-                System.out.print("Nhap ten san pham moi: ");
-                    sp.setTen_SanPham(scanner.nextLine());
-                    break;
-
-                case 2:
-                    System.out.print("Nhap gia moi: ");
-                    int giamoi = 0;
-                    giamoi = QuanLyNhanVien.kiemtraSoAm(giamoi, scanner);
-                    
-                    sp.setGia_SanPham(giamoi);
-                    break;
-
-                case 3:
-                    System.out.print("Nhap so luong moi: ");
-                    int soluongmoi = 0;
-                    soluongmoi = QuanLyNhanVien.kiemtraSoAm(soluongmoi, scanner);
-                    
-                    sp.setSoLuong_SanPham(soluongmoi); 
-                    break;
-                
-                case 4:
-                    System.out.print("Nhap loai vo moi: ");
-                    sp.setLoai_Vo(scanner.nextLine());
-                    break;
-                
-                case 5:
-                    System.out.print("Nhap nha san xuat moi: ");
-                    sp.setNhaSanXuat(scanner.nextLine());
-                    break;
-                    
-                case 6:
-                    System.out.print("Nhap chat lieu moi: ");
-                    sp.setChatLieu(scanner.nextLine());
-                    break;
-
-                case 0:
-                    return;
-
-                default:
-                    System.out.println("Lua chon khong hop le.");
-                    break;
-            } 
-        }
-    }
-    
-    public void suaSanPham2(But sp, Scanner scanner){
-
-        while(true){
-            System.out.println("============================================");
-            System.out.println("1. Ten san pham.");
-            System.out.println("2. Gia moi.");
-            System.out.println("3. So luong.");
-            System.out.println("4. Mau.");
-            System.out.println("5. Loai.");
-            System.out.println("6. Nha san xuat.");
-            System.out.println("0. Luu lai va thoat.");
-
-            System.out.print("Nhap tuy chon: "); int choice = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("============================================");
-
-            switch (choice) {
-                case 1:
-                    System.out.print("Nhap ten san pham moi: ");
-                    sp.setTen_SanPham(scanner.nextLine());
-                    break;
-
-                case 2:
-                    System.out.print("Nhap gia moi: ");
-                    int giamoi = 0;
-                    giamoi = QuanLyNhanVien.kiemtraSoAm(giamoi, scanner);
-                    
-                    sp.setGia_SanPham(giamoi);
-                    break;
-
-                case 3:
-                    System.out.print("Nhap so luong moi: ");
-                    int soluongmoi = 0;
-                    soluongmoi = QuanLyNhanVien.kiemtraSoAm(soluongmoi, scanner);
-                    
-                    sp.setSoLuong_SanPham(soluongmoi); 
-                    break;
-                
-                case 4:
-                    System.out.print("Nhap mau moi: ");
-                    sp.setMau(scanner.nextLine());
-                    break;
-                
-                case 5:
-                    System.out.print("Nhap loai but moi: ");
-                    sp.setLoai_But(scanner.nextLine());
-                    break;
-                    
-                case 6:
-                    System.out.print("Nhap hang san xuat moi: ");
-                    sp.setHang(scanner.nextLine());
-                    break;
-
-                case 0:
-                    return;
-
-                default:
-                    System.out.println("Lua chon khong hop le.");
-                    break;
-            } 
-        }
-    }
-
     // Phương thức lấy kích thước của danh sách sản phẩm
     public int size() {
         return danhSachSanPham.size();
