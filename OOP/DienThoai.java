@@ -9,7 +9,8 @@ public class DienThoai extends SanPham {
     private String ThuongHieu;
     private int BaoHanh;
 
-    public DienThoai(String xuatXu, String trongLuong, String kichThuocManHinh, String dungLuong, String RAM, String thuongHieu, int baoHanh) {
+    public DienThoai(String xuatXu, String trongLuong, String kichThuocManHinh, String dungLuong, String RAM,
+            String thuongHieu, int baoHanh) {
         this.XuatXu = xuatXu;
         this.TrongLuong = trongLuong;
         this.KichThuocManHinh = kichThuocManHinh;
@@ -19,7 +20,8 @@ public class DienThoai extends SanPham {
         this.BaoHanh = baoHanh;
     }
 
-    public DienThoai(String id, String ten, double gia, int soluong, String xuatXu, String trongLuong, String kichThuocManHinh, String dungLuong, String RAM, String thuongHieu, int baoHanh) {
+    public DienThoai(String id, String ten, double gia, int soluong, String xuatXu, String trongLuong,
+            String kichThuocManHinh, String dungLuong, String RAM, String thuongHieu, int baoHanh) {
         super(id, ten, gia, soluong);
         this.XuatXu = xuatXu;
         this.TrongLuong = trongLuong;
@@ -98,18 +100,18 @@ public class DienThoai extends SanPham {
         System.out.println(super.toString() + "\n" + this.toString());
     }
 
-    public String hienThiThongTin1(){
+    public String hienThiThongTin1() {
         return super.getTen_SanPham() + "\n" + super.getGia_SanPham() + "\n" + this.toString();
     }
 
     @Override
     public String toString() {
-        return "Xuat Xu: " + XuatXu + 
-                "\nTrong luong: " + TrongLuong + 
-                "\nKich thuoc man hinh: " + KichThuocManHinh + 
-                "\nDung luong: "+ DungLuong + 
-                "\nRAM: " + RAM + 
-                "\nThuong hieu: "+ ThuongHieu + 
-                "\nBao hanh: "+ BaoHanh;
+        return "Xuat Xu: " + XuatXu +
+                "\nTrong luong: " + TrongLuong +
+                "\nKich thuoc man hinh: " + KichThuocManHinh +
+                "\nDung luong: " + DungLuong +
+                "\nRAM: " + RAM +
+                "\nThuong hieu: " + ThuongHieu +
+                "\nBao hanh: " + BaoHanh;
     }
 }
