@@ -23,7 +23,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             String sql = "INSERT INTO DienThoai VALUES ('" + obj.getMaDt() + "', N'" + obj.getTenDt() + "', "
@@ -43,7 +43,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             String sql = "UPDATE DienThoai SET TenDT = N'" + obj.getTenDt() + "', GiaBan = " + obj.getGiaBan()
@@ -65,7 +65,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             String sql = "DELETE FROM DienThoai WHERE MaDT = '" + obj.getMaDt() + "'";
@@ -83,7 +83,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM DienThoai");
@@ -109,7 +109,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM DienThoai WHERE MaDT = '" + obj.getMaDt() + "'");
@@ -136,7 +136,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM DienThoai WHERE " + condition);
@@ -163,7 +163,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456";
+            String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM " + tableName);

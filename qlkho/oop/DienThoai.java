@@ -3,8 +3,8 @@ package qlkho.oop;
 public class DienThoai {
     private String maDt;
     private String tenDt;
-    private long giaBan;
-    private long giaNhap;
+    private float giaBan;
+    private float giaNhap;
     private String maTon;
     private String xuatXu;
     private float trongLuong;
@@ -14,7 +14,7 @@ public class DienThoai {
     private int baoHanh;
     private String maNcc;
 
-    public DienThoai(String maDt, String tenDt, long giaBan, long giaNhap, String maTon, String xuatXu,
+    public DienThoai(String maDt, String tenDt, float giaBan, float giaNhap, String maTon, String xuatXu,
             float trongLuong,
             float kichThuocManHinh, int dungLuong, int ram, int baoHanh, String maNcc) {
         this.maDt = maDt;
@@ -47,19 +47,19 @@ public class DienThoai {
         this.tenDt = tenDt;
     }
 
-    public long getGiaBan() {
+    public float getGiaBan() {
         return giaBan;
     }
 
-    public void setGiaBan(long giaBan) {
+    public void setGiaBan(float giaBan) {
         this.giaBan = giaBan;
     }
 
-    public long getGiaNhap() {
+    public float getGiaNhap() {
         return giaNhap;
     }
 
-    public void setGiaNhap(long giaNhap) {
+    public void setGiaNhap(float giaNhap) {
         this.giaNhap = giaNhap;
     }
 
@@ -126,8 +126,10 @@ public class DienThoai {
     public void setMaNcc(String maNcc) {
         this.maNcc = maNcc;
     }
+
     public String toString() {
-        return "DienThoai [baoHanh=" + baoHanh + ", dungLuong=" + dungLuong + ", giaBan=" + giaBan + ", giaNhap=" + giaNhap
+        return "DienThoai [baoHanh=" + baoHanh + ", dungLuong=" + dungLuong + ", giaBan=" + giaBan + ", giaNhap="
+                + giaNhap
                 + ", kichThuocManHinh=" + kichThuocManHinh + ", maDt=" + maDt + ", maNcc=" + maNcc + ", maTon=" + maTon
                 + ", ram=" + ram + ", tenDt=" + tenDt + ", trongLuong=" + trongLuong + ", xuatXu=" + xuatXu + "]";
     }
