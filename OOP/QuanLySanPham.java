@@ -3,6 +3,7 @@ package OOP;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.sql.*;
 
 public class QuanLySanPham implements QuanLyFile{
     private ArrayList<SanPham> danhSachSanPham;
@@ -69,6 +70,55 @@ public class QuanLySanPham implements QuanLyFile{
             System.err.println("Loi khi doc file DienThoai.txt: " + e.getMessage());
         }
     }
+
+
+    public Connection connectDB(){
+        Connection con = null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
+            return con;
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return con;
+    }
+
+    public void getAllSp(){
+        Connection con = connectDB();
+        try{
+            if(con != null){
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(
+                                                "SELECT *"+ 
+                                                "FROM DIENTHOAI, KHO, NHACUNGCAP"+
+                                                "WHERE DIENTHOAI.MaTon = KHO.MaTon, DIENTHOAI.MaNCC = NHACUNGCAP.MaNCC"
+                                                );
+                while(rs.next()){
+                    String id = rs.getString("MaDT");
+                    String ten = rs.getString("TenDT");
+                    Double gia = rs.getDouble("GiaBan");
+                    int soLuong = rs.getInt("SoLuongTon");
+                    String XuatXu = rs.getString("XuatXu");
+                    String TrongLuong = rs.getString("TrongLuong");
+                    String KichThuocManHinh = rs.getString("KichThuocManHinh");
+                    String DungLuong = rs.getString("DungLuong");
+                    String RAM = rs.getString("RAM");
+                    String ThuongHieu = rs.getString("TenNCC");
+                    int BaoHanh = rs.getInt("BaoHanh");
+                    DienThoai dt = new DienThoai(id, ten, gia, soLuong, XuatXu, TrongLuong, KichThuocManHinh, DungLuong, RAM, ThuongHieu, BaoHanh);
+                    danhSachSanPham.add(dt);
+                }
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public void menu(Scanner scanner){
         while (true) {

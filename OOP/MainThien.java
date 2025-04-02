@@ -13,7 +13,7 @@ public class MainThien {
             // Tải dữ liệu từ file
             qlnv.layDuLieuTuFile();
             qlkh.layDuLieuTuFile();
-            qlsp.layDuLieuTuFile();
+            qlsp.getAllSp();
             qlhd.layDuLieuTuFile();
 
         int choice = 0;

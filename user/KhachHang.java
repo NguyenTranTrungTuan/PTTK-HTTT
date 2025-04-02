@@ -1,35 +1,30 @@
-package OOP;
+package user;
 
 public class KhachHang {
    private String Id_KhachHang ;
    private String Ten_KhachHang ;
    private String Sdt_KhachHang ;
-   // private String GioiTinh_KhachHang;
    private String DiaChi_KhachHang;
    private String Email_KhachHang;
    private String Pass_KhachHang;
-   // private NgayThangNam NgaySinh_KhachHang;
+
    public KhachHang ()
    {
       this.Id_KhachHang = "";
       this.Ten_KhachHang = "";
       this.Sdt_KhachHang = "";
-      // this.GioiTinh_KhachHang = "";
       this.DiaChi_KhachHang = "";
       this.Email_KhachHang = "";
       this.Pass_KhachHang = "";
    }
    public KhachHang(String Id,String Ten, String Sdt, String DiaChi, String Email , String Pass)
-
    {
       this.Id_KhachHang = Id;
       this.Ten_KhachHang = Ten;
       this.Sdt_KhachHang = Sdt;
-      // this.GioiTinh_KhachHang = gioiTinh;
       this.DiaChi_KhachHang = DiaChi;
       this.Email_KhachHang = Email;
       this.Pass_KhachHang = Pass;
-      // this.NgaySinh_KhachHang = NgaySinh;
    }
 
    // Getter and Setter Id_KhachHang
@@ -41,23 +36,7 @@ public class KhachHang {
       Id_KhachHang = id_KhachHang;
    }
    
-   // // Getter and Setter for GioTinh_KhachHang
-   // public String getGioiTinh_KhachHang() {
-   //    return GioiTinh_KhachHang;
-   // }
-
-   // public void setGioiTinh_KhachHang(String gioiTinh_KhachHang) {
-   //    GioiTinh_KhachHang = gioiTinh_KhachHang;
-   // }
-
-   // Getter and Setter for NgaySinh_KhachHang
-   public NgayThangNam getNgaySinh_KhachHang() {
-      return NgaySinh_KhachHang;
-   }
-
-   public void setNgaySinh_KhachHang(NgayThangNam ngaySinh_KhachHang) {
-      NgaySinh_KhachHang = ngaySinh_KhachHang;
-   }
+   
 
    // Getter and Setter for Ten_KhachHang
    public String getTen_KhachHang() {
@@ -103,26 +82,4 @@ public class KhachHang {
    public void setPass_KhachHang(String pass_KhachHang) {
       Pass_KhachHang = pass_KhachHang;
    }
-   // //get và set ngày sinh khách hàng
-   // public NgayThangNam getNS_KhachHang() {
-   //    return NgaySinh_KhachHang;
-   // }
-
-   // public void setNS_KhachHang(NgayThangNam NS_KhachHang) {
-   //    NgaySinh_KhachHang = NS_KhachHang;}
-
-   // public void Xuat()
-   // {
-   //    System.out.println("Id khach hang: " + this.Id_KhachHang);
-   //    System.out.println("Ten: " + this.Ten_KhachHang);
-   //    System.out.println("So dien thoai: " + this.Sdt_KhachHang);
-   //    System.out.println("Gioi tinh: " + this.GioiTinh_KhachHang);
-   //    System.out.println("Dia chi: " + this.DiaChi_KhachHang);
-   //    System.out.println("Ngay Sinh: " + this.NgaySinh_KhachHang);
-   // }
-
-   // @Override
-   // public String toString(){
-   //    return Id_KhachHang + ", " + Ten_KhachHang + ", " + Sdt_KhachHang + ", " + GioiTinh_KhachHang + ", " +  DiaChi_KhachHang + ", " + NgaySinh_KhachHang  + ", " +  Email_KhachHang + ", " + Pass_KhachHang ;
-   // }
 }
