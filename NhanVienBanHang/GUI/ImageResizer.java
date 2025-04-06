@@ -1,4 +1,4 @@
-package qlkho;
+package NhanVienBanHang.GUI;
 
 import java.awt.Image;
 

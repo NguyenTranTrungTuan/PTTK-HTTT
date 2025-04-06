@@ -5,7 +5,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 
-import qlkho.dao.DienThoaiDAO;
+import NhanVienBanHang.DAO.NhanVien_DAO;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -72,7 +72,7 @@ public class NhanVienFrame extends JFrame implements MouseListener {
         panel_left_top.setBackground(new Color(51, 51, 51));
         panel_left.add(panel_left_top);
         JLabel imageAvatar = new JLabel();
-        ImageIcon icon = new ImageIcon("C:\\Users\\tuanv\\Documents\\DO_AN_PTTK\\PTTK-HTTT\\qlkho\\icon\\profile.jpg");
+        ImageIcon icon = new ImageIcon("NhanVienBanHang/Icon/profile.png");
         ImageIcon resizedIcon = ImageResizer.resizeImageIcon(icon, 90, 90);
         imageAvatar.setIcon(resizedIcon);
         imageAvatar.setBounds(10, 10, 90, 80);
@@ -108,15 +108,15 @@ public class NhanVienFrame extends JFrame implements MouseListener {
         panel_menu.setBackground(new Color(51, 51, 51));
         scrollPane.setViewportView(panel_menu);
 
-        lb_sanpham = new JLabel("Sản phẩm");
-        lb_sanpham.setBounds(10, 0, 160, 30);
-        lb_sanpham.setForeground(Color.white);
-        ImageIcon icon_sanpham = new ImageIcon(
-                "C:\\Users\\tuanv\\Documents\\DO_AN_PTTK\\PTTK-HTTT\\qlkho\\icon\\2.png");
-        lb_sanpham.setIcon(icon_sanpham);
-        lb_sanpham.setIconTextGap(10);
-        lb_sanpham.addMouseListener(this);
-        panel_menu.add(lb_sanpham);
+        lb_nhanvien= new JLabel("Nhan Vien Ban Hang ");
+       lb_nhanvien.setBounds(10, 0, 160, 30);
+       lb_nhanvien.setForeground(Color.white);
+        ImageIcon icon_nhanvien = new ImageIcon(
+                "NhanVienBanHan/Icon/2.png");
+       lb_nhanvien.setIcon(icon_nhanvien);
+       lb_nhanvien.setIconTextGap(10);
+       lb_nhanvien.addMouseListener(this);
+        panel_menu.add(lb_nhanvien);
 
         JPanel panel_right = new JPanel();
         panel_right.setBackground(Color.BLUE);
@@ -132,7 +132,7 @@ public class NhanVienFrame extends JFrame implements MouseListener {
 
         JLabel lb_search = new JLabel();
         ImageIcon icon_search = new ImageIcon(
-                "C:\\Users\\tuanv\\Documents\\DO_AN_PTTK\\PTTK-HTTT\\qlkho\\icon\\search.png");
+                "NhanVienBanHang/Icon/search.png");
         ImageIcon resizedIcon_search = ImageResizer.resizeImageIcon(icon_search, 30, 30);
         lb_search.setIcon(resizedIcon_search);
         lb_search.setBackground(new Color(51, 51, 51));
@@ -153,7 +153,7 @@ public class NhanVienFrame extends JFrame implements MouseListener {
 
         JButton btn_add = new JButton("Thêm");
         ImageIcon icon_add = new ImageIcon(
-                "C:\\Users\\tuanv\\Documents\\DO_AN_PTTK\\PTTK-HTTT\\qlkho\\icon\\add.png");
+                "NhanVienBanHang/Icon/add.png");
         icon_add = ImageResizer.resizeImageIcon(icon_add, 30, 30);
         btn_add.setIcon(icon_add);
         btn_add.setFocusPainted(false);
@@ -165,7 +165,7 @@ public class NhanVienFrame extends JFrame implements MouseListener {
 
         JButton btn_edit = new JButton("Sửa");
         ImageIcon icon_edit = new ImageIcon(
-                "C:\\Users\\tuanv\\Documents\\DO_AN_PTTK\\PTTK-HTTT\\qlkho\\icon\\edit.png");
+                "NhanVienBanHang/Icon/edit.png");
         icon_edit = ImageResizer.resizeImageIcon(icon_edit, 30, 30);
         btn_edit.setIcon(icon_edit);
         btn_edit.setFocusPainted(false);
@@ -176,8 +176,7 @@ public class NhanVienFrame extends JFrame implements MouseListener {
         panel_right_top_btn.add(btn_edit);
 
         JButton btn_delete = new JButton("Xóa");
-        ImageIcon icon_delete = new ImageIcon(
-                "C:\\Users\\tuanv\\Documents\\DO_AN_PTTK\\PTTK-HTTT\\qlkho\\icon\\delete.png");
+        ImageIcon icon_delete = new ImageIcon("NhanVienBanHang/Icon/delete.png");
         icon_delete = ImageResizer.resizeImageIcon(icon_delete, 30, 30);
         btn_delete.setIcon(icon_delete);
         btn_delete.setFocusPainted(false);
@@ -212,7 +211,7 @@ public class NhanVienFrame extends JFrame implements MouseListener {
         scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         panel_right_bottom.add(scrollPane_table, BorderLayout.CENTER);
 
-        tableModel = DienThoaiDAO.getInstance().loadDataToTable("DienThoai");
+        tableModel = NhanVien_DAO.getInstance().loadDataToTable("NhanVien");
         table.setModel(tableModel);
 
         JPanel panel_right_bottom_top = new JPanel();
@@ -237,25 +236,25 @@ public class NhanVienFrame extends JFrame implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        lb_sanpham.setBackground(new Color(150, 150, 150)); // Màu nền khi bấm
-        lb_sanpham.setOpaque(true);
+       lb_nhanvien.setBackground(new Color(150, 150, 150)); // Màu nền khi bấm
+       lb_nhanvien.setOpaque(true);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        lb_sanpham.setBackground(new Color(100, 100, 100)); // Quay lại màu hover khi thả chuột
-        lb_sanpham.setOpaque(true);
+       lb_nhanvien.setBackground(new Color(100, 100, 100)); // Quay lại màu hover khi thả chuột
+       lb_nhanvien.setOpaque(true);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        lb_sanpham.setBackground(new Color(100, 100, 100)); // Màu nền khi hover
-        lb_sanpham.setOpaque(true); // Đảm bảo màu nền được hiển thị
+       lb_nhanvien.setBackground(new Color(100, 100, 100)); // Màu nền khi hover
+       lb_nhanvien.setOpaque(true); // Đảm bảo màu nền được hiển thị
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        lb_sanpham.setBackground(new Color(51, 51, 51)); // Màu nền mặc định
-        lb_sanpham.setOpaque(true);
+       lb_nhanvien.setBackground(new Color(51, 51, 51)); // Màu nền mặc định
+       lb_nhanvien.setOpaque(true);
     }
 }
