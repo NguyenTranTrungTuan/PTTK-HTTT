@@ -1,5 +1,10 @@
-package NhanVienBanHang;
 
+package NhanVienBanHang;
+import NhanVienBanHang.GUI.NhanVienFrame;
 public class Main_NhanVien {
-    new NhanVienFrame();
+
+    
+    public static void main(String[] args) {
+        new NhanVienFrame();
+    }
 }
