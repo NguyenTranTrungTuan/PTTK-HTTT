@@ -18,6 +18,7 @@ public class NhanVien {
         this.Password = Password;
         this.maNQL = maNQL;
     }
+
     public String getMaNV() {
         return maNV;
     }   
@@ -47,7 +48,7 @@ public class NhanVien {
     }
     public void setUsername(String username) {
         Username = username;
-    
+    }
     public String getPassword() {
         return Password;
     }

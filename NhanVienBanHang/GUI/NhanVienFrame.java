@@ -53,9 +53,9 @@ public class NhanVienFrame extends JFrame implements MouseListener {
         }
     }
 
-    public qlkhoframe() {
+    public NhanVienFrame() {
 
-        setTitle("Quản lý kho");
+        setTitle("Nhân Viên Bán Hàng ");
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
