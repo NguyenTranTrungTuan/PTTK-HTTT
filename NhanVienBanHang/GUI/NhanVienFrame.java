@@ -1,37 +1,40 @@
 package NhanVienBanHang.GUI;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 public class NhanVienFrame extends JFrame {
-    JLabel lb_sanpham, lb_madtshowsp;
+    JLabel lb_tennv,lb_chucvu;
     JTable table;
     DefaultTableModel tableModel;
-    JButton btn_add, btn_refresh, btn_xacnhanthem, btn_huythem, btn_delete;
-    JPanel panel_right, panel_themsp, panel_right_bottom, panel_right_bottom_top;
-    JScrollPane scrollPane_table;
-    JTextField tf_madtshowsp, tf_tendtshowsp, tf_giabanshowsp, tf_gianhapshowsp, tf_matonshowsp, tf_xuatxushowsp,
-            tf_trongluongshowsp, tf_kichthuocmanhinhshowsp, tf_dungluongdtshowsp, tf_ramshowsp, tf_baohanhshowsp,
-            tf_manccshowsp, tf_madt, tf_tendt, tf_giaban, tf_gianhap, tf_maton, tf_xuatxu,
-            tf_trongluong, tf_kichthuocmanhinh, tf_dungluongdt, tf_ram, tf_baohanh,
-            tf_mancc;
+    JPanel panel_info,panel_chucnang, panel_topright, panel_bottomright;
+    JButton btn_confirm, btn_delete, btn_cancel;
+
+
     public NhanVienFrame() {
-        setTitle("Nhan-Vien Ban-Hang");
+        setTitle("Nhan Vien Ban Hang");
         setSize(1690, 1040);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the frame on the screen
+        setLocationRelativeTo(null); 
+
+        //Tạo panel bên trái phía trên là thông tin tài khoản
+        panel_info = new JPanel();
+        panel_info.setLayout(null);
+        panel_info.setBounds(0, 0, 800, 1040);
+        panel_info.setBackground(new java.awt.Color(255, 255, 255)); 
         
-        // Create a panel to hold the components
-        JPanel panel = new JPanel();
-        panel.setLayout(null); // use null layout for absolute positioning
-        
-        // Create and add components to the panel
-        JLabel label = new JLabel("Welcome to the Sales Management System!");
-        label.setBounds(50, 50, 300, 30);
-        panel.add(label);
-        
-        JButton button = new JButton("Click Me");
-        button.setBounds(50, 100, 100, 30);
-        panel.add(button);
-        
-        add(panel); // Don't forget to add the panel to the frame
+        lb_tennv = new JLabel("Ten Nhan Vien: ");
+        lb_tennv.setBounds(20, 20, 200, 30); 
+        lb_chucvu = new JLabel("Chuc Vu: ");
+        lb_chucvu.setBounds(20, 60, 200, 30);
+        panel_info.add(lb_tennv);
+        panel_info.add(lb_chucvu);  
+        ImageIcon icon = new ImageIcon("E://Lap trinh Java//QuanLyBanDienThoai//NhanVienBanHang//Icon//saler.webp");
+        JLabel iconLabel = new JLabel(icon);
+        iconLabel.setBounds(20, 100, 200, 200);
+        panel_info.add(iconLabel); 
+
+
+        add(panel_info);
         setVisible(true); // Make the frame visible
     }
 }
