@@ -115,42 +115,42 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         int buttonX = 0; // Đặt nút sát mép trái
 
         JButton btnDuyetDonHang = new JButton("Duyệt đơn hàng");
-        btnDuyetDonHang.setBounds(buttonX, 10, buttonWidth, buttonHeight); // Chiều rộng bằng với panel_left_bottom
+        btnDuyetDonHang.setBounds(buttonX, 0, buttonWidth, buttonHeight); // Chiều rộng bằng với panel_left_bottom
         btnDuyetDonHang.setBackground(Color.BLACK);
         btnDuyetDonHang.setForeground(Color.WHITE);
         btnDuyetDonHang.setFocusPainted(false);
         panel_left_bottom.add(btnDuyetDonHang);
 
         JButton btnHuyDonHang = new JButton("Hủy đơn hàng");
-        btnHuyDonHang.setBounds(buttonX, 60, buttonWidth, buttonHeight);
+        btnHuyDonHang.setBounds(buttonX, 50, buttonWidth, buttonHeight);
         btnHuyDonHang.setBackground(Color.BLACK);
         btnHuyDonHang.setForeground(Color.WHITE);
         btnHuyDonHang.setFocusPainted(false);
         panel_left_bottom.add(btnHuyDonHang);
 
         JButton btnInHoaDon = new JButton("In hóa đơn lưu trữ");
-        btnInHoaDon.setBounds(buttonX, 110, buttonWidth, buttonHeight);
+        btnInHoaDon.setBounds(buttonX, 100, buttonWidth, buttonHeight);
         btnInHoaDon.setBackground(Color.BLACK);
         btnInHoaDon.setForeground(Color.WHITE);
         btnInHoaDon.setFocusPainted(false);
         panel_left_bottom.add(btnInHoaDon);
 
         JButton btnXemHoaDon = new JButton("Xem hóa đơn");
-        btnXemHoaDon.setBounds(buttonX, 160, buttonWidth, buttonHeight);
+        btnXemHoaDon.setBounds(buttonX, 150, buttonWidth, buttonHeight);
         btnXemHoaDon.setBackground(Color.BLACK);
         btnXemHoaDon.setForeground(Color.WHITE);
         btnXemHoaDon.setFocusPainted(false);
         panel_left_bottom.add(btnXemHoaDon);
 
         JButton btnXemThongKe = new JButton("Xem thống kê báo cáo");
-        btnXemThongKe.setBounds(buttonX, 210, buttonWidth, buttonHeight);
+        btnXemThongKe.setBounds(buttonX, 200, buttonWidth, buttonHeight);
         btnXemThongKe.setBackground(Color.BLACK);
         btnXemThongKe.setForeground(Color.WHITE);
         btnXemThongKe.setFocusPainted(false);
         panel_left_bottom.add(btnXemThongKe);
 
-        JButton btnXemDonHang = new JButton("Xem Don Hang");
-        btnXemDonHang.setBounds(buttonX, 260, buttonWidth, buttonHeight);
+        JButton btnXemDonHang = new JButton("Xem đơn hàng");
+        btnXemDonHang.setBounds(buttonX, 250, buttonWidth, buttonHeight);
         btnXemDonHang.setBackground(Color.BLACK);
         btnXemDonHang.setForeground(Color.WHITE);
         btnXemDonHang.setFocusPainted(false);
@@ -214,6 +214,7 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
         // Tạo panel chứa nội dung chính bên phải
         JPanel panel_main_content = new JPanel();
+        
         panel_main_content.setLayout(null); // tự do đặt tọa độ nếu bạn muốn fix
         panel_main_content.setBackground(Color.BLACK);
         panel_right.add(panel_main_content, BorderLayout.CENTER);
@@ -221,10 +222,22 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         // panel_topright nằm trong panel_main_content
         JPanel panel_topright = new JPanel();
         panel_topright.setBackground(new Color(51, 51, 51)); 
-        panel_topright.setBounds(0, 0, 1470, 710); // đặt ngay dưới phần padding
+        panel_topright.setBounds(0, 0, 1470, 100); // đặt ngay dưới phần padding
         panel_topright.setLayout(null); 
         panel_main_content.add(panel_topright);
 
+        // Tạo padding giữa panel_topright và panel_bottomright
+        JPanel paddingMiddle = new JPanel();
+        paddingMiddle.setBounds(0, 100, 1470, 10); // Đặt chiều cao của padding là 20
+        paddingMiddle.setBackground(Color.BLACK); // Màu nền đen để phù hợp với giao diện
+        panel_main_content.add(paddingMiddle);
+
+        // panel_bottomright nằm trong panel_main_content
+        JPanel panel_bottomright = new JPanel();
+        panel_bottomright.setBackground(new Color(51, 51, 51));
+        panel_bottomright.setBounds(0, 120, 1470, 300); // Đặt panel_bottomright bên dưới paddingMiddle
+        panel_bottomright.setLayout(null);  
+        panel_main_content.add(panel_bottomright);
 
 
 
@@ -233,7 +246,11 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
 
 
-    
+
+
+
+
+
 
 
         setVisible(true);
