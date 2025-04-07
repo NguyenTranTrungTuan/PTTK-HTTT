@@ -59,17 +59,13 @@ public class NhanVienFrame extends JFrame {
         LineBorder iconBorder = new LineBorder(Color.WHITE, 2); // Viền màu trắng, độ dày 2px
         iconLabel.setBorder(iconBorder); // Áp dụng viền cho JLabel chứa icon
         panel_info.add(iconLabel);
-        panel_info.add(iconLabel);
 
 
         // Tạo panel chức năng nằm phía dưới panel_info
-        LineBorder chucnangBorder = new LineBorder(Color.WHITE, 2);
         panel_chucnang = new JPanel();
-        panel_chucnang.setLayout(new FlowLayout()); 
         panel_chucnang.setLayout(new BoxLayout(panel_chucnang, BoxLayout.Y_AXIS)); 
         panel_chucnang.setBounds(20, 170, 400, 870);
         panel_chucnang.setBackground(Color.LIGHT_GRAY);
-        panel_chucnang.setBorder(chucnangBorder);
 
         //Tạo các nút nằm trong panel_chucnang
         JButton btn_duyetDonHang = new JButton("Duyệt đơn hàng");
@@ -78,7 +74,7 @@ public class NhanVienFrame extends JFrame {
         JButton btn_xemHoaDon = new JButton("Xem hóa đơn bán hàng");
         JButton btn_xemThongKe = new JButton("Xem thống kê báo bán hàng");
 
-        Font buttonFont = new Font("Arial", Font.BOLD, 20); // Phông chữ Arial, đậm, kích thước 18
+        Font buttonFont = new Font("Arial", Font.BOLD, 20); 
         btn_duyetDonHang.setFont(buttonFont);
         btn_huyDonHang.setFont(buttonFont);
         btn_inHoaDon.setFont(buttonFont);
@@ -114,11 +110,37 @@ public class NhanVienFrame extends JFrame {
         btn_xemHoaDon.setForeground(Color.BLACK);
         btn_xemThongKe.setForeground(Color.BLACK);
 
-        addHoverEffect(btn_duyetDonHang, Color.YELLOW, Color.LIGHT_GRAY);
-        addHoverEffect(btn_huyDonHang, Color.YELLOW, Color.LIGHT_GRAY); 
-        addHoverEffect(btn_inHoaDon, Color.YELLOW, Color.LIGHT_GRAY);
-        addHoverEffect(btn_xemHoaDon, Color.YELLOW, Color.LIGHT_GRAY);  
-        addHoverEffect(btn_xemThongKe, Color.YELLOW, Color.LIGHT_GRAY);
+        // Tạo một LineBorder dùng chung
+        LineBorder buttonBorder = new LineBorder(Color.BLACK, 2); // Viền màu đen, độ dày 2px
+
+        // Áp dụng viền chung cho các nút
+        btn_duyetDonHang.setBorder(buttonBorder);
+        btn_huyDonHang.setBorder(buttonBorder);
+        btn_inHoaDon.setBorder(buttonBorder);
+        btn_xemHoaDon.setBorder(buttonBorder);
+        btn_xemThongKe.setBorder(buttonBorder);
+
+        //Bỏ viền nút khi nhấn
+        btn_duyetDonHang.setBorderPainted(false); 
+        btn_duyetDonHang.setBorderPainted(false);
+        btn_huyDonHang.setBorderPainted(false);
+        btn_inHoaDon.setBorderPainted(false);
+        btn_xemHoaDon.setBorderPainted(false);
+        btn_xemThongKe.setBorderPainted(false);
+
+        btn_duyetDonHang.setFocusPainted(false);
+        btn_huyDonHang.setFocusPainted(false);
+        btn_inHoaDon.setFocusPainted(false);
+        btn_xemHoaDon.setFocusPainted(false);
+        btn_xemThongKe.setFocusPainted(false);
+
+
+        //Thêm hiệu ứng hover cho các nút 
+        addHoverEffect(btn_duyetDonHang, Color.DARK_GRAY, Color.LIGHT_GRAY);
+        addHoverEffect(btn_huyDonHang, Color.DARK_GRAY, Color.LIGHT_GRAY);
+        addHoverEffect(btn_inHoaDon, Color.DARK_GRAY, Color.LIGHT_GRAY);
+        addHoverEffect(btn_xemHoaDon, Color.DARK_GRAY, Color.LIGHT_GRAY);
+        addHoverEffect(btn_xemThongKe, Color.DARK_GRAY, Color.LIGHT_GRAY);
 
         
         panel_chucnang.add(btn_duyetDonHang);
