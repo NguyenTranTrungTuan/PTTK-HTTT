@@ -11,7 +11,7 @@ public class NhanVienFrame extends JFrame {
     JLabel lb_tennv,lb_chucvu;
     JTable table;
     DefaultTableModel tableModel;
-    JPanel panel_info,panel_chucnang, panel_topright, panel_bottomright,panel_display, panel_table,panel_scroll;
+    JPanel panel_info,panel_chucnang, panel_topright, panel_bottomright,panel_display, panel_table,panel_scroll,panel_toptable;
     JButton btn_confirm, btn_delete, btn_cancel,btn_exit;
 
 
@@ -152,16 +152,23 @@ public class NhanVienFrame extends JFrame {
 
 
 
-        //Tạo panel bên phải phía dưới là bảng thông tin đơn hàng (panel_table)
-        panel_table = new JPanel(); 
-        panel_table.setLayout(null);
-        panel_table.setBounds(450, 20, 1200, 1020); 
+        // Tạo panel_table
+        panel_table = new JPanel();
+        panel_table.setLayout(null); // Sử dụng layout null để kiểm soát vị trí
+        panel_table.setBounds(400, 20, 1200, 1020);
         panel_table.setBackground(Color.GRAY);
         panel_table.setBorder(infoBorder);
-        panel_table.setLayout(new BoxLayout(panel_table, BoxLayout.Y_AXIS));
-        panel_table.setBackground(Color.GRAY);
-        panel_table.setBorder(infoBorder);
-        panel_table.setLayout(new BoxLayout(panel_table, BoxLayout.Y_AXIS)); // Sử dụng BoxLayout theo chiều dọc
+
+        // Tạo panel_toptable chứa trong panel_table
+        panel_toptable = new JPanel();
+        panel_toptable.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel_toptable.setBackground(Color.ORANGE);
+        panel_toptable.setBorder(infoBorder);
+        panel_toptable.setBounds(0, 0, 1200, 150); // Đặt vị trí và kích thước chính xác
+
+        // Thêm panel_toptable vào panel_table
+        panel_table.add(panel_toptable);
+
 
         
         // Thêm panel_info và panel_chucnang vào panel_display
