@@ -7,6 +7,7 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
     public void insert(DonHang obj) {
         // TODO Auto-generated method stub
         
+        
     }
 
     @Override

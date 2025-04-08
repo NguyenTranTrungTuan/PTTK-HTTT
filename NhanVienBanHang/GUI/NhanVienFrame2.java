@@ -239,6 +239,8 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         panel_bottomright.setLayout(null);  
         panel_main_content.add(panel_bottomright);
 
+        
+
 
 
 
