@@ -1,6 +1,6 @@
-package user;
+package DTO;
 
-public class KhachHang {
+public class KhachHang_DTO {
    private String Id_KhachHang ;
    private String Ten_KhachHang ;
    private String Sdt_KhachHang ;
@@ -8,7 +8,7 @@ public class KhachHang {
    private String Email_KhachHang;
    private String Pass_KhachHang;
 
-   public KhachHang ()
+   public KhachHang_DTO ()
    {
       this.Id_KhachHang = "";
       this.Ten_KhachHang = "";
@@ -17,7 +17,7 @@ public class KhachHang {
       this.Email_KhachHang = "";
       this.Pass_KhachHang = "";
    }
-   public KhachHang(String Id,String Ten, String Sdt, String DiaChi, String Email , String Pass)
+   public KhachHang_DTO(String Id,String Ten, String Sdt, String DiaChi, String Email , String Pass)
    {
       this.Id_KhachHang = Id;
       this.Ten_KhachHang = Ten;

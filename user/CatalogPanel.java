@@ -1,58 +1,125 @@
 package user;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
 import java.awt.event.*;
 
 public class CatalogPanel extends JPanel {
-    private JLabel headerLabel;
+    protected JLabel headerLabel;
     private JPanel listPanel;
-    private JLabel SamsungLabel = new JLabel("SAMSUNG");
-    private JLabel AppleLabel = new JLabel("APPLE");
-    private JLabel XiaomiLabel = new JLabel("XIAOMI");
-    private JLabel OppoLabel = new JLabel("OPPO");
-    private JLabel NokiaLabel = new JLabel("NOKIA");
-    private JLabel list[] = {SamsungLabel, AppleLabel, XiaomiLabel, OppoLabel, NokiaLabel};
+    protected JLabel SamsungLabel = new JLabel("SAMSUNG");
+    protected JLabel AppleLabel = new JLabel("APPLE");
+    protected JLabel XiaomiLabel = new JLabel("XIAOMI");
+    protected JLabel OppoLabel = new JLabel("OPPO");
+    protected JLabel NokiaLabel = new JLabel("NOKIA");
+    protected JLabel list[] = {SamsungLabel, AppleLabel, XiaomiLabel, OppoLabel, NokiaLabel};
 
     public CatalogPanel() {
         initComponents();
+    }
+
+    // MouseListener mouseListener = new MouseListener() {
+    //     @Override
+    //     public void mouseClicked(MouseEvent e) {
+    //         if (e.getSource() == headerLabel) {
+    //             for ( JLabel label : list){
+    //                 label.setOpaque(false);
+    //             }
+    //             ContentPanel.remove(productPanel);
+    //             productPanel = new ProductPanel("All");
+    //             ContentPanel.add(productPanel);
+    //         }
+    //         else if (e.getSource() == SamsungLabel) {
+    //             paintLabel("SAMSUNG");
+    //             ContentPanel.remove(productPanel);
+    //             productPanel = new ProductPanel("Samsung");
+    //             ContentPanel.add(productPanel);
+    //         } 
+    //         else if (e.getSource() == AppleLabel) {
+    //             paintLabel("APPLE");
+    //             ContentPanel.remove(productPanel);
+    //             productPanel = new ProductPanel("Apple");
+    //             ContentPanel.add(productPanel);
+    //         } 
+    //         else if (e.getSource() == XiaomiLabel) {
+    //             paintLabel("XIAOMI");
+    //             ContentPanel.remove(productPanel);
+    //             productPanel = new ProductPanel("Xiaomi");
+    //             ContentPanel.add(productPanel);
+    //         } 
+    //         else if (e.getSource() == OppoLabel) {
+    //             paintLabel("OPPO");
+    //             ContentPanel.remove(productPanel);
+    //             productPanel = new ProductPanel("Oppo");
+    //             ContentPanel.add(productPanel);
+    //         } 
+    //         else if (e.getSource() == NokiaLabel) {
+    //             paintLabel("NOKIA");
+    //             ContentPanel.remove(productPanel);
+    //             productPanel = new ProductPanel("Nokia");
+    //             ContentPanel.add(productPanel);
+    //         }
+    //         // Revalidate and repaint the ContentPanel to reflect changes
+    //         ContentPanel.revalidate();
+    //         ContentPanel.repaint();
+    //         }
+
+    //     @Override
+    //     public void mousePressed(MouseEvent e) {}
+
+    //     @Override
+    //     public void mouseReleased(MouseEvent e) {}
+
+    //     @Override
+    //     public void mouseEntered(MouseEvent e) {
+    //         if (e.getSource() == SamsungLabel) {
+    //             paintLabel("SAMSUNG");
+    //         } 
+    //         else if (e.getSource() == AppleLabel) {
+    //             paintLabel("APPLE");
+    //         } 
+    //         else if (e.getSource() == XiaomiLabel) {
+    //             paintLabel("XIAOMI");
+    //         } 
+    //         else if (e.getSource() == OppoLabel) {
+    //             paintLabel("OPPO");
+    //         } 
+    //         else if (e.getSource() == NokiaLabel) {
+    //             paintLabel("NOKIA");
+    //         }
+    //         // Revalidate and repaint the ContentPanel to reflect changes
+    //         ContentPanel.revalidate();
+    //         ContentPanel.repaint();
+    //     }
+    //     @Override
+    //     public void mouseExited(MouseEvent e) {}
+    // };
+
+    public void paintLabel(String name){
+        for (JLabel label : list){
+            if (label.getText().equals(name)){
+                label.setBackground(new Color(255,255,255, 80));
+                label.setOpaque(true);
+                label.revalidate();
+                label.repaint();
+            }
+            else{
+                label.setOpaque(false);
+                label.revalidate();
+                label.repaint();
+            }
+        }
     }
 
     private void initComponents() {
         headerLabel = new JLabel();
         listPanel = new JPanel();
 
-        // MouseListener mouseListener = new MouseListener() {
-        //     @Override
-        //     public void mouseClicked(MouseEvent e) {
-        //         // JLabel label = (JLabel) e.getSource();
-        //         // switch (label.getText()) {
-        //         //     case "SAMSUNG":
-                        
-        //         //         break;
-        //         //     case "APPLE":
-                        
-        //         //         break;
-        //         //     case "XIAOMI":
-                        
-        //         //         break;
-        //         //     case "OPPO":
-                        
-        //         //         break;
-        //         //     case "NOKIA":
-                        
-        //         //         break;
-        //         //     default:
-        //         //         break;
-        //         // }
-        //     }
-        // };
-
         for (JLabel lb : list) {
             lb.setFont(new Font("Segoe UI", 1, 20));
             lb.setForeground(Color.WHITE);
-            // lb.addMouseListener(mouseListener);
+            lb.setMaximumSize(new Dimension(120, 50));
+            lb.setHorizontalAlignment(SwingConstants.LEADING);
             listPanel.add(lb);
             listPanel.add(Box.createVerticalStrut(15));
         }

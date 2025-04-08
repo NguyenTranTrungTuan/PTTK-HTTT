@@ -1,12 +1,12 @@
 package user;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import BLL.DienThoai_BLL;
+import DTO.DienThoai_DTO;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.math.BigDecimal;
-import java.sql.*;
 import java.util.ArrayList;
 
 public class ProductPanel extends JScrollPane {
@@ -14,9 +14,16 @@ public class ProductPanel extends JScrollPane {
     private ArrayList<ProductItem> ProductList;
     private ArrayList<Model_Product_Description> DescriptionList;
     private ProductDescription CurrentDescription;
+    protected DienThoai_BLL dtbll;
 
-    public ProductPanel() { 
+    public ProductPanel(String typename) { 
         initComponents();
+        if(typename.equals("All"))
+            getAllSp();
+        else{
+            getAllProductType(typename);
+        }
+        addEvent();
     }
 
     MouseListener mouseListener = new MouseListener() {
@@ -46,50 +53,53 @@ public class ProductPanel extends JScrollPane {
         public void mouseExited(MouseEvent e) {}
     };
 
-    private Connection connectDB() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+    private void getAllSp() {
+        DescriptionList = new ArrayList<>();
+        ProductList = new ArrayList<>();
+        for (DienThoai_DTO dt : dtbll.getAllDienThoai()){
+            String id = dt.getID_SanPham();
+            String ten = dt.getTen_SanPham();
+            double gia = dt.getGia_SanPham();
+            int soLuong = dtbll.getSoLuongTon(dt.getID_Tonkho());
+            String xuatXu = dt.getXuatXu();
+            String trongLuong = dt.getTrongLuong();
+            String kichThuocManHinh = dt.getKichThuocManHinh();
+            String dungLuong = dt.getDungLuong();
+            String ram = dt.getRAM();
+            String thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
+            int baoHanh = dt.getBaoHanh();
+
+            ProductItem item = new ProductItem(new Model_ProductItem(ten, "LTG", String.valueOf(new BigDecimal(gia))));
+            ProductList.add(item);
+            ItemPanel.add(item);
+
+            Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+            DescriptionList.add(description);
         }
     }
 
-    private void getAllSp() {
+    private void getAllProductType(String typename){
         DescriptionList = new ArrayList<>();
-        try (Connection con = connectDB()) {
-            if (con != null) {
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(
-                    "SELECT * FROM DIENTHOAI " +
-                    "JOIN KHO ON DIENTHOAI.MaTon = KHO.MaTon " +
-                    "JOIN NHACUNGCAP ON DIENTHOAI.MaNCC = NHACUNGCAP.MaNCC"
-                );
-                while (rs.next()) {
-                    String id = rs.getString("MaDT");
-                    String ten = rs.getString("TenDT");
-                    double gia = rs.getDouble("GiaBan");
-                    int soLuong = rs.getInt("SoLuongTon");
-                    String xuatXu = rs.getString("XuatXu");
-                    String trongLuong = rs.getString("TrongLuong");
-                    String kichThuocManHinh = rs.getString("KichThuocManHinh");
-                    String dungLuong = rs.getString("DungLuong");
-                    String ram = rs.getString("RAM");
-                    String thuongHieu = rs.getString("TenNCC");
-                    int baoHanh = rs.getInt("BaoHanh");
+        ProductList = new ArrayList<>();
+        for (DienThoai_DTO dt : dtbll.getAllType(typename)){
+            String id = dt.getID_SanPham();
+            String ten = dt.getTen_SanPham();
+            double gia = dt.getGia_SanPham();
+            int soLuong = dtbll.getSoLuongTon(dt.getID_Tonkho());
+            String xuatXu = dt.getXuatXu();
+            String trongLuong = dt.getTrongLuong();
+            String kichThuocManHinh = dt.getKichThuocManHinh();
+            String dungLuong = dt.getDungLuong();
+            String ram = dt.getRAM();
+            String thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
+            int baoHanh = dt.getBaoHanh();
 
-                    Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
-                    DescriptionList.add(description);
+            ProductItem item = new ProductItem(new Model_ProductItem(ten, "LTG", String.valueOf(new BigDecimal(gia))));
+            ProductList.add(item);
+            ItemPanel.add(item);
 
-                    // Add to ProductList as well
-                    ProductItem item = new ProductItem(new Model_ProductItem(ten, "LTG", String.valueOf(new BigDecimal(gia))));
-                    ProductList.add(item);
-                    ItemPanel.add(item);
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+            DescriptionList.add(description);
         }
     }
 
@@ -100,15 +110,12 @@ public class ProductPanel extends JScrollPane {
     }
 
     private void initComponents() {
-        ProductList = new ArrayList<>();
+        dtbll = new DienThoai_BLL();
         ItemPanel = new JPanel(new GridLayout(0, 3, 35, 35));
         ItemPanel.setBackground(Color.decode("#cfdef3"));
         ItemPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 20));
-
-        getAllSp(); // Fetch and populate items from DB
         ItemPanel.revalidate();
         ItemPanel.repaint();
-        addEvent();
 
         setViewportView(ItemPanel);
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
