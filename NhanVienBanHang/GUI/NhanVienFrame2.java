@@ -228,14 +228,14 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
         // Tạo padding giữa panel_topright và panel_bottomright
         JPanel paddingMiddle = new JPanel();
-        paddingMiddle.setBounds(0, 100, 1470, 10); // Đặt chiều cao của padding là 20
+        paddingMiddle.setBounds(0, 100, 1470, 0); // Đặt chiều cao của padding là 20
         paddingMiddle.setBackground(Color.BLACK); // Màu nền đen để phù hợp với giao diện
         panel_main_content.add(paddingMiddle);
 
         // panel_bottomright nằm trong panel_main_content
         JPanel panel_bottomright = new JPanel();
         panel_bottomright.setBackground(new Color(51, 51, 51));
-        panel_bottomright.setBounds(0, 120, 1470, 300); // Đặt panel_bottomright bên dưới paddingMiddle
+        panel_bottomright.setBounds(0, 110, 1470, 600); // Đặt panel_bottomright bên dưới paddingMiddle
         panel_bottomright.setLayout(null);  
         panel_main_content.add(panel_bottomright);
 
