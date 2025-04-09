@@ -1,10 +1,7 @@
 package user;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.sql.*;
 import javax.swing.*;
-import java.util.regex.Pattern;
 
 public class DangKy extends JFrame {
     private JPanel panel = new JPanel();
@@ -32,26 +29,8 @@ public class DangKy extends JFrame {
         "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
     };
 
-    // Regex cho email
-    private static final String EMAIL_PATTERN = 
-        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    
-    // Regex cho số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 số)
-    private static final String PHONE_PATTERN = 
-        "^0[35789][0-9]{8}$";
-
     public DangKy() {
         initComponents();
-    }
-
-    private Connection connectDB() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
     }
 
     private void initComponents() {
