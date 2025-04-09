@@ -3,6 +3,7 @@ package NhanVienBanHang.DAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
@@ -45,53 +46,38 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
     }
 
     @Override
-    public javax.swing.table.DefaultTableModel loadDataToTable(String tableName) {
-        DefaultTableModel tableModel = new DefaultTableModel();
-        Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            // Kết nối đến cơ sở dữ liệu
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
-            String username = "sa";
-            String password = "1234566";
-            con = DriverManager.getConnection(url, username, password);
-
-            // Truy vấn dữ liệu từ bảng
-            String sql = "SELECT * FROM " + tableName;
-            stmt = con.createStatement();
-            rs = stmt.executeQuery(sql);
-
-            // Lấy thông tin cột từ ResultSet
-            int columnCount = rs.getMetaData().getColumnCount();
-            for (int i = 1; i <= columnCount; i++) {
-                tableModel.addColumn(rs.getMetaData().getColumnName(i));
-            }
-
-            // Lấy dữ liệu từ ResultSet và thêm vào DefaultTableModel
-            while (rs.next()) {
-                Object[] rowData = new Object[columnCount];
-                for (int i = 1; i <= columnCount; i++) {
-                    rowData[i - 1] = rs.getObject(i);
-                }
-                tableModel.addRow(rowData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+        public DefaultTableModel loadDataToTable(String tableName) {
+            DefaultTableModel tableModel = new DefaultTableModel();
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (con != null) con.close();
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+                String username = "sa";
+                String password = "123456";
+                Connection con = DriverManager.getConnection(url, username, password);
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM " + tableName);
+
+                ResultSetMetaData metaData = rs.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                String[] columnNames = new String[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    columnNames[i - 1] = metaData.getColumnName(i);
+                }
+                tableModel.setColumnIdentifiers(columnNames);
+
+                while (rs.next()) {
+                    Object[] row = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        row[i - 1] = rs.getObject(i);
+                    }
+                    tableModel.addRow(row);
+                }
+                con.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return tableModel;
         }
-        return tableModel;
-    }
-
     public ArrayList<DonHang> getAllDonHang() {
         ArrayList<DonHang> list = new ArrayList<>();
         Connection con = null;
@@ -137,6 +123,10 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
         }
         return list;
     }
+
+    
+
+
 
     
     public static DonHang_DAO getInstance() {

@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 
+
 import NhanVienBanHang.DAO.DonHang_DAO;
 
 public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListener {
@@ -238,7 +239,7 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         JPanel panel_bottomright = new JPanel();
         panel_bottomright.setBackground(new Color(51, 51, 51));
         panel_bottomright.setBounds(0, 110, 1470, 600); // Đặt panel_bottomright bên dưới paddingMiddle
-        panel_bottomright.setLayout(null);  
+        panel_bottomright.setLayout(new BorderLayout());  
         panel_main_content.add(panel_bottomright);
 
         //Đưa dữ liệu lên chỗ xem đơn hàng
@@ -257,16 +258,15 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
         scrollPane_table.setBorder(null);
         scrollPane_table.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane_table.getVerticalScrollBar().setPreferredSize(new Dimension(3, 0));// Chiều rộng 12px
+        table.setPreferredScrollableViewportSize(new Dimension(1450, 580));
+        scrollPane_table.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
         scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
         panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
 
-        tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang")
-
-
-
+        tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
+        table.setModel(tableModel);
 
 
 
