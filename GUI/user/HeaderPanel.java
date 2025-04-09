@@ -1,4 +1,4 @@
-package user;
+package GUI.user;
 
 import javax.swing.*;
 
@@ -145,7 +145,7 @@ public class HeaderPanel extends JPanel {
         logoPanel.setPreferredSize(new Dimension(200, 100));
         logoPanel.setOpaque(false);
 
-        logoIcon = new JLabel(new ImageIcon("user/Icon/logo.png")); 
+        logoIcon = new JLabel(new ImageIcon("GUI/user/Icon/logo.png")); 
         logoPanel.add(logoIcon);
 
         // ==== SEARCH PANEL ====
@@ -154,7 +154,7 @@ public class HeaderPanel extends JPanel {
         searchPanel.setPreferredSize(new Dimension(500, 100));
         searchPanel.setOpaque(false);
 
-        searchIcon = new JLabel(new ImageIcon("user/Icon/search.png"));
+        searchIcon = new JLabel(new ImageIcon("GUI/user/Icon/search.png"));
         searchIcon.setBounds(10, 30, 30, 40);
 
         searchBox = new JTextField();
@@ -170,10 +170,10 @@ public class HeaderPanel extends JPanel {
         btnPanel.setOpaque(false);
         btnPanel.setLayout(null);
 
-        accountIcon = new JLabel(new ImageIcon("user/Icon/user.png"));
+        accountIcon = new JLabel(new ImageIcon("GUI/user/Icon/user.png"));
         accountIcon.setBounds(20, 30, 30, 40);
 
-        cartIcon = new JLabel(new ImageIcon("user/Icon/shopping-cart.png"));
+        cartIcon = new JLabel(new ImageIcon("GUI/user/Icon/shopping-cart.png"));
         cartIcon.setBounds(180, 30, 40, 40);
 
         accountLabel = new JLabel("");

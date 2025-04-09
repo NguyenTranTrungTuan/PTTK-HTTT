@@ -1,4 +1,4 @@
-package user;
+package GUI.user;
 
 public class Model_Product_Description {
     private String name;
