@@ -10,6 +10,8 @@ public class DonHang {
     private String tinhtrang;
     private String tongtien;
 
+    
+
     public DonHang(String madon, String makh, String manv, String diachidat, String ngaydat, String pttt, String tinhtrang, String tongtien) {
         this.madon = madon;
         this.makh = makh;
