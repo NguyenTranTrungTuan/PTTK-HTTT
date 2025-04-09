@@ -1,5 +1,5 @@
 
-package user;
+package GUI.user;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -66,7 +66,7 @@ public class Model_ProductItem {
     private String price;
 
     public Icon toImage(){
-        ImageIcon image = new ImageIcon("user/ProductImage/" +Imageicon+".png");
+        ImageIcon image = new ImageIcon("GUI/user/ProductImage/" +Imageicon+".png");
         Image og = image.getImage();
         int w = 140;
         int h = 180;
