@@ -11,7 +11,7 @@ import dao.DAOInterface;
 import java.awt.event.MouseListener;
 
 
-public class GioHangGUI extends JFrame{
+public class GioHangGUI extends JPanel{
 
     private JTextField txtMaDt, txtTenDt, txtGiaBan, txtGiaNhap, txtMaTon, txtXuatXu, txtTrongLuong,
             txtKichThuocManHinh, txtDungLuong, txtRam, txtBaoHanh, txtMaNcc;
@@ -20,10 +20,6 @@ public class GioHangGUI extends JFrame{
     private DefaultTableModel model;
 
     public GioHangGUI() {
-        setTitle("Giỏ Hàng");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         initComponents();
     }
 
@@ -104,7 +100,4 @@ public class GioHangGUI extends JFrame{
         }
     }
 
-    public static void main(String[] args) {
-        
-    }
 }
