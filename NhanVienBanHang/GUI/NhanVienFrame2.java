@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -18,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,6 +32,12 @@ import javax.swing.table.DefaultTableModel;
 import NhanVienBanHang.DAO.DonHang_DAO;
 
 public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     
      public class CustomScrollBarUI extends BasicScrollBarUI {
 
@@ -268,6 +276,10 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
         table.setModel(tableModel);
 
+        //KHI NHẤN BUTTONS XEM ĐƠN HÀNG 
+
+        
+
 
 
 
@@ -287,40 +299,32 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
-    }
+    
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
+
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
+
     }
 
     private void addHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
