@@ -7,15 +7,18 @@ import DTO.KhachHang_DTO;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.*;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 public class HeaderPanel extends JPanel {
     private JPanel logoPanel, searchPanel, btnPanel;
     protected JLabel logoIcon, searchIcon, accountIcon, cartIcon, accountLabel;
-    private JTextField searchBox;
+    protected JTextField searchBox;
     protected DangKy dangkyFrame;
     protected DangNhap dangnhapFrame;
     private KhachHang_BLL khbll;
+    public KhachHang_DTO kh;
 
     // Regex cho email
     private static final String EMAIL_PATTERN = 
@@ -29,6 +32,23 @@ public class HeaderPanel extends JPanel {
     public HeaderPanel() {
         initComponents();
     }
+
+    FocusListener Focus = new FocusListener() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            if (searchBox.getText().equals("Search...")) {
+                searchBox.setText("");
+                searchBox.setForeground(Color.BLACK);
+            }
+        }
+        @Override
+        public void focusLost(FocusEvent e) {
+            if (searchBox.getText().isEmpty()) {
+                searchBox.setForeground(Color.GRAY);
+                searchBox.setText("Search...");
+            }
+        }
+    };
 
     MouseListener mouseListener = new MouseListener() {
         @Override
@@ -49,9 +69,23 @@ public class HeaderPanel extends JPanel {
         @Override
         public void mouseReleased(MouseEvent e) {}
         @Override
-        public void mouseEntered(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {
+            if (e.getSource() == accountLabel  && !accountLabel.getText().equals("")){
+                Font font = accountLabel.getFont();
+                Map attributes = font.getAttributes();
+                attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                accountLabel.setFont(font.deriveFont(attributes));
+            }
+        }
         @Override
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {
+            if (e.getSource() == accountLabel  && !accountLabel.getText().equals("")){
+                Font font = accountLabel.getFont();
+                Map attributes = font.getAttributes();
+                attributes.put(TextAttribute.UNDERLINE, null);
+                accountLabel.setFont(font.deriveFont(attributes));
+            }
+        }
     };
 
     private void addDangKyEvent(){
@@ -111,7 +145,7 @@ public class HeaderPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String email = dangnhapFrame.txtEmail.getText().trim();
                 String matKhau = new String(dangnhapFrame.txtMatKhau.getPassword()).trim();
-                KhachHang_DTO kh = khbll.getKhachHangFromAccount(email, matKhau);
+                kh = khbll.getKhachHangFromAccount(email, matKhau);
                 if (kh != null) {
                     JOptionPane.showMessageDialog(dangnhapFrame, "Đăng nhập thành công!");
                     accountLabel.setText(kh.getTen_KhachHang());
@@ -142,10 +176,12 @@ public class HeaderPanel extends JPanel {
 
         // ==== LOGO PANEL ====
         logoPanel = new JPanel();
+        logoPanel.setLayout(null);
         logoPanel.setPreferredSize(new Dimension(200, 100));
         logoPanel.setOpaque(false);
 
         logoIcon = new JLabel(new ImageIcon("GUI/user/Icon/logo.png")); 
+        logoIcon.setBounds(100, 30, 30, 40);
         logoPanel.add(logoIcon);
 
         // ==== SEARCH PANEL ====
@@ -157,8 +193,9 @@ public class HeaderPanel extends JPanel {
         searchIcon = new JLabel(new ImageIcon("GUI/user/Icon/search.png"));
         searchIcon.setBounds(10, 30, 30, 40);
 
-        searchBox = new JTextField();
+        searchBox = new JTextField("Search...");
         searchBox.setBounds(50, 30, 400, 40);
+        searchBox.setForeground(Color.GRAY);
         searchBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
         searchPanel.add(searchIcon);
@@ -179,16 +216,16 @@ public class HeaderPanel extends JPanel {
         accountLabel = new JLabel("");
         accountLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
         accountLabel.setForeground(Color.WHITE);
-        accountLabel.setBounds(60, 40, 100, 20);
+        accountLabel.setBounds(60, 40, 100, 30);
 
         btnPanel.add(accountIcon);
         btnPanel.add(accountLabel);
         btnPanel.add(cartIcon);
 
         accountIcon.addMouseListener(mouseListener);
+        accountLabel.addMouseListener(mouseListener);
+        searchBox.addFocusListener(Focus);
 
-
-        
         // ==== ADD TO HEADER ====
         add(logoPanel, BorderLayout.WEST);
         add(searchPanel, BorderLayout.CENTER);

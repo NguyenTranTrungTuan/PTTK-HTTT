@@ -2,7 +2,7 @@ package GUI.user;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.*;;
+import java.awt.event.*;
 
 
 public class TrangChu extends JFrame{
@@ -10,12 +10,29 @@ public class TrangChu extends JFrame{
     private JPanel ContentPanel;
     private CatalogPanel catalogPanel;
     private ProductPanel productPanel;
+    // private UserMenuPanel UserMenu;
+    private UserInfoPanel UserInfo;
+    private FilterPanel Filter;
 
     public TrangChu(){
         initComponents();
         setTitle("Trang Chủ");
         setResizable(false);
     }
+
+    KeyListener KeyListener = new KeyListener() {
+        @Override
+        public void keyPressed(KeyEvent e){
+            if (e.getKeyCode() == KeyEvent.VK_ENTER && !header.searchBox.getText().equals("")){
+                SwitchToFilter();
+            }
+        }
+        @Override
+        public void keyTyped(KeyEvent e) {}
+
+        @Override
+        public void keyReleased(KeyEvent e) {}
+    };
 
     MouseListener mouseListener = new MouseListener() {
         @Override
@@ -25,37 +42,58 @@ public class TrangChu extends JFrame{
                     label.setOpaque(false);
                 }
                 ContentPanel.remove(productPanel);
-                productPanel = new ProductPanel("All");
+                productPanel = new ProductPanel("All", null, null);
                 ContentPanel.add(productPanel);
             }
             else if (e.getSource() == catalogPanel.SamsungLabel) {
                 catalogPanel.paintLabel("SAMSUNG");
                 ContentPanel.remove(productPanel);
-                productPanel = new ProductPanel("Samsung");
+                productPanel = new ProductPanel("Samsung", null, null);
                 ContentPanel.add(productPanel);
             } 
             else if (e.getSource() == catalogPanel.AppleLabel) {
                 catalogPanel.paintLabel("APPLE");
                 ContentPanel.remove(productPanel);
-                productPanel = new ProductPanel("Apple");
+                productPanel = new ProductPanel("Apple", null, null);
                 ContentPanel.add(productPanel);
             } 
             else if (e.getSource() == catalogPanel.XiaomiLabel) {
                 catalogPanel.paintLabel("XIAOMI");
                 ContentPanel.remove(productPanel);
-                productPanel = new ProductPanel("Xiaomi");
+                productPanel = new ProductPanel("Xiaomi", null, null);
                 ContentPanel.add(productPanel);
             } 
             else if (e.getSource() == catalogPanel.OppoLabel) {
                 catalogPanel.paintLabel("OPPO");
                 ContentPanel.remove(productPanel);
-                productPanel = new ProductPanel("Oppo");
+                productPanel = new ProductPanel("Oppo", null, null);
                 ContentPanel.add(productPanel);
             } 
             else if (e.getSource() == catalogPanel.NokiaLabel) {
                 catalogPanel.paintLabel("NOKIA");
                 ContentPanel.remove(productPanel);
-                productPanel = new ProductPanel("Nokia");
+                productPanel = new ProductPanel("Nokia", null, null);
+                ContentPanel.add(productPanel);
+            }
+            else if (e.getSource() == header.accountLabel  && !header.accountLabel.getText().equals("")){
+                SwitchToUserMenu();
+            }
+            else if (e.getSource() == header.logoIcon){
+                SwitchToShop();
+            }
+            else if(e.getSource() == header.searchIcon && !header.searchBox.getText().equals("")){
+                SwitchToFilter();
+            }
+            else if(e.getSource() == Filter.FilterButton && !Filter.MinPriceTF.getText().equals("Giá thấp nhất") && !Filter.MaxPriceTF.getText().equals("Giá cao nhất")){
+                ContentPanel.remove(productPanel);
+                // ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.X_AXIS));
+                if(header.searchBox.getText().equals("Search...")){
+                    productPanel = new ProductPanel("All", null, Filter);
+                }
+                else{
+                    productPanel = new ProductPanel("Search", header.searchBox.getText(), Filter);
+                    
+                }
                 ContentPanel.add(productPanel);
             }
             // Revalidate and repaint the ContentPanel to reflect changes
@@ -68,7 +106,7 @@ public class TrangChu extends JFrame{
 
         @Override
         public void mouseReleased(MouseEvent e) {}
-
+            
         @Override
         public void mouseEntered(MouseEvent e) {
             if (e.getSource() == catalogPanel.SamsungLabel) {
@@ -86,17 +124,81 @@ public class TrangChu extends JFrame{
             else if (e.getSource() == catalogPanel.NokiaLabel) {
                 catalogPanel.paintLabel("NOKIA");
             }
+            
             // Revalidate and repaint the ContentPanel to reflect changes
             ContentPanel.revalidate();
             ContentPanel.repaint();
         }
         @Override
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {
+            for (JLabel label : catalogPanel.list){
+                label.setOpaque(false);
+            }
+            ContentPanel.revalidate();
+            ContentPanel.repaint();
+        }
     };
 
+    public void SwitchToFilter(){
+        ContentPanel.removeAll();;
+        ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.X_AXIS));
+
+        Filter = new FilterPanel();
+        Filter.FilterButton.addMouseListener(mouseListener);
+        productPanel = new ProductPanel("Search", header.searchBox.getText(), null);
+
+        // ContentPanel.add(Filter);
+        ContentPanel.add(Filter);
+        ContentPanel.add(productPanel);
+
+        ContentPanel.revalidate();
+        ContentPanel.repaint();
+    }
+
+    public void SwitchToShop(){
+        ContentPanel.removeAll();
+        ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.X_AXIS));
+        productPanel = new ProductPanel("All", null, null);
+        catalogPanel = new CatalogPanel();
+        catalogPanel.headerLabel.addMouseListener(mouseListener);
+        for ( JLabel label : catalogPanel.list){
+            label.addMouseListener(mouseListener);
+        }
+        ContentPanel.add(catalogPanel);
+        ContentPanel.add(productPanel);
+        ContentPanel.revalidate();
+        ContentPanel.repaint();
+    }
+
+    public void SwitchToUserMenu(){
+        ContentPanel.removeAll();
+
+        // UserMenu.UsernameLabel.setText(header.accountLabel.getText().toUpperCase());
+        // for(JLabel lb : UserMenu.OptionList){
+        //     lb.addMouseListener(mouseListener);
+        // }
+        ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.Y_AXIS));
+
+        UserInfo = new UserInfoPanel();
+        UserInfo.NameInfo.setText(header.kh.getTen_KhachHang());
+        UserInfo.PhoneInfo.setText(header.kh.getSdt_KhachHang());
+        UserInfo.EmailInfo.setText(header.kh.getEmail_KhachHang());
+        UserInfo.AddressInfo.setText(header.kh.getDiaChi_KhachHang());
+        UserInfo.PasswordInfo.setText(header.kh.getPass_KhachHang());
+
+        // ContentPanel.add(UserMenu);
+        // ContentPanel.add(Box.createHorizontalStrut(20));
+        ContentPanel.add(UserInfo);
+        ContentPanel.revalidate();
+        ContentPanel.repaint();
+    }
+
     public void initComponents(){
-        JPanel spacer = new JPanel();
         header = new HeaderPanel();
+        header.accountLabel.addMouseListener(mouseListener);
+        header.logoIcon.addMouseListener(mouseListener);
+        header.searchIcon.addMouseListener(mouseListener);
+        header.searchBox.addKeyListener(KeyListener);
 
         ContentPanel = new JPanel();
         catalogPanel = new CatalogPanel();
@@ -104,15 +206,11 @@ public class TrangChu extends JFrame{
         for ( JLabel label : catalogPanel.list){
             label.addMouseListener(mouseListener);
         }
-        productPanel = new ProductPanel("All");
-        spacer.setPreferredSize(new Dimension(20, 1));
-        spacer.setOpaque(false);
-        
+        productPanel = new ProductPanel("All", null, null);
 
         ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.X_AXIS));
         ContentPanel.setBackground(Color.decode("#cfdef3"));
         ContentPanel.add(catalogPanel);
-        ContentPanel.add(spacer);
         ContentPanel.add(productPanel);
         ContentPanel.setPreferredSize(new Dimension(960,540));
         setLayout(new BorderLayout());
