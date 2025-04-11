@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,9 +34,13 @@ import javax.swing.table.DefaultTableModel;
 
 
 import NhanVienBanHang.DAO.DonHang_DAO;
+import java.awt.Component;
 import java.awt.FlowLayout;
 
 public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListener {
+
+    private JButton activeButton = null;
+    JPanel panel_bottomright, panel_topright, panel_right, panel_left, panel_left_top, panel_left_bottom;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -87,12 +93,12 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         setLocationRelativeTo(null); 
 
 
-        JPanel panel_left = new JPanel();
+        panel_left = new JPanel();
         panel_left.setPreferredSize(new Dimension(300, 0));
         panel_left.setBackground(Color.black);
         add(panel_left, BorderLayout.WEST);
         panel_left.setLayout(null);
-        JPanel panel_left_top = new JPanel();
+        panel_left_top = new JPanel();
         panel_left_top.setLayout(null);
         panel_left_top.setBounds(10, 10, 250, 150);
         panel_left_top.setBackground(new Color(51, 51, 51));
@@ -114,7 +120,7 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         panel_left_top.add(labelRole);
 
 
-        JPanel panel_left_bottom = new JPanel();
+        panel_left_bottom = new JPanel();
         panel_left_bottom.setLayout(new BoxLayout(panel_left_bottom, BoxLayout.Y_AXIS));
         panel_left_bottom.setBounds(10, 170, 250, 600);
         panel_left_bottom.setBackground(new Color(51, 51, 51));
@@ -128,6 +134,7 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         btnXemDonHang.setFont(new Font("Arial", Font.PLAIN, 16)); // Font chữ
         btnXemDonHang.setHorizontalAlignment(SwingConstants.LEFT); // Căn chữ sang trái
 
+
         // Tạo viền bo tròn
         btnXemDonHang.setBorder(new RoundedBorder(10)); // Viền bo tròn với bán kính 20px
 
@@ -139,10 +146,12 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         // Thêm hiệu ứng hover
         addHoverEffect(btnXemDonHang, new Color(70, 70, 70), new Color(51, 51, 51));
 
+        // Thêm khoảng cách trước các nút
+        panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10))); // Thêm khoảng cách 10px trước các nút
+
+
         // Thêm nút vào panel_left_bottom
         panel_left_bottom.add(btnXemDonHang);
-
-
 
         
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10))); // Tạo khoảng cách giữa các nút
@@ -169,14 +178,19 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         // Thêm nút vào panel_left_bottom
         panel_left_bottom.add(btnBaoCao);
 
+        // Thêm sự kiện cho nút Đơn Hàng
+        btnXemDonHang.addActionListener(e -> {
+            handleButtonClick(btnXemDonHang);
+        });
 
-
-                
-        
+        // Thêm sự kiện cho nút Báo Cáo
+        btnBaoCao.addActionListener(e -> {
+            handleButtonClick(btnBaoCao);
+        });
 
 
         // Tạo panel_right để hiển thị thông tin các đơn hàng
-        JPanel panel_right = new JPanel();
+        panel_right = new JPanel();
         panel_right.setBackground(Color.BLACK);
         panel_right.setLayout(new BoxLayout(panel_right, BoxLayout.Y_AXIS)); // Sử dụng BoxLayout để sắp xếp theo chiều dọc
         panel_right.setPreferredSize(new Dimension(1470, 0));
@@ -187,7 +201,7 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
 
         // Tạo panel_topright
-        JPanel panel_topright = new JPanel();
+        panel_topright = new JPanel();
         panel_topright.setBackground(new Color(51, 51, 51));
         panel_topright.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Sử dụng FlowLayout để căn chỉnh các nút
         panel_topright.setPreferredSize(new Dimension(0, 150)); // Đặt chiều cao cho panel_topright
@@ -197,15 +211,70 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         panel_right.add(Box.createRigidArea(new Dimension(0, 10))); // Tạo khoảng cách 10 pixel
 
         // Tạo panel_bottomright
-        JPanel panel_bottomright = new JPanel();
+        panel_bottomright = new JPanel();
         panel_bottomright.setBackground(new Color(51, 51, 51));
         panel_bottomright.setLayout(new BorderLayout());
         panel_right.add(panel_bottomright);
 
-
-
-
-
+        btnXemDonHang.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Xóa các thành phần hiện tại trong panel_bottomright
+                panel_bottomright.removeAll();
+                panel_topright.removeAll(); // Xóa nội dung cũ trong panel_topright
+        
+                // Tạo bảng và thêm vào JScrollPane
+                DefaultTableModel tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang"); // Tải dữ liệu từ cơ sở dữ liệu
+                JTable table = new JTable(tableModel) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false; // Không cho phép chỉnh sửa các ô
+                    }
+                };
+        
+                // Tùy chỉnh bảng
+                table.setBackground(new Color(51, 51, 51));
+                table.setForeground(Color.WHITE);
+                table.setGridColor(Color.BLACK);
+                table.setRowHeight(30);
+                table.getTableHeader().setBackground(new Color(51, 51, 51));
+                table.getTableHeader().setForeground(Color.WHITE);
+        
+                // Thêm bảng vào JScrollPane
+                JScrollPane scrollPane_table = new JScrollPane(table);
+                scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
+                scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        
+                // Tùy chỉnh thanh cuộn
+                scrollPane_table.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+        
+                // Thêm JScrollPane vào panel_bottomright
+                panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
+        
+                // Thêm MouseListener để xử lý sự kiện nhấn vào hàng
+                table.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent evt) {
+                        int row = table.getSelectedRow(); // Lấy chỉ số hàng được chọn
+                        if (row != -1) {
+                            // Lấy dữ liệu từ hàng được chọn
+                            String maDonHang = table.getValueAt(row, 0).toString();
+                            String tenKhachHang = table.getValueAt(row, 1).toString();
+                            String ngayDat = table.getValueAt(row, 2).toString();
+                            String tongTien = table.getValueAt(row, 3).toString();
+        
+                            // Hiển thị dữ liệu trong panel_topright
+                            showOrderDetailsInPanelTopRight(maDonHang, tenKhachHang, ngayDat, tongTien);
+                        }
+                    }
+                });
+        
+                // Cập nhật lại giao diện
+                panel_bottomright.revalidate();
+                panel_bottomright.repaint();
+            }
+        });
 
 
 
@@ -305,6 +374,60 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
             }
         });
     }
+
+            private void handleButtonClick(JButton button) {
+ 
+            if (activeButton != null) {
+                // Khôi phục kích thước nút trước đó
+                activeButton.setFont(new Font("Arial", Font.PLAIN, 16)); // Font chữ bình thường
+                activeButton.setPreferredSize(null); // Khôi phục kích thước mặc định
+                activeButton.revalidate();
+            }
+
+            // Thay đổi kích thước nút hiện tại
+            button.setFont(new Font("Arial", Font.BOLD, 18)); // Font chữ lớn hơn
+            button.setPreferredSize(new Dimension(button.getWidth() + 20, button.getHeight() + 10)); // Tăng kích thước
+            button.revalidate();
+
+            // Cập nhật nút đang được nhấn
+            activeButton = button;
+        }
+
+        private void showOrderDetailsInPanelTopRight(String maDonHang, String tenKhachHang, String ngayDat, String tongTien) {
+            // Xóa nội dung cũ trong panel_topright
+            panel_topright.removeAll();
+        
+            // Hiển thị thông tin chi tiết
+            JLabel labelMaDonHang = new JLabel("Mã Đơn Hàng: " + maDonHang);
+            JLabel labelTenKhachHang = new JLabel("Tên Khách Hàng: " + tenKhachHang);
+            JLabel labelNgayDat = new JLabel("Ngày Đặt: " + ngayDat);
+            JLabel labelTongTien = new JLabel("Tổng Tiền: " + tongTien);
+        
+            // Tùy chỉnh giao diện
+            labelMaDonHang.setForeground(Color.WHITE);
+            labelTenKhachHang.setForeground(Color.WHITE);
+            labelNgayDat.setForeground(Color.WHITE);
+            labelTongTien.setForeground(Color.WHITE);
+        
+            labelMaDonHang.setFont(new Font("Arial", Font.PLAIN, 16));
+            labelTenKhachHang.setFont(new Font("Arial", Font.PLAIN, 16));
+            labelNgayDat.setFont(new Font("Arial", Font.PLAIN, 16));
+            labelTongTien.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+            // Thêm các label vào panel_topright
+            panel_topright.add(labelMaDonHang);
+            panel_topright.add(labelTenKhachHang);
+            panel_topright.add(labelNgayDat);
+            panel_topright.add(labelTongTien);
+        
+            // Cập nhật lại giao diện
+            panel_topright.revalidate();
+            panel_topright.repaint();
+        }
+
+        
+
+        
 
    
 }
