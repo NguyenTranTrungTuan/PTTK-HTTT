@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -30,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 import NhanVienBanHang.DAO.DonHang_DAO;
+import java.awt.FlowLayout;
 
 public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListener {
 
@@ -91,7 +94,7 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         panel_left.setLayout(null);
         JPanel panel_left_top = new JPanel();
         panel_left_top.setLayout(null);
-        panel_left_top.setBounds(10, 10, 250, 100);
+        panel_left_top.setBounds(10, 10, 250, 150);
         panel_left_top.setBackground(new Color(51, 51, 51));
         panel_left.add(panel_left_top);
         JLabel imageAvatar = new JLabel();
@@ -113,168 +116,68 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
         JPanel panel_left_bottom = new JPanel();
         panel_left_bottom.setLayout(null);
-        panel_left_bottom.setBounds(10, 120, 250, 600);
+        panel_left_bottom.setBounds(10, 170, 250, 600);
         panel_left_bottom.setBackground(new Color(51, 51, 51));
         panel_left.add(panel_left_bottom);
 
-        // Tạo font Arial cỡ 20
-        Font fontArial20 = new Font("Arial", Font.PLAIN, 18);
-
-        // Đặt chiều rộng của các nút bằng với chiều rộng của panel_left_bottom
-        int buttonWidth = 250; // Chiều rộng của panel_left_bottom
-        int buttonHeight = 40; // Chiều cao cố định của mỗi nút
-        int buttonX = 0; // Đặt nút sát mép trái
-
-        JButton btnDuyetDonHang = new JButton("Duyệt đơn hàng");
-        btnDuyetDonHang.setBounds(buttonX, 0, buttonWidth, buttonHeight); // Chiều rộng bằng với panel_left_bottom
-        btnDuyetDonHang.setBackground(Color.BLACK);
-        btnDuyetDonHang.setForeground(Color.WHITE);
-        btnDuyetDonHang.setFocusPainted(false);
-        panel_left_bottom.add(btnDuyetDonHang);
-
-        JButton btnHuyDonHang = new JButton("Hủy đơn hàng");
-        btnHuyDonHang.setBounds(buttonX, 50, buttonWidth, buttonHeight);
-        btnHuyDonHang.setBackground(Color.BLACK);
-        btnHuyDonHang.setForeground(Color.WHITE);
-        btnHuyDonHang.setFocusPainted(false);
-        panel_left_bottom.add(btnHuyDonHang);
-
-        JButton btnInHoaDon = new JButton("In hóa đơn lưu trữ");
-        btnInHoaDon.setBounds(buttonX, 100, buttonWidth, buttonHeight);
-        btnInHoaDon.setBackground(Color.BLACK);
-        btnInHoaDon.setForeground(Color.WHITE);
-        btnInHoaDon.setFocusPainted(false);
-        panel_left_bottom.add(btnInHoaDon);
-
-        JButton btnXemHoaDon = new JButton("Xem hóa đơn");
-        btnXemHoaDon.setBounds(buttonX, 150, buttonWidth, buttonHeight);
-        btnXemHoaDon.setBackground(Color.BLACK);
-        btnXemHoaDon.setForeground(Color.WHITE);
-        btnXemHoaDon.setFocusPainted(false);
-        panel_left_bottom.add(btnXemHoaDon);
-
-        JButton btnXemThongKe = new JButton("Xem thống kê báo cáo");
-        btnXemThongKe.setBounds(buttonX, 200, buttonWidth, buttonHeight);
-        btnXemThongKe.setBackground(Color.BLACK);
-        btnXemThongKe.setForeground(Color.WHITE);
-        btnXemThongKe.setFocusPainted(false);
-        panel_left_bottom.add(btnXemThongKe);
-
-        JButton btnXemDonHang = new JButton("Xem đơn hàng");
-        btnXemDonHang.setBounds(buttonX, 250, buttonWidth, buttonHeight);
-        btnXemDonHang.setBackground(Color.BLACK);
-        btnXemDonHang.setForeground(Color.WHITE);
-        btnXemDonHang.setFocusPainted(false);
-        panel_left_bottom.add(btnXemDonHang);
-    
-
-        btnDuyetDonHang.setFont(fontArial20);
-        btnHuyDonHang.setFont(fontArial20);
-        btnInHoaDon.setFont(fontArial20);
-        btnXemHoaDon.setFont(fontArial20);
-        btnXemThongKe.setFont(fontArial20);
-        btnXemDonHang.setFont(fontArial20);
-
-        // Thêm hiệu ứng hover màu trắng nhạt cho các nút
-        addHoverEffect(btnDuyetDonHang, new Color(211, 211, 211), Color.BLACK); // Màu hover: trắng nhạt
-        addHoverEffect(btnHuyDonHang, new Color(211, 211, 211), Color.BLACK);
-        addHoverEffect(btnInHoaDon, new Color(211, 211, 211), Color.BLACK);
-        addHoverEffect(btnXemHoaDon, new Color(211, 211, 211), Color.BLACK);
-        addHoverEffect(btnXemThongKe, new Color(211, 211, 211), Color.BLACK);
-        addHoverEffect(btnXemDonHang, new Color(211, 211, 211), Color.BLACK);
-
-        //Thêm icon kế bên các button
-        ImageIcon iconDuyetDonHang = ImageResizer.resizeImageIcon(new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\approved-order.png"), 20, 20);
-        btnDuyetDonHang.setIcon(iconDuyetDonHang);
-        btnDuyetDonHang.setHorizontalAlignment(SwingConstants.LEFT);
-
-        ImageIcon iconHuyDonHang = ImageResizer.resizeImageIcon(new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\out-of-stock.png"), 20, 20);
-        btnHuyDonHang.setIcon(iconHuyDonHang);
-        btnHuyDonHang.setHorizontalAlignment(SwingConstants.LEFT);
-
-        ImageIcon iconInHoaDon = ImageResizer.resizeImageIcon(new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\printer.png"), 20, 20);
-        btnInHoaDon.setIcon(iconInHoaDon);
-        btnInHoaDon.setHorizontalAlignment(SwingConstants.LEFT);
-
-        ImageIcon iconXemHoaDon = ImageResizer.resizeImageIcon(new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\bill.png"), 20, 20);
-        btnXemHoaDon.setIcon(iconXemHoaDon);
-        btnXemHoaDon.setHorizontalAlignment(SwingConstants.LEFT);
-
-        ImageIcon iconXemThongKe = ImageResizer.resizeImageIcon(new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\result.png"), 20, 20);
-        btnXemThongKe.setIcon(iconXemThongKe);
-        btnXemThongKe.setHorizontalAlignment(SwingConstants.LEFT);
-
-        ImageIcon iconXemDonHang = ImageResizer.resizeImageIcon(new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\order.png"), 20, 20);
-        btnXemDonHang.setIcon(iconXemDonHang);  
-        btnXemDonHang.setHorizontalAlignment(SwingConstants.LEFT);
+        
 
 
-
-        //Tạo panel_right để hiển thị thông tin các đơn hàng
+        // Tạo panel_right để hiển thị thông tin các đơn hàng
         JPanel panel_right = new JPanel();
         panel_right.setBackground(Color.BLACK);
-        panel_right.setLayout(new BorderLayout());
-        panel_right.setPreferredSize(new Dimension(1470, 0)); 
+        panel_right.setLayout(new BoxLayout(panel_right, BoxLayout.Y_AXIS)); // Sử dụng BoxLayout để sắp xếp theo chiều dọc
+        panel_right.setPreferredSize(new Dimension(1470, 0));
         add(panel_right, BorderLayout.CENTER);
 
-        // Tạo khoảng trống phía trên (nằm dưới chút xíu so với đầu panel_right)
-        JPanel paddingTop = new JPanel();
-        paddingTop.setPreferredSize(new Dimension(0, 10)); // tùy chỉnh độ cao cách xuống
-        paddingTop.setBackground(Color.BLACK);
-        panel_right.add(paddingTop, BorderLayout.NORTH);
+        // Thêm khoảng cách 10 pixel trước panel_topright
+        panel_right.add(Box.createRigidArea(new Dimension(0, 10))); // Tạo khoảng cách 10 pixel
 
-        // Tạo panel chứa nội dung chính bên phải
-        JPanel panel_main_content = new JPanel();
-        
-        panel_main_content.setLayout(null); // tự do đặt tọa độ nếu bạn muốn fix
-        panel_main_content.setBackground(Color.BLACK);
-        panel_right.add(panel_main_content, BorderLayout.CENTER);
 
-        // panel_topright nằm trong panel_main_content
+        // Tạo panel_topright
         JPanel panel_topright = new JPanel();
-        panel_topright.setBackground(new Color(51, 51, 51)); 
-        panel_topright.setBounds(0, 0, 1470, 100); // đặt ngay dưới phần padding
-        panel_topright.setLayout(null); 
-        panel_main_content.add(panel_topright);
+        panel_topright.setBackground(new Color(51, 51, 51));
+        panel_topright.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Sử dụng FlowLayout để căn chỉnh các nút
+        panel_topright.setPreferredSize(new Dimension(0, 150)); // Đặt chiều cao cho panel_topright
+        panel_right.add(panel_topright);
 
-        // Tạo padding giữa panel_topright và panel_bottomright
-        JPanel paddingMiddle = new JPanel();
-        paddingMiddle.setBounds(0, 100, 1470, 0); // Đặt chiều cao của padding là 20
-        paddingMiddle.setBackground(Color.BLACK); // Màu nền đen để phù hợp với giao diện
-        panel_main_content.add(paddingMiddle);
+        // Thêm khoảng cách giữa panel_topright và panel_bottomright
+        panel_right.add(Box.createRigidArea(new Dimension(0, 10))); // Tạo khoảng cách 10 pixel
 
-        // panel_bottomright nằm trong panel_main_content
+        // Tạo panel_bottomright
         JPanel panel_bottomright = new JPanel();
         panel_bottomright.setBackground(new Color(51, 51, 51));
-        panel_bottomright.setBounds(0, 110, 1470, 600); // Đặt panel_bottomright bên dưới paddingMiddle
-        panel_bottomright.setLayout(new BorderLayout());  
-        panel_main_content.add(panel_bottomright);
+        panel_bottomright.setLayout(new BorderLayout());
+        panel_right.add(panel_bottomright);
 
-        //Đưa dữ liệu lên chỗ xem đơn hàng
-        DefaultTableModel tableModel = new DefaultTableModel();
-        JTable table = new JTable(tableModel);
-        table.addMouseListener(this);
-        table.setBackground(new Color(51, 51, 51));
-        table.setForeground(Color.white);
-        table.setGridColor(Color.BLACK);
-        table.setRowHeight(30);
-        table.getTableHeader().setBackground(new Color(51, 51, 51));
-        table.getTableHeader().setForeground(Color.white);
 
-        JScrollPane scrollPane_table = new JScrollPane();
-        scrollPane_table.setViewportView(table);
-        scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
-        scrollPane_table.setBorder(null);
-        scrollPane_table.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        table.setPreferredScrollableViewportSize(new Dimension(1450, 580));
-        scrollPane_table.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
-        scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
-        scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
-        panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
 
-        tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
-        table.setModel(tableModel);
+
+
+
+
+
+
+
+        // // Tạo bảng và thêm vào JScrollPane
+        // DefaultTableModel tableModel = new DefaultTableModel();
+        // JTable table = new JTable(tableModel);
+        // table.setBackground(new Color(51, 51, 51));
+        // table.setForeground(Color.WHITE);
+        // table.setGridColor(Color.BLACK);
+        // table.setRowHeight(30);
+        // table.getTableHeader().setBackground(new Color(51, 51, 51));
+        // table.getTableHeader().setForeground(Color.WHITE);
+
+        // JScrollPane scrollPane_table = new JScrollPane(table);
+        // scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
+        // scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        // panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
+
+        // // Tải dữ liệu từ cơ sở dữ liệu
+        // tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
+        // table.setModel(tableModel);
 
         //KHI NHẤN BUTTONS XEM ĐƠN HÀNG 
 
