@@ -115,11 +115,63 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
 
 
         JPanel panel_left_bottom = new JPanel();
-        panel_left_bottom.setLayout(null);
+        panel_left_bottom.setLayout(new BoxLayout(panel_left_bottom, BoxLayout.Y_AXIS));
         panel_left_bottom.setBounds(10, 170, 250, 600);
         panel_left_bottom.setBackground(new Color(51, 51, 51));
         panel_left.add(panel_left_bottom);
 
+        // Tạo một nút với icon và viền bo tròn
+        JButton btnXemDonHang = new JButton("Đơn Hàng");
+        btnXemDonHang.setBackground(new Color(51, 51, 51)); // Màu nền
+        btnXemDonHang.setForeground(Color.WHITE); // Màu chữ
+        btnXemDonHang.setFocusPainted(false); // Loại bỏ viền khi nhấn
+        btnXemDonHang.setFont(new Font("Arial", Font.PLAIN, 16)); // Font chữ
+        btnXemDonHang.setHorizontalAlignment(SwingConstants.LEFT); // Căn chữ sang trái
+
+        // Tạo viền bo tròn
+        btnXemDonHang.setBorder(new RoundedBorder(10)); // Viền bo tròn với bán kính 20px
+
+        // Thêm icon vào nút
+        ImageIcon donhang_icon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\checklist.png");
+        donhang_icon = ImageResizer.resizeImageIcon(donhang_icon, 20, 20); // Thay đổi kích thước icon
+        btnXemDonHang.setIcon(donhang_icon); // Đặt icon cho nút
+
+        // Thêm hiệu ứng hover
+        addHoverEffect(btnXemDonHang, new Color(70, 70, 70), new Color(51, 51, 51));
+
+        // Thêm nút vào panel_left_bottom
+        panel_left_bottom.add(btnXemDonHang);
+
+
+
+        
+        panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10))); // Tạo khoảng cách giữa các nút
+
+        // Tạo nút Báo Cáo
+        JButton btnBaoCao = new JButton("Báo Cáo");
+        btnBaoCao.setBackground(new Color(51, 51, 51)); // Màu nền
+        btnBaoCao.setForeground(Color.WHITE); // Màu chữ
+        btnBaoCao.setFocusPainted(false); // Loại bỏ viền khi nhấn
+        btnBaoCao.setFont(new Font("Arial", Font.PLAIN, 16)); // Font chữ
+        btnBaoCao.setHorizontalAlignment(SwingConstants.LEFT); // Căn chữ sang trái
+
+        // Tạo viền bo tròn
+        btnBaoCao.setBorder(new RoundedBorder(10)); // Viền bo tròn với bán kính 10px
+
+        // Thêm icon vào nút Báo Cáo
+        ImageIcon baoCaoIcon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\report.png");
+        baoCaoIcon = ImageResizer.resizeImageIcon(baoCaoIcon, 20, 20); // Thay đổi kích thước icon
+        btnBaoCao.setIcon(baoCaoIcon); // Đặt icon cho nút
+
+        // Thêm hiệu ứng hover
+        addHoverEffect(btnBaoCao, new Color(70, 70, 70), new Color(51, 51, 51));
+
+        // Thêm nút vào panel_left_bottom
+        panel_left_bottom.add(btnBaoCao);
+
+
+
+                
         
 
 
@@ -234,12 +286,22 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(hoverColor); 
+                button.setBackground(hoverColor); // Thay đổi màu nền khi hover
             }
     
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(defaultColor); 
+                button.setBackground(defaultColor); // Khôi phục màu nền khi chuột rời đi
+            }
+    
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                button.setBounds(button.getX() + 2, button.getY() + 2, button.getWidth() - 4, button.getHeight() - 4); // Giảm kích thước để tạo hiệu ứng nhấn
+            }
+    
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                button.setBounds(button.getX() - 2, button.getY() - 2, button.getWidth() + 4, button.getHeight() + 4); // Khôi phục kích thước khi thả chuột
             }
         });
     }
