@@ -283,46 +283,9 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
             }
         });
 
+        //Tao button xem chi tiet don hang
 
-
-
-
-        // // Tạo bảng và thêm vào JScrollPane
-        // DefaultTableModel tableModel = new DefaultTableModel();
-        // JTable table = new JTable(tableModel);
-        // table.setBackground(new Color(51, 51, 51));
-        // table.setForeground(Color.WHITE);
-        // table.setGridColor(Color.BLACK);
-        // table.setRowHeight(30);
-        // table.getTableHeader().setBackground(new Color(51, 51, 51));
-        // table.getTableHeader().setForeground(Color.WHITE);
-
-        // JScrollPane scrollPane_table = new JScrollPane(table);
-        // scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
-        // scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        // panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
-
-        // // Tải dữ liệu từ cơ sở dữ liệu
-        // tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
-        // table.setModel(tableModel);
-
-        //KHI NHẤN BUTTONS XEM ĐƠN HÀNG 
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
         setVisible(true);
