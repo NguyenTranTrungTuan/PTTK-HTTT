@@ -291,7 +291,11 @@ public class NhanVienFrame2 extends JFrame implements MouseListener,ActionListen
         btnXemChiTietDonHang.setFont(new Font("Arial", Font.PLAIN, 16)); // Font chữ
         btnXemChiTietDonHang.setHorizontalAlignment(SwingConstants.LEFT); // Căn chữ sang trái
         btnXemChiTietDonHang.setBorder(new RoundedBorder(10)); // Viền bo tròn với bán kính 20px
-        ImageIcon chitietdonhang_icon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\.png");
+        ImageIcon chitietdonhang_icon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\document.png");
+        chitietdonhang_icon = ImageResizer.resizeImageIcon(chitietdonhang_icon, 20, 20); // Thay đổi kích thước icon
+        btnXemChiTietDonHang.setIcon(chitietdonhang_icon); // Đặt icon cho nút
+        addHoverEffect(btnXemChiTietDonHang, new Color(70, 70, 70), new Color(51, 51, 51)); // Thêm hiệu ứng hover
+        
 
 
     
