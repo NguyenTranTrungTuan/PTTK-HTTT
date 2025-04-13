@@ -123,7 +123,35 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
         }
         return list;
     }
+    
+    public boolean updateTinhTrang(String madon, String newTinhTrang) {
+        Connection con = null;
+        Statement stmt = null;
+        try {
+            // Kết nối đến cơ sở dữ liệu
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123456";
+            con = DriverManager.getConnection(url, username, password);
 
+            // Cập nhật tình trạng đơn hàng
+            String sql = "UPDATE DonHang SET tinhtrang = '" + newTinhTrang + "' WHERE madon = '" + madon + "'";
+            stmt = con.createStatement();
+            int rowsAffected = stmt.executeUpdate(sql);
+            return rowsAffected > 0; // Trả về true nếu có ít nhất một dòng bị ảnh hưởng
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     
 
 
