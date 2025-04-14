@@ -3,8 +3,8 @@ package qlkho.oop;
 public class DienThoai {
     private String maDt;
     private String tenDt;
-    private float giaBan;
-    private float giaNhap;
+    private int giaBan;
+    private int giaNhap;
     private String maTon;
     private String xuatXu;
     private float trongLuong;
@@ -14,7 +14,7 @@ public class DienThoai {
     private int baoHanh;
     private String maNcc;
 
-    public DienThoai(String maDt, String tenDt, float giaBan, float giaNhap, String maTon, String xuatXu,
+    public DienThoai(String maDt, String tenDt, int giaBan, int giaNhap, String maTon, String xuatXu,
             float trongLuong,
             float kichThuocManHinh, int dungLuong, int ram, int baoHanh, String maNcc) {
         this.maDt = maDt;
@@ -47,19 +47,19 @@ public class DienThoai {
         this.tenDt = tenDt;
     }
 
-    public float getGiaBan() {
+    public int getGiaBan() {
         return giaBan;
     }
 
-    public void setGiaBan(float giaBan) {
+    public void setGiaBan(int giaBan) {
         this.giaBan = giaBan;
     }
 
-    public float getGiaNhap() {
+    public int getGiaNhap() {
         return giaNhap;
     }
 
-    public void setGiaNhap(float giaNhap) {
+    public void setGiaNhap(int giaNhap) {
         this.giaNhap = giaNhap;
     }
 

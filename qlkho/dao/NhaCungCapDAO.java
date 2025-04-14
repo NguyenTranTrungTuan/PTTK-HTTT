@@ -1,24 +1,24 @@
 package qlkho.dao;
 
-import java.util.ArrayList;
-
-import javax.swing.table.DefaultTableModel;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import qlkho.oop.DienThoai;
+import java.util.ArrayList;
 
-public class DienThoaiDAO implements DAOInterface<DienThoai> {
+import javax.swing.table.DefaultTableModel;
 
-    public static DienThoaiDAO getInstance() {
-        return new DienThoaiDAO();
+import qlkho.oop.NhaCungCap;
+
+public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
+
+    public static NhaCungCapDAO getInstance() {
+        return new NhaCungCapDAO();
     }
 
     @Override
-    public void insert(DienThoai obj) {
+    public void insert(NhaCungCap obj) {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
@@ -26,10 +26,8 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            String sql = "INSERT INTO DienThoai VALUES ('" + obj.getMaDt() + "', N'" + obj.getTenDt() + "', "
-                    + obj.getGiaBan() + ", " + obj.getGiaNhap() + ", '" + obj.getMaTon() + "', N'" + obj.getXuatXu()
-                    + "', " + obj.getTrongLuong() + ", " + obj.getKichThuocManHinh() + ", " + obj.getDungLuong() + ", "
-                    + obj.getRam() + ", " + obj.getBaoHanh() + ", '" + obj.getMaNcc() + "')";
+            String sql = "INSERT INTO DienThoai VALUES ('" + obj.getManCC() + "', N'" + obj.getTenNCC() + "', N'"
+                    + obj.getQuocGia() + "')";
             st.executeUpdate(sql);
             con.close();
         } catch (Exception e) {
@@ -38,7 +36,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
     }
 
     @Override
-    public void update(DienThoai obj) {
+    public void update(NhaCungCap obj) {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
@@ -46,12 +44,9 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            String sql = "UPDATE DienThoai SET TenDT = N'" + obj.getTenDt() + "', GiaBan = " + obj.getGiaBan()
-                    + ", GiaNhap = " + obj.getGiaNhap() + ", MaTon = '" + obj.getMaTon() + "', XuatXu = N'"
-                    + obj.getXuatXu() + "', TrongLuong = " + obj.getTrongLuong() + ", KichThuocManHinh = "
-                    + obj.getKichThuocManHinh() + ", DungLuong = " + obj.getDungLuong() + ", RAM = " + obj.getRam()
-                    + ", BaoHanh = " + obj.getBaoHanh() + ", MaNCC = '" + obj.getMaNcc() + "' WHERE MaDT = '"
-                    + obj.getMaDt() + "'";
+            String sql = "UPDATE NhaCungCap SET TenNCC = N'" + obj.getTenNCC() + "', QuocGia = N'"
+                    + obj.getQuocGia() + "' WHERE MaNCC = '"
+                    + obj.getManCC() + "'";
             st.executeUpdate(sql);
             con.close();
         } catch (Exception e) {
@@ -60,7 +55,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
     }
 
     @Override
-    public void delete(DienThoai obj) {
+    public void delete(NhaCungCap obj) {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
@@ -68,7 +63,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            String sql = "DELETE FROM DienThoai WHERE MaDT = '" + obj.getMaDt() + "'";
+            String sql = "DELETE FROM NhaCungCap WHERE MaNCC = '" + obj.getManCC() + "'";
             st.executeUpdate(sql);
             con.close();
         } catch (Exception e) {
@@ -77,8 +72,8 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
     }
 
     @Override
-    public ArrayList<DienThoai> selectAll() {
-        ArrayList<DienThoai> list = new ArrayList<DienThoai>();
+    public ArrayList<NhaCungCap> selectAll() {
+        ArrayList<NhaCungCap> list = new ArrayList<NhaCungCap>();
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
@@ -86,15 +81,10 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM DienThoai");
+            ResultSet rs = st.executeQuery("SELECT * FROM NhaCungCap");
             while (rs.next()) {
-                DienThoai dt = new DienThoai(rs.getString("MaDT"), rs.getString("TenDT"), rs.getInt("GiaBan"),
-                        rs.getInt("GiaNhap"),
-                        rs.getString("MaTon"),
-                        rs.getString("XuatXu"), rs.getFloat("TrongLuong"), rs.getFloat("KichThuocManHinh"),
-                        rs.getInt("DungLuong"), rs.getInt("RAM"), rs.getInt("BaoHanh"),
-                        rs.getString("MaNCC"));
-                list.add(dt);
+                NhaCungCap ncc = new NhaCungCap(rs.getString("MaNCC"), rs.getString("TenNCC"), rs.getString("QuocGia"));
+                list.add(ncc);
             }
             con.close();
         } catch (Exception e) {
@@ -104,7 +94,7 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
     }
 
     @Override
-    public DienThoai selectById(DienThoai obj) {
+    public NhaCungCap selectById(NhaCungCap obj) {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
@@ -112,15 +102,10 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM DienThoai WHERE MaDT = '" + obj.getMaDt() + "'");
+            ResultSet rs = st.executeQuery("SELECT * FROM NhaCungCap WHERE MaNCC = '" + obj.getManCC() + "'");
             if (rs.next()) {
-                DienThoai dt = new DienThoai(rs.getString("MaDT"), rs.getString("TenDT"), rs.getInt("GiaBan"),
-                        rs.getInt("GiaNhap"),
-                        rs.getString("MaTon"),
-                        rs.getString("XuatXu"), rs.getFloat("TrongLuong"), rs.getFloat("KichThuocManHinh"),
-                        rs.getInt("DungLuong"), rs.getInt("RAM"), rs.getInt("BaoHanh"),
-                        rs.getString("MaNCC"));
-                return dt;
+                NhaCungCap ncc = new NhaCungCap(rs.getString("MaNCC"), rs.getString("TenNCC"), rs.getString("QuocGia"));
+                return ncc;
             }
             con.close();
         } catch (Exception e) {
@@ -130,8 +115,8 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
     }
 
     @Override
-    public ArrayList<DienThoai> selectByCondtion(String condition) {
-        ArrayList<DienThoai> list = new ArrayList<DienThoai>();
+    public ArrayList<NhaCungCap> selectByCondtion(String condition) {
+        ArrayList<NhaCungCap> list = new ArrayList<NhaCungCap>();
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
@@ -139,15 +124,10 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM DienThoai WHERE " + condition);
+            ResultSet rs = st.executeQuery("SELECT * FROM NhaCungCap WHERE " + condition);
             while (rs.next()) {
-                DienThoai dt = new DienThoai(rs.getString("MaDT"), rs.getString("TenDT"), rs.getInt("GiaBan"),
-                        rs.getInt("GiaNhap"),
-                        rs.getString("MaTon"),
-                        rs.getString("XuatXu"), rs.getFloat("TrongLuong"), rs.getFloat("KichThuocManHinh"),
-                        rs.getInt("DungLuong"), rs.getInt("RAM"), rs.getInt("BaoHanh"),
-                        rs.getString("MaNCC"));
-                list.add(dt);
+                NhaCungCap ncc = new NhaCungCap(rs.getString("MaNCC"), rs.getString("TenNCC"), rs.getString("QuocGia"));
+                list.add(ncc);
             }
             con.close();
         } catch (Exception e) {
@@ -189,4 +169,5 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
         }
         return tableModel;
     }
+
 }
