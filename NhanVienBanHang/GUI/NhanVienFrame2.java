@@ -357,43 +357,24 @@ public class NhanVienFrame2 extends JFrame {
                 table.getTableHeader().setBackground(new Color(51, 51, 51));
                 table.getTableHeader().setForeground(Color.WHITE);
         
-                // Tạo JComboBox cho cột Tình Trạng
-                String[] tinhTrangOptions = {"Chưa Xử Lý", "Đã Xử Lý", "Hủy Đơn Hàng"};
-                JComboBox<String> comboBoxTinhTrang = new JComboBox<>(tinhTrangOptions);
-                comboBoxTinhTrang.setBackground(Color.WHITE);
-                comboBoxTinhTrang.setForeground(Color.BLACK);
-        
-                // Thêm MouseListener để hiển thị JComboBox khi nhấp vào cột Tình Trạng
+                // Thêm MouseListener để cập nhật panel_topright khi nhấp vào dòng
                 table.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        int row = table.getSelectedRow();
-                        int column = table.getSelectedColumn();
+                        int row = table.getSelectedRow(); // Lấy chỉ số hàng được chọn
+                        if (row != -1) {
+                            // Lấy dữ liệu từ hàng được chọn
+                            String maDon = table.getValueAt(row, 0).toString();
+                            String maKH = table.getValueAt(row, 1).toString();
+                            String maNV = table.getValueAt(row, 2).toString();
+                            String diaChiDat = table.getValueAt(row, 3).toString();
+                            String ngayDat = table.getValueAt(row, 4).toString();
+                            String pttt = table.getValueAt(row, 5).toString();
+                            String tinhTrang = table.getValueAt(row, 6).toString();
+                            String tongTien = table.getValueAt(row, 7).toString();
         
-                        // Kiểm tra nếu cột được nhấp là cột Tình Trạng
-                        if (column == 6) { // Cột Tình Trạng (chỉ số cột bắt đầu từ 0)
-                            comboBoxTinhTrang.setSelectedItem(table.getValueAt(row, column)); // Đặt giá trị hiện tại
-                            int result = JOptionPane.showConfirmDialog(
-                                null,
-                                comboBoxTinhTrang,
-                                "Chọn Tình Trạng",
-                                JOptionPane.OK_CANCEL_OPTION,
-                                JOptionPane.PLAIN_MESSAGE
-                            );
-        
-                            if (result == JOptionPane.OK_OPTION) {
-                                String tinhTrangMoi = comboBoxTinhTrang.getSelectedItem().toString();
-                                String maDonHang = table.getValueAt(row, 0).toString(); // Lấy Mã Đơn Hàng (khóa chính)
-        
-                                // Cập nhật cơ sở dữ liệu
-                                boolean success = DonHang_DAO.getInstance().updateTinhTrang(maDonHang, tinhTrangMoi);
-                                if (success) {
-                                    table.setValueAt(tinhTrangMoi, row, column); // Cập nhật giá trị trong bảng
-                                    JOptionPane.showMessageDialog(null, "Cập nhật thành công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Cập nhật thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
+                            // Hiển thị dữ liệu trong panel_topright
+                            showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
                         }
                     }
                 });
@@ -407,6 +388,20 @@ public class NhanVienFrame2 extends JFrame {
         
                 // Thêm JScrollPane vào panel_bottomright
                 panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
+        
+                // Hiển thị thông tin dòng đầu tiên trên panel_topright
+                if (tableModel.getRowCount() > 0) {
+                    String maDon = tableModel.getValueAt(0, 0).toString();
+                    String maKH = tableModel.getValueAt(0, 1).toString();
+                    String maNV = tableModel.getValueAt(0, 2).toString();
+                    String diaChiDat = tableModel.getValueAt(0, 3).toString();
+                    String ngayDat = tableModel.getValueAt(0, 4).toString();
+                    String pttt = tableModel.getValueAt(0, 5).toString();
+                    String tinhTrang = tableModel.getValueAt(0, 6).toString();
+                    String tongTien = tableModel.getValueAt(0, 7).toString();
+        
+                    showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
+                }
         
                 // Cập nhật lại giao diện
                 panel_bottomright.revalidate();
