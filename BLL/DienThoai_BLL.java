@@ -7,6 +7,10 @@ import java.util.ArrayList;
 public class DienThoai_BLL {
     DienThoai_DAO dtdao = new DienThoai_DAO();
 
+    public DienThoai_DTO getDTFromID(String id){
+        return dtdao.getDTFromID(id);
+    }
+
     public ArrayList<DienThoai_DTO> getAllDienThoai(){
         return dtdao.getAllDT();
     }

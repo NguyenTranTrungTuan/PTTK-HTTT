@@ -1,6 +1,8 @@
 package DAO;
 
 import DTO.DienThoai_DTO;
+import DTO.KhachHang_DTO;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -59,6 +61,38 @@ public class DienThoai_DAO {
             }
         }
         return arr;
+    }
+
+    public DienThoai_DTO getDTFromID(String id){
+        if (OpenConnection()) {
+            try {            
+                String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT="+id;
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()){
+                    String madt = rs.getString("MaDT");
+                    String ten = rs.getString("TenDT");
+                    double gia = rs.getDouble("GiaBan");
+                    double gianhap = rs.getDouble("GiaNhap");
+                    String idtonkho = rs.getString("MaTon");
+                    String xuatXu = rs.getString("XuatXu");
+                    String trongLuong = rs.getString("TrongLuong");
+                    String kichThuocManHinh = rs.getString("KichThuocManHinh");
+                    String dungLuong = rs.getString("DungLuong");
+                    String ram = rs.getString("RAM");
+                    String idncc = rs.getString("MaNCC");
+                    int baoHanh = rs.getInt("BaoHanh");
+
+                    DienThoai_DTO dt = new DienThoai_DTO(madt, ten, gia, gianhap, idtonkho, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, idncc, baoHanh);
+                    return dt;
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);            
+            } finally {     
+                closeConnection(); 
+            }   
+        }
+        return null;
     }
 
     public ArrayList<DienThoai_DTO> getAllType(String typename){

@@ -1,32 +1,43 @@
 package DTO;
 
 public class ChiTietDon_DTO {
+    private String MaCTDH;
     private DienThoai_DTO thongTinSanPham;
     private int soLuongMua;
     private double thanhtien;
-    private String idDonHang;
+    private String MaCTPnhap;
 
     
     public ChiTietDon_DTO() {
+        this.MaCTDH = "";
         this.thongTinSanPham = null;
         this.soLuongMua = 0;
         this.thanhtien = 0.0;
-        this.idDonHang = "";
+        this.MaCTPnhap = "";
     }
 
-    public ChiTietDon_DTO(DienThoai_DTO thongTinSanPham, int soLuongMua, double thanhtien, String idDH) {
+    public ChiTietDon_DTO(String mactdh, DienThoai_DTO thongTinSanPham, int soLuongMua, double thanhtien, String mactpnhap) {
+        this.MaCTDH = mactdh;
         this.thongTinSanPham = thongTinSanPham;
         this.soLuongMua = soLuongMua;
         this.thanhtien = thanhtien;
-        this.idDonHang = idDH;
+        this.MaCTPnhap = mactpnhap;
     }
 
-    public String getIdDonHang() {
-        return idDonHang;
+    public String getMaCTDH() {
+        return MaCTDH;
     }
-    
-    public void setIdDonHang(String idDonHang) {
-        this.idDonHang = idDonHang;
+
+    public void setMaCTDH(String maCTDH) {
+        MaCTDH = maCTDH;
+    }
+
+    public String getMaCTPnhap() {
+        return MaCTPnhap;
+    }
+
+    public void setMaCTPnhap(String maCTPnhap) {
+        MaCTPnhap = maCTPnhap;
     }
 
     public DienThoai_DTO getThongTinSanPham() {

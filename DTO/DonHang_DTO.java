@@ -2,6 +2,7 @@ package DTO;
 import java.util.ArrayList;
 
 public class DonHang_DTO {
+    private String MaDon;
     private String idKhachHang;
     private String idNhanVien;
     private String DiaChiDat;
@@ -12,17 +13,31 @@ public class DonHang_DTO {
     private double tongTien;
 
     // Constructor không tham số
-    public DonHang_DTO() {
-        this.idKhachHang = "";
-        this.dsSanPhamMua = new ArrayList<>();
-        this.tongTien = 0.0;
-    }
+    // public DonHang_DTO() {
+    //     this.idKhachHang = "";
+    //     this.dsSanPhamMua = new ArrayList<>();
+    //     this.tongTien = 0.0;
+    // }
 
     // Constructor có tham số
-    public DonHang_DTO(String idKhachHang) {
-        this.idKhachHang = idKhachHang;
-        this.dsSanPhamMua = new ArrayList<>();
-        this.tongTien = 0.0;
+    public DonHang_DTO(String madon, String makh, String manv, String Diachi, String Date, String pttt, String tinhtrang, ArrayList<ChiTietDon_DTO> ctdh, Double tongtien) {
+        MaDon = madon;
+        idKhachHang = makh;
+        idNhanVien = manv;
+        DiaChiDat = Diachi;
+        NgayDat = Date;
+        PTTT = pttt;
+        TinhTrangDonHang = tinhtrang;
+        dsSanPhamMua = ctdh;
+        tongTien = tongtien;
+    }
+
+    public String getMaDon() {
+        return MaDon;
+    }
+
+    public void setMaDon(String maDon) {
+        MaDon = maDon;
     }
 
     // Getter và Setter cho idKhachHang
