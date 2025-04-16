@@ -67,18 +67,18 @@ public class HeaderPanel extends JPanel {
                     addDangNhapEvent();
                 }
             }
-            if (e.getSource() == cartIcon) {
-                giohang=new GioHangGUI();
-                JPanel contentPanel = tc.getContentPanel();
-                if (contentPanel != null) {
-                    contentPanel.removeAll(); 
-                    contentPanel.add(giohang); 
-                    contentPanel.revalidate(); 
-                    contentPanel.repaint();    
-                } else {
-                    System.out.println("ContentPanel is null!"); 
-                }
-            }
+            // if (e.getSource() == cartIcon) {
+            //     giohang=new GioHangGUI();
+            //     JPanel contentPanel = tc.getContentPanel();
+            //     if (contentPanel != null) {
+            //         contentPanel.removeAll(); 
+            //         contentPanel.add(giohang); 
+            //         contentPanel.revalidate(); 
+            //         contentPanel.repaint();    
+            //     } else {
+            //         System.out.println("ContentPanel is null!"); 
+            //     }
+            // }
     }
         @Override
         public void mousePressed(MouseEvent e) {}
@@ -198,7 +198,7 @@ public class HeaderPanel extends JPanel {
         logoPanel.setPreferredSize(new Dimension(200, 100));
         logoPanel.setOpaque(false);
 
-        logoIcon = new JLabel(new ImageIcon("GUI/user/Icon/logo.png")); 
+        logoIcon = new JLabel(new ImageIcon("GUI/user/Icon/home.png")); 
         logoIcon.setBounds(100, 30, 30, 40);
         logoPanel.add(logoIcon);
 

@@ -1,7 +1,7 @@
 package GUI.user;
 import javax.swing.*;
 
-import OOP.GioHang;
+import GUI.giohang.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,10 +12,10 @@ public class TrangChu extends JFrame{
     private JPanel ContentPanel;
     private CatalogPanel catalogPanel;
     private ProductPanel productPanel;
-    private GioHang gh;
-    public JPanel getContentPanel() {
-        return ContentPanel;
-    }    // private UserMenuPanel UserMenu;
+    private GioHangGUI gh;
+    // public JPanel getContentPanel() {
+    //     return ContentPanel;
+    // }    // private UserMenuPanel UserMenu;
     private UserInfoPanel UserInfo;
     private FilterPanel Filter;
     private ConfirmFrame confirmFrame;
@@ -89,6 +89,10 @@ public class TrangChu extends JFrame{
             }
             else if(e.getSource() == header.searchIcon && !header.searchBox.getText().equals("")){
                 SwitchToFilter();
+            }
+            else if(e.getSource() == header.cartIcon){
+                ContentPanel.removeAll();
+                ContentPanel.add(new GioHangGUI());
             }
             else if(Filter != null && e.getSource() == Filter.FilterButton && !Filter.MinPriceTF.getText().equals("Giá thấp nhất") && !Filter.MaxPriceTF.getText().equals("Giá cao nhất")){
                 ContentPanel.remove(productPanel);
@@ -215,11 +219,12 @@ public class TrangChu extends JFrame{
     }
 
     public void initComponents(){
-        header = new HeaderPanel(this);
-        gh=new GioHang();        header.accountLabel.addMouseListener(mouseListener);
+        header = new HeaderPanel(this);       
+        header.accountLabel.addMouseListener(mouseListener);
         header.logoIcon.addMouseListener(mouseListener);
         header.searchIcon.addMouseListener(mouseListener);
         header.searchBox.addKeyListener(KeyListener);
+        header.cartIcon.addMouseListener(mouseListener);
 
         ContentPanel = new JPanel();
         catalogPanel = new CatalogPanel();
