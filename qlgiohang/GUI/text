@@ -1,0 +1,172 @@
+package qlgiohang.GUI;
+
+import qlgiohang.oop.Product;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class ThongTinDatHang extends JPanel implements ActionListener {
+
+    private JTextField txtTenNguoiNhan;
+    private JTextField txtSDTNguoiNhan;
+    private JComboBox<String> cmbTinhThanhPho;
+    private JComboBox<String> cmbQuanHuyen;
+    private JComboBox<String> cmbPhuongXa;
+    private JTextField txtSoNhaTenDuong;
+    private JTextArea txtGhiChu;
+    private JRadioButton radioNhanTaiCuaHang;
+    private JRadioButton radioGiaoHangTanNoi;
+    private ButtonGroup giaoHangGroup;
+    private JButton btnChonPhuongThuc;
+    private JButton btnQuayLai; 
+    private JPanel itemPanel;
+    private CardLayout cardLayout;
+    private JPanel contentPanel;
+
+    public ThongTinDatHang(CardLayout cardLayout, JPanel contentPanel) {
+        this.cardLayout = cardLayout;
+        this.contentPanel = contentPanel;
+        initComponents();
+        loadData();
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout());
+        JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        formPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // --- Title ---
+        JLabel lblTieuDe = new JLabel("THÔNG TIN NHẬN HÀNG");
+        lblTieuDe.setFont(lblTieuDe.getFont().deriveFont(Font.BOLD, 16));
+        lblTieuDe.setPreferredSize(new Dimension(400, 30));
+        formPanel.add(lblTieuDe);
+
+        // --- Hình thức nhận hàng ---
+        radioNhanTaiCuaHang = new JRadioButton("Nhận tại cửa hàng");
+        radioGiaoHangTanNoi = new JRadioButton("Giao hàng tận nơi");
+        radioGiaoHangTanNoi.setSelected(true);
+        giaoHangGroup = new ButtonGroup();
+        giaoHangGroup.add(radioNhanTaiCuaHang);
+        giaoHangGroup.add(radioGiaoHangTanNoi);
+
+        formPanel.add(radioNhanTaiCuaHang);
+        formPanel.add(radioGiaoHangTanNoi);
+
+        // --- Tên người nhận ---
+        formPanel.add(createLabeledField("TÊN NGƯỜI NHẬN", txtTenNguoiNhan = new JTextField(20)));
+
+        // --- SĐT người nhận ---
+        formPanel.add(createLabeledField("SĐT NGƯỜI NHẬN", txtSDTNguoiNhan = new JTextField(15)));
+
+        // --- Tỉnh / Thành phố ---
+        formPanel.add(createLabeledField("TỈNH / THÀNH PHỐ", cmbTinhThanhPho = new JComboBox<>()));
+
+        // --- Chọn quận/huyện ---
+        formPanel.add(createLabeledField("CHỌN QUẬN/HUYỆN", cmbQuanHuyen = new JComboBox<>()));
+
+        // --- Chọn phường/xã ---
+        formPanel.add(createLabeledField("CHỌN PHƯỜNG/XÃ", cmbPhuongXa = new JComboBox<>()));
+
+        // --- Số nhà, tên đường ---
+        formPanel.add(createLabeledField("SỐ NHÀ, TÊN ĐƯỜNG", txtSoNhaTenDuong = new JTextField(30)));
+
+        // --- Ghi chú khác (nếu có) ---
+        JLabel lblGhiChu = new JLabel("Ghi chú khác (nếu có)");
+        lblGhiChu.setFont(lblGhiChu.getFont().deriveFont(Font.PLAIN, 10));
+        lblGhiChu.setPreferredSize(new Dimension(400, 20));
+        formPanel.add(lblGhiChu);
+
+        txtGhiChu = new JTextArea(3, 30);
+        txtGhiChu.setLineWrap(true);
+        txtGhiChu.setWrapStyleWord(true);
+        JScrollPane scrollPaneGhiChu = new JScrollPane(txtGhiChu);
+        scrollPaneGhiChu.setPreferredSize(new Dimension(400, 60));
+        formPanel.add(scrollPaneGhiChu);
+
+        // --- Buttons ---
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        btnChonPhuongThuc = new JButton("Chọn phương thức");
+        btnChonPhuongThuc.setPreferredSize(new Dimension(200, 40));
+        btnChonPhuongThuc.addActionListener(this);
+        buttonPanel.add(btnChonPhuongThuc);
+
+        btnQuayLai = new JButton("Quay lại Giỏ hàng");
+        btnQuayLai.setPreferredSize(new Dimension(200, 40));
+        btnQuayLai.addActionListener(this);
+        buttonPanel.add(btnQuayLai);
+
+        formPanel.add(buttonPanel);
+
+        add(formPanel, BorderLayout.NORTH);
+
+        // --- Item Panel ---
+        itemPanel = new JPanel();
+        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
+        add(new JScrollPane(itemPanel), BorderLayout.CENTER);
+    }
+
+    private JPanel createLabeledField(String labelText, JComponent field) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel label = new JLabel(labelText);
+        label.setFont(label.getFont().deriveFont(Font.PLAIN, 10));
+        label.setPreferredSize(new Dimension(200, 20));
+        panel.add(label);
+        field.setPreferredSize(new Dimension(200, 30));
+        panel.add(field);
+        return panel;
+    }
+
+    private void loadData() {
+        cmbTinhThanhPho.setModel(new DefaultComboBoxModel<>(new String[]{"Chọn tỉnh/thành phố", "Hà Nội", "TP.HCM", "Đà Nẵng"}));
+        cmbQuanHuyen.setModel(new DefaultComboBoxModel<>(new String[]{"Chọn quận/huyện"}));
+        cmbPhuongXa.setModel(new DefaultComboBoxModel<>(new String[]{"Chọn phường/xã"}));
+    }
+
+    public void updateItems(List<Product> products) {
+        itemPanel.removeAll();
+        for (Product product : products) {
+            JLabel productLabel = new JLabel(product.getTenSanPham() + " - " + product.getSoLuong() + " x " + String.format("%,.0f₫", product.getGiaMoi()));
+            productLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            itemPanel.add(productLabel);
+        }
+        itemPanel.revalidate();
+        itemPanel.repaint();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnChonPhuongThuc) {
+            if (!validateInput()) {
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "Thông tin nhận hàng đã được lưu.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else if (e.getSource() == btnQuayLai) {
+            // Navigate back to "Giỏ hàng"
+            cardLayout.show(contentPanel, "GioHang");
+        }
+    }
+
+    private boolean validateInput() {
+        if (txtTenNguoiNhan.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên người nhận.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (txtSDTNguoiNhan.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số điện thoại người nhận.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (cmbTinhThanhPho.getSelectedItem() == null || cmbQuanHuyen.getSelectedItem() == null || cmbPhuongXa.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn đầy đủ địa chỉ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (txtSoNhaTenDuong.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số nhà và tên đường.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+}

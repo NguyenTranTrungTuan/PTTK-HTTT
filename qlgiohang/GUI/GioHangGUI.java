@@ -1,5 +1,4 @@
-package qlgiohang;
-import GUI.user.MyButton;
+package qlgiohang.GUI;
 import qlgiohang.oop.Product;
 
 import javax.swing.*;
@@ -11,98 +10,104 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GioHangGUI extends JPanel implements ActionListener {
-
     private JLabel lbTongTienValue;
     private JPanel itemPanel;
     private List<Product> products;
     private JButton btnDatHang;
+    private ThongTinDatHang thongTinNhanHang;
+    private JPanel contentPanel;
+    private ThanhToanUIDesigner thanhtoan;
+    private CardLayout cardLayout;
 
     public GioHangGUI() {
         products = new ArrayList<>();
-        initComponents();
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+        this.setLayout(new BorderLayout());
+        this.add(contentPanel, BorderLayout.CENTER);
+        JPanel gioHangPanel = initGioHangPanel();
+        contentPanel.add(gioHangPanel, "GioHang");
+        thongTinNhanHang = new ThongTinDatHang(cardLayout, contentPanel);
+        contentPanel.add(thongTinNhanHang, "ThongTinNhanHang");
+        thanhtoan=new ThanhToanUIDesigner(cardLayout, contentPanel);
+        contentPanel.add(thanhtoan, "ThanhToan");
         updateTongTien();
     }
-
-    public void initComponents() {
-        this.setLayout(new BorderLayout());
-        this.setBorder(new EmptyBorder(10, 10, 10, 10)); 
+    private JPanel initGioHangPanel() {
+        JPanel gioHangPanel = new JPanel(new BorderLayout());
+        gioHangPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
         navPanel.add(createNavLabel("Giỏ hàng", true));
         navPanel.add(createNavLabel("Thông tin đặt hàng", false));
         navPanel.add(createNavLabel("Thanh toán", false));
         navPanel.add(createNavLabel("Hoàn tất", false));
-        this.add(navPanel, BorderLayout.NORTH);
+        gioHangPanel.add(navPanel, BorderLayout.NORTH);
 
-        // Item Panel
         itemPanel = new JPanel();
-        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS)); 
+        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
         itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
         addProduct("Màn hình Asus TUF GAMING VG279QE5A-R 27\" IPS 146Hz chuyên game", 3290000);
         addProduct("Laptop Dell Inspiron 15 3000", 15990000);
+        gioHangPanel.add(new JScrollPane(itemPanel), BorderLayout.CENTER);
 
-        this.add(new JScrollPane(itemPanel), BorderLayout.CENTER);
-
-        // Bottom Panel
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel lbTongTienLabel = new JLabel("Tổng tiền:");
-        lbTongTienLabel.setFont(lbTongTienLabel.getFont().deriveFont(Font.BOLD, 16));
+        lbTongTienLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         totalPanel.add(lbTongTienLabel);
 
         lbTongTienValue = new JLabel("0₫");
-        lbTongTienValue.setFont(lbTongTienValue.getFont().deriveFont(Font.BOLD, 18));
+        lbTongTienValue.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lbTongTienValue.setForeground(Color.RED);
         totalPanel.add(lbTongTienValue);
         bottomPanel.add(totalPanel, BorderLayout.WEST);
 
         btnDatHang = new JButton("ĐẶT HÀNG NGAY");
-        btnDatHang.setBackground(Color.RED);
+        btnDatHang.setBackground(new Color(215, 0, 24));
         btnDatHang.setForeground(Color.WHITE);
-        btnDatHang.setFont(btnDatHang.getFont().deriveFont(Font.BOLD, 16));
-        btnDatHang.setPreferredSize(new Dimension(200, 40));
-        btnDatHang.addActionListener(this); 
+        btnDatHang.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btnDatHang.setPreferredSize(new Dimension(250, 45));
+        btnDatHang.setFocusPainted(false);
+        btnDatHang.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnDatHang.addActionListener(this);
         bottomPanel.add(btnDatHang, BorderLayout.EAST);
+        gioHangPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        return gioHangPanel;
     }
 
     private void addProduct(String tenSanPham, double giaMoi) {
-        JPanel productPanel = new JPanel();
-        productPanel.setLayout(new BorderLayout());
-        productPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK), 
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
+        JPanel productPanel = new JPanel(new BorderLayout(10, 10));
+        productPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        productPanel.setBackground(Color.WHITE);
         Product product = new Product(tenSanPham, giaMoi, 1);
         products.add(product);
 
-        // Image
         JLabel lbhinhanh = new JLabel(new ImageIcon("src/images/phone.png"));
-        lbhinhanh.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         lbhinhanh.setHorizontalAlignment(SwingConstants.CENTER);
         lbhinhanh.setPreferredSize(new Dimension(140, 80));
         productPanel.add(lbhinhanh, BorderLayout.WEST);
 
         JPanel detailsPanel = new JPanel(new BorderLayout());
-
+        detailsPanel.setBackground(Color.WHITE);
         JLabel lbTenSanPham = new JLabel(tenSanPham);
-        lbTenSanPham.setFont(lbTenSanPham.getFont().deriveFont(Font.BOLD, 14));
+        lbTenSanPham.setFont(new Font("Segoe UI", Font.BOLD, 14));
         detailsPanel.add(lbTenSanPham, BorderLayout.NORTH);
 
         JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pricePanel.setBackground(Color.WHITE);
         JLabel lbGiaMoi = new JLabel(String.format("%,.0f₫", giaMoi));
-        lbGiaMoi.setFont(lbGiaMoi.getFont().deriveFont(Font.BOLD, 16));
+        lbGiaMoi.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lbGiaMoi.setForeground(Color.RED);
         pricePanel.add(lbGiaMoi);
         detailsPanel.add(pricePanel, BorderLayout.CENTER);
 
         productPanel.add(detailsPanel, BorderLayout.CENTER);
 
-        // Quantity Control Panel
         JPanel quantityPanel = new JPanel();
         quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         quantityPanel.setPreferredSize(new Dimension(150,80));
@@ -154,15 +159,16 @@ public class GioHangGUI extends JPanel implements ActionListener {
         quantityPanel.add(lbSoLuong);
         quantityPanel.add(btnThem);
         quantityPanel.add(btnXoa);
-
         productPanel.add(quantityPanel, BorderLayout.EAST);
+
         itemPanel.add(productPanel);
     }
 
     private JLabel createNavLabel(String text, boolean isActive) {
         JLabel label = new JLabel(text);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN, 14));
-        label.setForeground(isActive ? Color.RED : Color.GRAY);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        label.setForeground(isActive ? new Color(230, 0, 0) : Color.GRAY);
+        label.setBorder(new EmptyBorder(0, 10, 0, 10));
         return label;
     }
 
@@ -177,15 +183,20 @@ public class GioHangGUI extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnDatHang) {
-            JOptionPane.showMessageDialog(this, "Đặt hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            if (products.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi đặt hàng.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            thongTinNhanHang.updateItems(products);
+            cardLayout.show(contentPanel, "ThongTinNhanHang");
         }
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Giỏ hàng");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new GioHangGUI());
         frame.setSize(800, 600);
+        frame.add(new GioHangGUI());
         frame.setVisible(true);
     }
 }
