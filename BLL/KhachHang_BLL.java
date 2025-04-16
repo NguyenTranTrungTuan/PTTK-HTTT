@@ -12,6 +12,21 @@ public class KhachHang_BLL {
         return khachhangDao.getAllKhachHang();
     }
 
+    public String getLatestID(){
+        return khachhangDao.getLatestID();
+    }
+
+    public String getNextID(){
+        String latestID = getLatestID();
+        String prefix = latestID.replaceAll("\\d+", "");
+        String numberic = latestID.replaceAll("[^\\d]", "");
+
+        int number = Integer.parseInt(numberic);
+        number++;
+        String nextnumberic = String.format("0%" + numberic.length() + "d", number);
+        return (prefix+nextnumberic).replace(" ", ""); 
+    }
+
     public KhachHang_DTO getKhachHangFromAccount(String email, String password){
         KhachHang_DTO kh = khachhangDao.getKhachHangFromAccount(email, password);
         if (kh != null)

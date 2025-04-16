@@ -29,6 +29,11 @@ public class KhachHang_DAO {
         }
     }
 
+    public String getLatestID(){
+        ArrayList<KhachHang_DTO> arr = getAllKhachHang();
+        return arr.get(arr.size()-1).getId_KhachHang();
+    }
+
     public ArrayList<KhachHang_DTO> getAllKhachHang(){
         ArrayList<KhachHang_DTO> arr = new  ArrayList<>();
         if (OpenConnection()){
@@ -88,8 +93,8 @@ public class KhachHang_DAO {
                 stmt1.setString(1, kh.getId_KhachHang());
                 stmt1.setString(2, kh.getTen_KhachHang());
                 stmt1.setString(3, kh.getSdt_KhachHang());
-                stmt1.setString(4, kh.getDiaChi_KhachHang());
-                stmt1.setString(5, kh.getEmail_KhachHang());
+                stmt1.setString(4, kh.getEmail_KhachHang());
+                stmt1.setString(5, kh.getDiaChi_KhachHang());
                 stmt1.setString(6, kh.getPass_KhachHang());
 
                 if (stmt1.executeUpdate()>=1)
