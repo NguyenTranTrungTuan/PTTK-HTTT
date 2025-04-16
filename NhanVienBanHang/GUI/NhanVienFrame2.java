@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,12 +37,14 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import NhanVienBanHang.DAO.DonHang_DAO;
 import NhanVienBanHang.DAO.ChiTietDonHang_DAO;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 
 public class NhanVienFrame2 extends JFrame {
 
@@ -208,7 +212,7 @@ public class NhanVienFrame2 extends JFrame {
         panel_left_bottom.add(labelCongCu);
 
 
-                // Tạo nút "Chọn Thời Điểm Đơn Hàng"
+        // Tạo nút "Chọn Thời Điểm Đơn Hàng"
         JButton btnChonThoiDiem = new JButton("Chọn Thời Điểm");
         btnChonThoiDiem.setBackground(new Color(51, 51, 51)); // Màu nền
         btnChonThoiDiem.setForeground(Color.WHITE); // Màu chữ
@@ -259,12 +263,17 @@ public class NhanVienFrame2 extends JFrame {
 
         // Hiển thị bảng đơn hàng mặc định
         DefaultTableModel tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
+        tableModel.addColumn("Chi Tiết Đơn Hàng");
         JTable table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Không cho phép chỉnh sửa các ô
+                return column == tableModel.getColumnCount() - 1;
             }
         };
+
+        // Thêm nút vào cột "Chi Tiết Đơn Hàng"
+        table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
+        table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
 
         // Tùy chỉnh bảng
         table.setBackground(new Color(51, 51, 51));
@@ -273,6 +282,28 @@ public class NhanVienFrame2 extends JFrame {
         table.setRowHeight(30);
         table.getTableHeader().setBackground(new Color(51, 51, 51));
         table.getTableHeader().setForeground(Color.WHITE);
+
+        // Thêm sự kiện lắng nghe khi nhấn vào dòng
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Lấy thông tin từ dòng được chọn
+                    String maDon = table.getValueAt(selectedRow, 0).toString();
+                    String maKH = table.getValueAt(selectedRow, 1).toString();
+                    String maNV = table.getValueAt(selectedRow, 2).toString();
+                    String diaChiDat = table.getValueAt(selectedRow, 3).toString();
+                    String ngayDat = table.getValueAt(selectedRow, 4).toString();
+                    String pttt = table.getValueAt(selectedRow, 5).toString();
+                    String tinhTrang = table.getValueAt(selectedRow, 6).toString();
+                    String tongTien = table.getValueAt(selectedRow, 7).toString();
+
+                    // Hiển thị thông tin trên panel_topright
+                    showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
+                }
+            }
+        });
 
         // Thêm bảng vào JScrollPane
         JScrollPane scrollPane_table = new JScrollPane(table);
@@ -310,8 +341,7 @@ public class NhanVienFrame2 extends JFrame {
                 // Xóa các thành phần hiện tại trong panel_bottomright
                 panel_bottomright.removeAll();
                 panel_topright.removeAll(); // Xóa nội dung cũ trong panel_topright
-                
-    
+        
                 // Tạo bảng và thêm vào JScrollPane
                 DefaultTableModel tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang"); // Tải dữ liệu từ cơ sở dữ liệu
                 tableModel.addColumn("Chi Tiết Đơn Hàng");
@@ -322,12 +352,10 @@ public class NhanVienFrame2 extends JFrame {
                         return column == tableModel.getColumnCount() - 1;
                     }
                 };
-
+        
                 // Thêm nút vào cột "Chi Tiết Đơn Hàng"
                 table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
-                table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(new JCheckBox()));
-                
-
+                table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
         
                 // Tùy chỉnh bảng
                 table.setBackground(new Color(51, 51, 51));
@@ -337,23 +365,23 @@ public class NhanVienFrame2 extends JFrame {
                 table.getTableHeader().setBackground(new Color(51, 51, 51));
                 table.getTableHeader().setForeground(Color.WHITE);
         
-                // Thêm MouseListener để cập nhật panel_topright khi nhấp vào dòng
+                // Thêm sự kiện lắng nghe khi nhấn vào dòng
                 table.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        int row = table.getSelectedRow(); // Lấy chỉ số hàng được chọn
-                        if (row != -1) {
-                            // Lấy dữ liệu từ hàng được chọn
-                            String maDon = table.getValueAt(row, 0).toString();
-                            String maKH = table.getValueAt(row, 1).toString();
-                            String maNV = table.getValueAt(row, 2).toString();
-                            String diaChiDat = table.getValueAt(row, 3).toString();
-                            String ngayDat = table.getValueAt(row, 4).toString();
-                            String pttt = table.getValueAt(row, 5).toString();
-                            String tinhTrang = table.getValueAt(row, 6).toString();
-                            String tongTien = table.getValueAt(row, 7).toString();
+                        int selectedRow = table.getSelectedRow();
+                        if (selectedRow != -1) {
+                            // Lấy thông tin từ dòng được chọn
+                            String maDon = table.getValueAt(selectedRow, 0).toString();
+                            String maKH = table.getValueAt(selectedRow, 1).toString();
+                            String maNV = table.getValueAt(selectedRow, 2).toString();
+                            String diaChiDat = table.getValueAt(selectedRow, 3).toString();
+                            String ngayDat = table.getValueAt(selectedRow, 4).toString();
+                            String pttt = table.getValueAt(selectedRow, 5).toString();
+                            String tinhTrang = table.getValueAt(selectedRow, 6).toString();
+                            String tongTien = table.getValueAt(selectedRow, 7).toString();
         
-                            // Hiển thị dữ liệu trong panel_topright
+                            // Hiển thị thông tin trên panel_topright
                             showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
                         }
                     }
@@ -369,26 +397,14 @@ public class NhanVienFrame2 extends JFrame {
                 // Thêm JScrollPane vào panel_bottomright
                 panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
         
-                // Hiển thị thông tin dòng đầu tiên trên panel_topright
-                if (tableModel.getRowCount() > 0) {
-                    String maDon = tableModel.getValueAt(0, 0).toString();
-                    String maKH = tableModel.getValueAt(0, 1).toString();
-                    String maNV = tableModel.getValueAt(0, 2).toString();
-                    String diaChiDat = tableModel.getValueAt(0, 3).toString();
-                    String ngayDat = tableModel.getValueAt(0, 4).toString();
-                    String pttt = tableModel.getValueAt(0, 5).toString();
-                    String tinhTrang = tableModel.getValueAt(0, 6).toString();
-                    String tongTien = tableModel.getValueAt(0, 7).toString();
-        
-                    showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
-                }
-        
                 // Cập nhật lại giao diện
                 panel_bottomright.revalidate();
                 panel_bottomright.repaint();
             }
         });
         
+        // Mặc định nổi bật nút Đơn Hàng
+        handleButtonClick(btnXemDonHang);
 
         setVisible(true);
 
@@ -502,6 +518,108 @@ public class NhanVienFrame2 extends JFrame {
                 title,
                 JOptionPane.INFORMATION_MESSAGE
             );
+        }
+
+        // Lớp Button Rendererer
+        public static class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+            setText("Chi Tiết");
+            setBackground(new Color(70, 130, 180));
+            setForeground(Color.WHITE);
+            setFont(new Font("Arial", Font.BOLD, 12));
+            setFocusPainted(false);
+            setBorderPainted(false);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setBackground(new Color(100, 149, 237));
+            } else {
+                setBackground(new Color(70, 130, 180));
+            }
+            return this;
+        }
+    }
+
+
+
+        public static class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
+            private JTable table;
+            private JButton button;
+            private boolean isPushed;
+
+            public ButtonEditor(JTable table) {
+                this.table = table;
+                button = new JButton("Chi Tiết");
+                button.setOpaque(true);
+                button.setBackground(new Color(70, 130, 180));
+                button.setForeground(Color.WHITE);
+                button.setFont(new Font("Arial", Font.BOLD, 12));
+                button.setFocusPainted(false);
+                button.setBorderPainted(false);
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        fireEditingStopped(); // Kết thúc chỉnh sửa khi nút được nhấn
+                    }
+                });
+            }
+
+            @Override
+            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                isPushed = true;
+                return button; // Trả về nút để hiển thị trong ô
+            }
+
+            @Override
+            public Object getCellEditorValue() {
+                if (isPushed) {
+                    int row = table.getSelectedRow();
+                    String maDon = table.getValueAt(row, 0).toString(); // Lấy Mã Đơn Hàng từ cột 0
+                    System.out.println("Mã Đơn được nhấn: " + maDon); // Log kiểm tra
+                    showChiTietDonHang(maDon);
+                }
+                isPushed = false;
+                return null;
+            }
+            
+            @Override
+            public boolean stopCellEditing() {
+                isPushed = false;
+                return super.stopCellEditing();
+            }
+
+            private void showChiTietDonHang(String maDon) {
+                // Lấy dữ liệu chi tiết đơn hàng từ cơ sở dữ liệu dựa trên maDon
+                DefaultTableModel chiTietTableModel = ChiTietDonHang_DAO.getInstance().loadDataToTableByMaDon(maDon);
+
+                if (chiTietTableModel.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Không có dữ liệu chi tiết cho Mã Đơn: " + maDon, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                // Tạo bảng hiển thị chi tiết đơn hàng
+                JTable chiTietTable = new JTable(chiTietTableModel);
+                chiTietTable.setBackground(new Color(51, 51, 51));
+                chiTietTable.setForeground(Color.WHITE);
+                chiTietTable.setGridColor(Color.BLACK);
+                chiTietTable.setRowHeight(30);
+                chiTietTable.getTableHeader().setBackground(new Color(51, 51, 51));
+                chiTietTable.getTableHeader().setForeground(Color.WHITE);
+
+                // Hiển thị bảng chi tiết đơn hàng trong một JDialog
+                JScrollPane scrollPane = new JScrollPane(chiTietTable);
+                scrollPane.getViewport().setBackground(new Color(51, 51, 51));
+                scrollPane.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+
+                JDialog dialog = new JDialog((Frame) null, "Chi Tiết Đơn Hàng - Mã Đơn: " + maDon, true);
+                dialog.setSize(800, 400);
+                dialog.setLocationRelativeTo(null);
+                dialog.add(scrollPane);
+                dialog.setVisible(true);
+            }
         }
 
 

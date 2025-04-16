@@ -7,15 +7,15 @@ public class ChiTietDonHang {
     private int thanhtien;
     private String madon;
     private int dongia;
-    private String mactnh;
+    private String mactpnhap;
 
-    public ChiTietDonHang(String mactdh, int soluong, int thanhtien, String madon, int dongia, String mactnh) {
+    public ChiTietDonHang(String mactdh, int soluong, int thanhtien, String madon, int dongia, String mactpnhap) {
         this.mactdh = mactdh;
         this.soluong = soluong;
         this.thanhtien = thanhtien;
         this.madon = madon;
         this.dongia = dongia;
-        this.mactnh = mactnh;
+        this.mactpnhap = mactpnhap;
     }
     public String getMactdh() {
         return mactdh;
@@ -47,11 +47,11 @@ public class ChiTietDonHang {
     public void setDongia(int dongia) {
         this.dongia = dongia;
     }
-    public String getMactnh() {
-        return mactnh;
+    public String getMactpnhap() {
+        return mactpnhap;
     }
-    public void setMactnh(String mactnh) {
-        this.mactnh = mactnh;
+    public void setMactpnhap(String mactpnhap) {
+        this.mactpnhap = mactpnhap;
     }
     @Override
     public String toString() {
@@ -61,7 +61,7 @@ public class ChiTietDonHang {
                 ", thanhtien=" + thanhtien +
                 ", madon='" + madon + '\'' +
                 ", dongia=" + dongia +
-                ", mactnh='" + mactnh + '\'' +
+                ", mactpnhap='" + mactpnhap + '\'' +
                 '}';
     }
 
