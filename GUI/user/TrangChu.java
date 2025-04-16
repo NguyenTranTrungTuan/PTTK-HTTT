@@ -13,6 +13,7 @@ public class TrangChu extends JFrame{
     // private UserMenuPanel UserMenu;
     private UserInfoPanel UserInfo;
     private FilterPanel Filter;
+    private ConfirmFrame confirmFrame;
 
     public TrangChu(){
         initComponents();
@@ -84,7 +85,7 @@ public class TrangChu extends JFrame{
             else if(e.getSource() == header.searchIcon && !header.searchBox.getText().equals("")){
                 SwitchToFilter();
             }
-            else if(e.getSource() == Filter.FilterButton && !Filter.MinPriceTF.getText().equals("Giá thấp nhất") && !Filter.MaxPriceTF.getText().equals("Giá cao nhất")){
+            else if(Filter != null && e.getSource() == Filter.FilterButton && !Filter.MinPriceTF.getText().equals("Giá thấp nhất") && !Filter.MaxPriceTF.getText().equals("Giá cao nhất")){
                 ContentPanel.remove(productPanel);
                 // ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.X_AXIS));
                 if(header.searchBox.getText().equals("Search...")){
@@ -95,6 +96,19 @@ public class TrangChu extends JFrame{
                     
                 }
                 ContentPanel.add(productPanel);
+            }
+            else if( UserInfo != null && e.getSource() == UserInfo.logoutButton){
+                confirmFrame = new ConfirmFrame();
+                confirmFrame.confirmbtn.addMouseListener(mouseListener);
+                confirmFrame.cancelbtn.addMouseListener(mouseListener);
+            }
+            else if(confirmFrame != null && e.getSource() == confirmFrame.confirmbtn && !header.accountLabel.getText().equals("")){
+                header.accountLabel.setText("");
+                confirmFrame.dispose();
+                SwitchToShop();
+            }
+            else if(confirmFrame != null && e.getSource() == confirmFrame.cancelbtn){
+                confirmFrame.dispose();
             }
             // Revalidate and repaint the ContentPanel to reflect changes
             ContentPanel.revalidate();
@@ -185,6 +199,8 @@ public class TrangChu extends JFrame{
         UserInfo.EmailInfo.setText(header.kh.getEmail_KhachHang());
         UserInfo.AddressInfo.setText(header.kh.getDiaChi_KhachHang());
         UserInfo.PasswordInfo.setText(header.kh.getPass_KhachHang());
+
+        UserInfo.logoutButton.addMouseListener(mouseListener);
 
         // ContentPanel.add(UserMenu);
         // ContentPanel.add(Box.createHorizontalStrut(20));

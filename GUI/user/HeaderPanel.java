@@ -133,7 +133,9 @@ public class HeaderPanel extends JPanel {
                     return;
                 }
 
+                kh = new KhachHang_DTO(khbll.getNextID(), hoTen,sdt,diaChi,email,matKhau);
                 JOptionPane.showMessageDialog(dangkyFrame, "Đăng ký thành công!");
+                System.out.println(khbll.addKhachHang(kh));
                 accountLabel.setText(hoTen);
                 dangkyFrame.dispose();
             }

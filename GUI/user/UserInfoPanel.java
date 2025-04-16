@@ -35,6 +35,9 @@ public class UserInfoPanel extends JPanel{
     protected JLabel[] LabelList = {NameLabel, PhoneNumberLabel, EmailLabel, AddressLabel, PasswordLabel};
     protected JLabel[] InfoList = {NameInfo, PhoneInfo, EmailInfo, AddressInfo};
 
+    protected JPanel BtnPanel = new JPanel();
+    protected MyButton logoutButton = new MyButton("Đăng xuất".toUpperCase());
+
 
     public UserInfoPanel(){
         initComponents();
@@ -105,6 +108,14 @@ public class UserInfoPanel extends JPanel{
         InfoPanel.setBackground(Color.WHITE);
         InfoPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 20, 50));
 
+        logoutButton.setBackground(Color.RED);
+        logoutButton.setForeground(Color.WHITE);
+        logoutButton.setPreferredSize(new Dimension(100,50));
+
+        BtnPanel.setBackground(Color.WHITE);
+        BtnPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
+        BtnPanel.add(logoutButton);
+
         setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 20));
         setMaximumSize(new Dimension(740, 440));
         setBackground(Color.decode("#cfdef3"));
@@ -113,5 +124,6 @@ public class UserInfoPanel extends JPanel{
 
         add(headerPanel);
         add(InfoPanel);
+        add(BtnPanel);
     }
 }   
