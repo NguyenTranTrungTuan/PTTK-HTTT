@@ -1,6 +1,8 @@
 package GUI.user;
 import javax.swing.*;
 
+import OOP.GioHang;
+
 import java.awt.*;
 import java.awt.event.*;;
 
@@ -10,7 +12,10 @@ public class TrangChu extends JFrame{
     private JPanel ContentPanel;
     private CatalogPanel catalogPanel;
     private ProductPanel productPanel;
-
+    private GioHang gh;
+    public JPanel getContentPanel() {
+        return ContentPanel;
+    }
     public TrangChu(){
         initComponents();
         setTitle("Trang Chủ");
@@ -96,8 +101,8 @@ public class TrangChu extends JFrame{
 
     public void initComponents(){
         JPanel spacer = new JPanel();
-        header = new HeaderPanel();
-
+        header = new HeaderPanel(this);
+        gh=new GioHang();
         ContentPanel = new JPanel();
         catalogPanel = new CatalogPanel();
         catalogPanel.headerLabel.addMouseListener(mouseListener);

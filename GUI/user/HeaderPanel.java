@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import BLL.KhachHang_BLL;
 import DTO.KhachHang_DTO;
+import GUI.giohang.GioHangGUI;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +17,9 @@ public class HeaderPanel extends JPanel {
     protected DangKy dangkyFrame;
     protected DangNhap dangnhapFrame;
     private KhachHang_BLL khbll;
+    private GioHangGUI giohang;
+    private TrangChu tc;
+
 
     // Regex cho email
     private static final String EMAIL_PATTERN = 
@@ -26,7 +30,8 @@ public class HeaderPanel extends JPanel {
         "^0[35789][0-9]{8}$";
 
 
-    public HeaderPanel() {
+    public HeaderPanel(TrangChu tc) {
+        this.tc=tc;
         initComponents();
     }
 
@@ -42,8 +47,19 @@ public class HeaderPanel extends JPanel {
                     addDangNhapEvent();
                 }
             }
-        }
-
+            if (e.getSource() == cartIcon) {
+                giohang=new GioHangGUI();
+                JPanel contentPanel = tc.getContentPanel();
+                if (contentPanel != null) {
+                    contentPanel.removeAll(); 
+                    contentPanel.add(giohang); 
+                    contentPanel.revalidate(); 
+                    contentPanel.repaint();    
+                } else {
+                    System.out.println("ContentPanel is null!"); 
+                }
+            }
+    }
         @Override
         public void mousePressed(MouseEvent e) {}
         @Override
@@ -186,7 +202,6 @@ public class HeaderPanel extends JPanel {
         btnPanel.add(cartIcon);
 
         accountIcon.addMouseListener(mouseListener);
-
 
         
         // ==== ADD TO HEADER ====

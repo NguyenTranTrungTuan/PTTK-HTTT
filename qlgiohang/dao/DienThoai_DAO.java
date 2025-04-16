@@ -1,4 +1,4 @@
-package DAO;
+package qlgiohang.dao;
 
 import DTO.DienThoai_DTO;
 import java.sql.*;

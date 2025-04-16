@@ -1,4 +1,4 @@
-package GUI.giohang;
+package qlgiohang;
 import GUI.user.MyButton;
 import qlgiohang.oop.Product;
 
