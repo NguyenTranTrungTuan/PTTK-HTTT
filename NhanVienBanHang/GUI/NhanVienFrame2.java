@@ -356,6 +356,8 @@ public class NhanVienFrame2 extends JFrame {
                 // Thêm nút vào cột "Chi Tiết Đơn Hàng"
                 table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
                 table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
+
+
         
                 // Tùy chỉnh bảng
                 table.setBackground(new Color(51, 51, 51));
