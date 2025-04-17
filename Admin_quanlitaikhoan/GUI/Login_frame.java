@@ -2,75 +2,95 @@ package Admin_quanlitaikhoan.GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.*;
-import java.io.File;
-import javax.imageio.ImageIO;
+import java.awt.event.*;
 
 public class Login_frame extends JFrame {
-
     public Login_frame() {
-        setTitle("Giao diện đăng nhập");
-        setSize(1690, 1040);
+        // Thiết lập JFrame
+        setTitle("Đăng Nhập");
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null); // Căn giữa màn hình
 
-        // Tạo panel nền mờ
-        BackgroundPanel backgroundPanel = new BackgroundPanel("E:\\Lap trinh Java\\QuanLyBanDienThoai\\Admin_quanlitaikhoan\\Icon\\login.png");
-        backgroundPanel.setLayout(new BorderLayout()); // Dùng BorderLayout
-
-        // Tạo panel_login
-        JPanel panel_login = new JPanel();
-        panel_login.setPreferredSize(new Dimension(900, 600)); // Kích thước panel_login
-        panel_login.setBackground(new Color(255, 255, 255, 200)); // Màu nền trong suốt
-        panel_login.setOpaque(true); // Đảm bảo panel không trong suốt
-        panel_login.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Viền cho panel_login
-
-        // Thêm JLabel vào panel_login để kiểm tra
-        JLabel label = new JLabel("Form đăng nhập", JLabel.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        panel_login.add(label);
-
-        // Đặt panel_login vào giữa backgroundPanel
-        backgroundPanel.add(panel_login, BorderLayout.CENTER); // Căn giữa với BorderLayout.CENTER
-
+        // Tạo panel chính với hình ảnh nền
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Load hình ảnh nền
+                ImageIcon backgroundImage = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\Admin_quanlitaikhoan\\Icon\\login.png"); 
+                Image img = backgroundImage.getImage();
+                g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        backgroundPanel.setLayout(new GridBagLayout());
         setContentPane(backgroundPanel);
-        setVisible(true);
+
+        // Tạo panel chứa các thành phần đăng nhập (nửa trong suốt)
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new GridBagLayout());
+        loginPanel.setPreferredSize(new Dimension(300, 200));
+        loginPanel.setBackground(new Color(0, 0, 0, 150)); // Nửa trong suốt với màu đen
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Khoảng cách giữa các thành phần
+
+        // Tiêu đề
+        JLabel titleLabel = new JLabel("ĐĂNG NHẬP");
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        loginPanel.add(titleLabel, gbc);
+
+        // Tên người dùng
+        JLabel usernameLabel = new JLabel("Tên người dùng:");
+        usernameLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        loginPanel.add(usernameLabel, gbc);
+
+        JTextField usernameField = new JTextField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        loginPanel.add(usernameField, gbc);
+
+        // Mật khẩu
+        JLabel passwordLabel = new JLabel("Mật khẩu:");
+        passwordLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        loginPanel.add(passwordLabel, gbc);
+
+        JPasswordField passwordField = new JPasswordField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        loginPanel.add(passwordField, gbc);
+
+        // Nút đăng nhập
+        JButton loginButton = new JButton("Đăng Nhập");
+        loginButton.setBackground(new Color(0, 120, 255));
+        loginButton.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        loginPanel.add(loginButton, gbc);
+
+        // Thêm panel đăng nhập vào backgroundPanel
+        backgroundPanel.add(loginPanel);
+
+        // Sự kiện cho nút đăng nhập (có thể thêm logic kiểm tra đăng nhập)
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+                JOptionPane.showMessageDialog(null, "Tên: " + username + "\nMật khẩu: " + password);
+            }
+        });
     }
 
-    // JPanel tùy biến để vẽ ảnh nền
-    class BackgroundPanel extends JPanel {
-        private Image blurredImage;
-
-        public BackgroundPanel(String imagePath) {
-            try {
-                // Load ảnh gốc
-                BufferedImage original = ImageIO.read(new File(imagePath));
-
-                // Làm mờ ảnh (ví dụ 90% mờ)
-                BufferedImage transparentImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = transparentImage.createGraphics();
-                g2d.drawImage(original, 0, 0, null);
-
-                // Giảm độ mờ (alpha transparency 90%)
-                AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f); // 90% mờ
-                g2d.setComposite(alphaComposite);
-                g2d.fillRect(0, 0, original.getWidth(), original.getHeight());
-                g2d.dispose();
-
-                blurredImage = transparentImage;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (blurredImage != null) {
-                g.drawImage(blurredImage, 0, 0, getWidth(), getHeight(), this);
-            }
-        }
-    }
 
 }
