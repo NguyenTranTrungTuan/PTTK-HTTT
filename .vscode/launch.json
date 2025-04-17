@@ -6,6 +6,55 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PaymentMethodDialog",
+            "request": "launch",
+            "mainClass": "qlgiohang.GUI.PaymentMethodDialog",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
+            "name": "ThanhToanUIDesigner",
+            "request": "launch",
+            "mainClass": "qlgiohang.GUI.ThanhToanUIDesigner",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
+            "name": "GioHangGUI",
+            "request": "launch",
+            "mainClass": "qlgiohang.GUI.GioHangGUI",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
+            "name": "GioHangGUI",
+            "request": "launch",
+            "mainClass": "qlgiohang.GioHangGUI",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
+            "name": "ThanhToanUIDesigner",
+            "request": "launch",
+            "mainClass": "qlgiohang.ThanhToanUIDesigner",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
+            "name": "ThongTinNhanHangUIDesigner",
+            "request": "launch",
+            "mainClass": "qlgiohang.ThongTinNhanHangUIDesigner",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
+            "name": "ThongTinDatHangGUI",
+            "request": "launch",
+            "mainClass": "qlgiohang.ThongTinDatHangGUI",
+            "projectName": "PTTK-HTTT_b375fde4"
+        },
+        {
+            "type": "java",
             "name": "TrangChu",
             "request": "launch",
             "mainClass": "GUI.user.TrangChu",
