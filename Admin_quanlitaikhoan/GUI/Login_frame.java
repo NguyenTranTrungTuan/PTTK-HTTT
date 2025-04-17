@@ -2,7 +2,13 @@ package Admin_quanlitaikhoan.GUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javax.swing.*;
+
+import Admin_quanlitaikhoan.DTO.NhanVien;
 
 public class Login_frame extends JFrame {
     public Login_frame() {
@@ -81,18 +87,49 @@ public class Login_frame extends JFrame {
         // Thêm panel đăng nhập vào backgroundPanel
         backgroundPanel.add(loginPanel);
 
-        // Sự kiện cho nút đăng nhập (có thể thêm logic kiểm tra đăng nhập)
+        // Sự kiện cho nút đăng nhập
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-                JOptionPane.showMessageDialog(null, "Tên: " + username + "\nMật khẩu: " + password);
+
+                // Kiểm tra thông tin đăng nhập (ví dụ đơn giản)
+                if (username.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Chuyển đến frame mới
+                    new Admin_frame();
+                    dispose(); // Đóng frame đăng nhập
+                }
             }
         });
 
         setVisible(true); // Hiển thị JFrame
     }
 
+    public NhanVien checkLogin(String username, String password) {
+    String sql = "SELECT * FROM NhanVien WHERE Username=? AND Password=?";
+    try (Connection c = getConnection();
+        PreparedStatement stmt = c.prepareStatement(sql)) {
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return new NhanVien(
+                rs.getString("maNV"),
+                rs.getString("tennv"),
+                rs.getString("chucvu"),
+                rs.getString("ttlienlac"),
+                rs.getString("Username"),
+                rs.getString("Password"),
+                rs.getString("maNQL")
+            );
+        }
+    } catch (Exception e) {
+        System.out.println("Login failed: " + e.getMessage());
+    }
+    return null;
+}
 
 }

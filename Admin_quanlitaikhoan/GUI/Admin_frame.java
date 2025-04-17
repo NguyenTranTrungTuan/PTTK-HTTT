@@ -1,13 +1,18 @@
 package Admin_quanlitaikhoan.GUI;
 import javax.swing.*;
 
-public class Admin_frame {
+public class Admin_frame extends JFrame {
     public Admin_frame() {
         // Thiết lập JFrame
-        JFrame frame = new JFrame("Quản Lý Tài Khoản");
-        frame.setSize(1690, 1040);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); // Căn giữa
+        setTitle("Quản Lý Tài Khoản");
+        setSize(1690, 1040);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Căn giữa
+
+        
+        setVisible(true);
+
+        
     }
 
 }
