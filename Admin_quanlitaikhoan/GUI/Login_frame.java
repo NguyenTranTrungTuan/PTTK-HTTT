@@ -1,14 +1,14 @@
 package Admin_quanlitaikhoan.GUI;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class Login_frame extends JFrame {
     public Login_frame() {
         // Thiết lập JFrame
         setTitle("Đăng Nhập");
-        setSize(600, 400);
+        setSize(1690, 1040);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Căn giữa màn hình
 
@@ -90,6 +90,8 @@ public class Login_frame extends JFrame {
                 JOptionPane.showMessageDialog(null, "Tên: " + username + "\nMật khẩu: " + password);
             }
         });
+
+        setVisible(true); // Hiển thị JFrame
     }
 
 
