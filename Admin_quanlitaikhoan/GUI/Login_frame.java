@@ -1,14 +1,12 @@
 package Admin_quanlitaikhoan.GUI;
 
+import Admin_quanlitaikhoan.DAO.NhanVien_DAO;
+import Admin_quanlitaikhoan.DTO.NhanVien;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import javax.swing.*;
-
-import Admin_quanlitaikhoan.DTO.NhanVien;
+import javax.swing.border.EmptyBorder;
+import NhanVienBanHang.GUI.NhanVienFrame2; 
 
 public class Login_frame extends JFrame {
     public Login_frame() {
@@ -94,13 +92,19 @@ public class Login_frame extends JFrame {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
 
-                // Kiểm tra thông tin đăng nhập (ví dụ đơn giản)
                 if (username.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    // Chuyển đến frame mới
-                    new Admin_frame();
-                    dispose(); // Đóng frame đăng nhập
+                    NhanVien_DAO dao = NhanVien_DAO.getInstance();
+                    NhanVien nv = dao.checkLogin(username, password);
+
+                    if (nv != null) {
+                        JOptionPane.showMessageDialog(null, "Đăng nhập thành công! Xin chào " + nv.getTennv(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                        new NhanVien_frame2(); // Chuyển đến giao diện admin
+                        dispose(); // Đóng frame đăng nhập
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -108,28 +112,6 @@ public class Login_frame extends JFrame {
         setVisible(true); // Hiển thị JFrame
     }
 
-    public NhanVien checkLogin(String username, String password) {
-    String sql = "SELECT * FROM NhanVien WHERE Username=? AND Password=?";
-    try (Connection c = getConnection();
-        PreparedStatement stmt = c.prepareStatement(sql)) {
-        stmt.setString(1, username);
-        stmt.setString(2, password);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return new NhanVien(
-                rs.getString("maNV"),
-                rs.getString("tennv"),
-                rs.getString("chucvu"),
-                rs.getString("ttlienlac"),
-                rs.getString("Username"),
-                rs.getString("Password"),
-                rs.getString("maNQL")
-            );
-        }
-    } catch (Exception e) {
-        System.out.println("Login failed: " + e.getMessage());
-    }
-    return null;
-}
+
 
 }

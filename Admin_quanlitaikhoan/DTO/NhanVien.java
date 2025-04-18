@@ -6,16 +6,16 @@ public class NhanVien {
     private String chucvu;
     private String ttlienlac;
     private String Username;
-    private String Password;
+    private String Passwordnv;
     private String maNQL;
 
-    public NhanVien(String maNV, String tennv, String chucvu, String ttlienlac, String Username, String Password, String maNQL) {
+    public NhanVien(String maNV, String tennv, String chucvu, String ttlienlac, String Username, String Passwordnv, String maNQL) {
         this.maNV = maNV;
         this.tennv = tennv;
         this.chucvu = chucvu;
         this.ttlienlac = ttlienlac;
         this.Username = Username;
-        this.Password = Password;
+        this.Passwordnv = Passwordnv;
         this.maNQL = maNQL;
     }
 
@@ -50,10 +50,10 @@ public class NhanVien {
         Username = username;
     }
     public String getPassword() {
-        return Password;
+        return Passwordnv;
     }
-    public void setPassword(String password) {
-        Password = password;
+    public void setPassword(String Passwordnv) {
+        Passwordnv = Passwordnv;
     }
     public String getMaNQL() {
         return maNQL;
@@ -62,7 +62,7 @@ public class NhanVien {
     @Override
     public String toString() {
         return "NhanVien [maNV=" + maNV + ", tennv=" + tennv + ", chucvu=" + chucvu + ", ttlienlac=" + ttlienlac
-                + ", Username=" + Username + ", Password=" + Password + ", maNQL=" + maNQL + "]";
+                + ", Username=" + Username + ", Passwordnv=" + Passwordnv + ", maNQL=" + maNQL + "]";
     }
     
 }
