@@ -23,7 +23,7 @@ public class NhaCungCap {
         this.quocGia = quocGia;
     }
 
-    public String getManCC() {
+    public String getMaNCC() {
         return maNCC;
     }
 

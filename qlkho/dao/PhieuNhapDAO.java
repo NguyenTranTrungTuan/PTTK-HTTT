@@ -39,7 +39,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             String sql = "INSERT INTO PhieuNhap VALUES ('" + obj.getMaHDNhap() + "', '" + obj.getMaNCC() + "', "
-                    + obj.getSoLoaiDT() + ", " + obj.getNgayNhap() + ", '" + obj.getTongTien() + "', '" + obj.getMaNV()
+                    + obj.getSoLoaiDT() + ",'" + obj.getNgayNhap() + "', '" + obj.getTongTien() + "', '" + obj.getMaNV()
                     + "')";
             st.executeUpdate(sql);
             con.close();
@@ -58,7 +58,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             String sql = "UPDATE PhieuNhap SET MaNCC = '" + obj.getMaNCC() + "', SoLoaiDT = " + obj.getSoLoaiDT()
-                    + ", NgayNhap = " + obj.getNgayNhap() + ", TongTien = '" + obj.getTongTien() + "', MaNV = N'"
+                    + ", NgayNhap = '" + obj.getNgayNhap() + "', TongTien = '" + obj.getTongTien() + "', MaNV = N'"
                     + obj.getMaNV() + "' WHERE MaHDNhap = '"
                     + obj.getMaHDNhap() + "'";
             st.executeUpdate(sql);
@@ -159,6 +159,50 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         return list;
     }
 
+    public String countSum() {
+        int tong = 0;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT TongTien FROM PhieuNhap");
+            while (rs.next()) {
+                tong += rs.getInt("TongTien");
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(tong);
+    }
+
+    public String countSumCondition(String thang, String nam) {
+        int tong = 0;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            if (thang.equals("Tất cả") && nam.equals("Tất cả")) {
+                return countSum();
+            }
+            ResultSet rs = st.executeQuery("SELECT TongTien FROM PhieuNhap WHERE SUBSTRING(NgayNhap, 4, 2) = '" + thang
+                    + "' AND SUBSTRING(NgayNhap, 7, 4) = '" + nam + "'");
+            while (rs.next()) {
+                tong += rs.getInt("TongTien");
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(tong);
+    }
+
     @Override
     public DefaultTableModel loadDataToTable(String tableName) {
         DefaultTableModel tableModel = new DefaultTableModel();
@@ -170,6 +214,46 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM " + tableName);
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            String[] columnNames = new String[columnCount + 1];
+
+            for (int i = 1; i <= columnCount; i++) {
+                columnNames[i - 1] = metaData.getColumnName(i);
+            }
+            columnNames[columnCount] = "Chi tiet hoa don";
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (rs.next()) {
+                Object[] row = new Object[columnCount + 1];
+                for (int i = 1; i <= columnCount; i++) {
+                    row[i - 1] = rs.getObject(i);
+                }
+                row[columnCount] = "Chi tiet";
+                tableModel.addRow(row);
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tableModel;
+    }
+
+    public DefaultTableModel loadDataToTableCondition(String thang, String nam) {
+        DefaultTableModel tableModel = new DefaultTableModel();
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            if (thang.equals("Tất cả") && nam.equals("Tất cả")) {
+                return loadDataToTable("PhieuNhap");
+            }
+            ResultSet rs = st.executeQuery("SELECT * FROM PhieuNhap WHERE SUBSTRING(NgayNhap, 4, 2) = '" + thang
+                    + "' AND SUBSTRING(NgayNhap, 7, 4) = '" + nam + "'");
 
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -319,6 +403,30 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         );
 
         return chart;
+    }
+
+    public String autoUpdateMaHDN() {
+        String maHDN = null;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT TOP 1 MaHDNhap FROM PhieuNhap ORDER BY MaHDNhap DESC");
+            if (rs.next()) {
+                maHDN = rs.getString("MaHDNhap");
+                int newMaHDN = Integer.parseInt(maHDN.substring(2)) + 1;
+                maHDN = String.format("PN%03d", newMaHDN);
+            } else {
+                maHDN = "PN001";
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maHDN;
     }
 
 }

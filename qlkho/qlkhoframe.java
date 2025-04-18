@@ -2,6 +2,8 @@ package qlkho;
 
 import qlkho.oop.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -10,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 
 import org.jfree.chart.ChartPanel;
 
+import qlkho.dao.ChiTietPhieuNhapDAO;
 import qlkho.dao.DienThoaiDAO;
 import qlkho.dao.NhaCungCapDAO;
 import qlkho.dao.PhieuNhapDAO;
@@ -19,23 +22,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class qlkhoframe extends JFrame implements MouseListener, ActionListener {
-    JComboBox<String> cb_thang, cb_nam;
+public class qlkhoframe extends JFrame implements MouseListener, ActionListener, DocumentListener {
+    JComboBox<String> cb_thang, cb_nam, cb_tenncc, cb_tendt;
     ChartPanel chartPanel;
-    JLabel lb_sanpham, lb_madtshowsp, lb_ncc, lb_phieunhap, lb_thongkenhapkho;
+    JLabel lb_sanpham, lb_madtshowsp, lb_ncc, lb_phieunhap, lb_thongkenhapkho, lb_tongtiennhap;
     JTable table;
     DefaultTableModel tableModel;
-    JButton btn_add, btn_refresh, btn_xacnhanthem, btn_huythem, btn_delete, btn_thongke, btn_edit;
+    JButton btn_add, btn_refresh, btn_xacnhanthem, btn_huythem, btn_delete, btn_thongke, btn_edit, btn_huythemncc,
+            btn_xacnhanthemncc, btn_xacnhanthemphieunhap, btn_huythemphieunhap;
     JPanel panel_right, panel_themsp, panel_right_bottom, panel_right_bottom_top, panel_thongkenhapkho, panel_right_top,
-            panel_thongkebottom_top, panel_thongkebottom_mid, panel_thongkebottom_bottom, panel_thongkenhapkhobottom;
+            panel_thongkebottom_top, panel_thongkebottom_mid, panel_thongkebottom_bottom, panel_thongkenhapkhobottom,
+            panel_themncc, panel_themphieunhap;
     JScrollPane scrollPane_table;
     JTextField tf_madtshowsp, tf_tendtshowsp, tf_giabanshowsp, tf_gianhapshowsp, tf_matonshowsp, tf_xuatxushowsp,
             tf_trongluongshowsp, tf_kichthuocmanhinhshowsp, tf_dungluongdtshowsp, tf_ramshowsp, tf_baohanhshowsp,
             tf_manccshowsp, tf_madt, tf_tendt, tf_giaban, tf_gianhap, tf_maton, tf_xuatxu,
             tf_trongluong, tf_kichthuocmanhinh, tf_dungluongdt, tf_ram, tf_baohanh,
-            tf_mancc, tf_search;
+            tf_mancc, tf_search, tf_nccmancc, tf_ncctenncc, tf_nccquocgia, tf_sl;
     boolean isSanPhamPanel, isNCCPanel, isPhieuNhap;
 
     public class CustomScrollBarUI extends BasicScrollBarUI {
@@ -142,25 +149,6 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
             nam[j] = String.valueOf(i);
         }
         return nam;
-    }
-
-    private void addSearchFunctionality() {
-        tf_search.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                searchTable(tf_search.getText());
-            }
-
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                searchTable(tf_search.getText());
-            }
-
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                searchTable(tf_search.getText());
-            }
-        });
     }
 
     private void searchTable(String query) {
@@ -294,7 +282,7 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
         panel_right_top.add(lb_search, BorderLayout.WEST);
 
         tf_search = new JTextField("Tìm kiếm");
-        addSearchFunctionality();
+        tf_search.getDocument().addDocumentListener(this);
         tf_search.setBounds(40, 10, 100, 40);
         tf_search.setBorder(BorderFactory.createLineBorder(new Color(51, 51, 51)));
         tf_search.setBackground(new Color(51, 51, 51));
@@ -538,10 +526,10 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
         panel_right_bottom_showsp.add(panel_right_bottom_showsp_right, BorderLayout.CENTER);
         panel_right_bottom_top.add(panel_right_bottom_showsp, BorderLayout.CENTER);
 
+        // themsp
         panel_themsp = new JPanel();
         panel_themsp.setBackground(Color.red);
         panel_themsp.setLayout(new BorderLayout());
-
         JPanel panel_themsp_top = new JPanel();
         panel_themsp_top.setBackground(Color.BLACK);
         panel_themsp_top.setPreferredSize(new Dimension(0, 350));
@@ -615,7 +603,7 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
         JLabel lb_madt = new JLabel();
         lb_madt.setText("Mã điện thoại: ");
         lb_madt.setForeground(Color.white);
-        tf_madt = new JTextField();
+        tf_madt = new JTextField(DienThoaiDAO.getInstance().autoUpdateMaDT());
         tf_madt.setBackground(Color.BLACK);
         tf_madt.setForeground(Color.white);
         tf_madt.setBorder(BorderFactory.createLineBorder(new Color(51, 51, 51)));
@@ -724,9 +712,91 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
         btn_xacnhanthem.addActionListener(this);
         btn_xacnhanthem.setPreferredSize(new Dimension(150, 30));
         btn_huythem = new JButton("Huy");
+        btn_huythem.addActionListener(this);
         btn_huythem.setPreferredSize(new Dimension(150, 30));
         panel_themsp_bottom_layout.add(btn_xacnhanthem);
         panel_themsp_bottom_layout.add(btn_huythem);
+        // panelthemsp
+
+        // startpanelthemncc
+        panel_themncc = new JPanel();
+        panel_themncc.setLayout(new BorderLayout());
+        JPanel panel_themncc_top = new JPanel(new GridBagLayout());
+        panel_themncc_top.setBackground(new Color(51, 51, 51));
+        panel_themncc_top.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Tạo khoảng cách bên trong
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Khoảng cách giữa các thành phần
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Thành phần lấp đầy theo chiều ngang
+
+        // Mã NCC
+        JLabel lb_nccmancc = new JLabel("Mã NCC:");
+        lb_nccmancc.setForeground(Color.white);
+        gbc.gridx = 0; // Cột đầu tiên
+        gbc.gridy = 0; // Hàng đầu tiên
+        gbc.weightx = 0.3; // Tỷ lệ phân bổ không gian ngang
+        panel_themncc_top.add(lb_nccmancc, gbc);
+
+        tf_nccmancc = new JTextField();
+        tf_nccmancc.setPreferredSize(new Dimension(20, 45));
+        tf_nccmancc.setBackground(Color.BLACK);
+        tf_nccmancc.setForeground(Color.white);
+        tf_nccmancc.setBorder(BorderFactory.createLineBorder(new Color(51, 51, 51)));
+        gbc.gridx = 1; // Cột thứ hai
+        gbc.gridy = 0; // Hàng đầu tiên
+        gbc.weightx = 0.7; // Tỷ lệ phân bổ không gian ngang
+        panel_themncc_top.add(tf_nccmancc, gbc);
+
+        // Tên NCC
+        JLabel lb_ncctenncc = new JLabel("Tên NCC:");
+        lb_ncctenncc.setForeground(Color.white);
+        gbc.gridx = 0; // Cột đầu tiên
+        gbc.gridy = 1; // Hàng thứ hai
+        gbc.weightx = 0.3;
+        panel_themncc_top.add(lb_ncctenncc, gbc);
+
+        tf_ncctenncc = new JTextField();
+        tf_ncctenncc.setPreferredSize(new Dimension(20, 45));
+        tf_ncctenncc.setBackground(Color.BLACK);
+        tf_ncctenncc.setForeground(Color.white);
+        tf_ncctenncc.setBorder(BorderFactory.createLineBorder(new Color(51, 51, 51)));
+        gbc.gridx = 1; // Cột thứ hai
+        gbc.gridy = 1; // Hàng thứ hai
+        gbc.weightx = 0.7;
+        panel_themncc_top.add(tf_ncctenncc, gbc);
+
+        // Quốc gia
+        JLabel lb_nccquocgia = new JLabel("Quốc gia:");
+        lb_nccquocgia.setForeground(Color.white);
+        gbc.gridx = 0; // Cột đầu tiên
+        gbc.gridy = 2; // Hàng thứ ba
+        gbc.weightx = 0.3;
+        panel_themncc_top.add(lb_nccquocgia, gbc);
+
+        tf_nccquocgia = new JTextField();
+        tf_nccquocgia.setPreferredSize(new Dimension(20, 45));
+        tf_nccquocgia.setBackground(Color.BLACK);
+        tf_nccquocgia.setForeground(Color.white);
+        tf_nccquocgia.setBorder(BorderFactory.createLineBorder(new Color(51, 51, 51)));
+        gbc.gridx = 1; // Cột thứ hai
+        gbc.gridy = 2; // Hàng thứ ba
+        gbc.weightx = 0.7;
+        panel_themncc_top.add(tf_nccquocgia, gbc);
+
+        JPanel panel_themncc_bottom = new JPanel();
+        panel_themncc_bottom.setLayout(new GridLayout(1, 2));
+        btn_xacnhanthemncc = new JButton("Xác nhận");
+        btn_xacnhanthemncc.setFocusPainted(false);
+        btn_xacnhanthemncc.addActionListener(this);
+        panel_themncc_bottom.add(btn_xacnhanthemncc);
+        btn_huythemncc = new JButton("Huy");
+        btn_huythemncc.addActionListener(this);
+        btn_huythemncc.setFocusPainted(false);
+        panel_themncc_bottom.add(btn_huythemncc);
+
+        panel_themncc.add(panel_themncc_top, BorderLayout.CENTER);
+        panel_themncc.add(panel_themncc_bottom, BorderLayout.SOUTH);
+        // endpanelthemncc
 
         // panelncc
 
@@ -784,8 +854,9 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
         panel_thongkenhapkhobottom.setBackground(Color.pink);
         panel_thongkenhapkhobottom.setLayout(new BorderLayout());
         panel_thongkebottom_top = new JPanel();
+        panel_thongkebottom_top.setLayout(new BorderLayout());
         panel_thongkebottom_top.setPreferredSize(new Dimension(0, 60));
-        panel_thongkebottom_top.setBackground(Color.red);
+        panel_thongkebottom_top.setBackground(new Color(51, 51, 51));
         panel_thongkebottom_mid = new JPanel();
         panel_thongkebottom_mid.setLayout(new BorderLayout());
         chartPanel = new ChartPanel(null);
@@ -797,6 +868,89 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
         panel_thongkenhapkhobottom.add(panel_thongkebottom_mid, BorderLayout.CENTER);
         panel_thongkenhapkhobottom.add(panel_thongkebottom_bottom, BorderLayout.SOUTH);
         panel_thongkenhapkho.add(panel_thongkenhapkhobottom, BorderLayout.CENTER);
+
+        // startpanelthemphieunhap
+        panel_themphieunhap = new JPanel();
+        panel_themphieunhap.setBackground(new Color(51, 51, 51));
+        panel_themphieunhap.setLayout(new GridBagLayout());
+        GridBagConstraints gbc_themphieunhap = new GridBagConstraints();
+        gbc_themphieunhap.insets = new Insets(5, 5, 5, 5); // Khoảng cách giữa các thành phần
+        gbc_themphieunhap.fill = GridBagConstraints.HORIZONTAL; // Thành phần lấp đầy theo chiều ngang
+        JLabel lb_tenncc = new JLabel("Ten NCC:");
+        lb_tenncc.setForeground(Color.white);
+        gbc_themphieunhap.gridx = 0;
+        gbc_themphieunhap.gridy = 0;
+        gbc_themphieunhap.gridwidth = 1;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 0;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(lb_tenncc, gbc_themphieunhap);
+        cb_tenncc = new JComboBox<>();
+        cb_tenncc.setPreferredSize(new Dimension(150, 45));
+        gbc_themphieunhap.gridx = 1;
+        gbc_themphieunhap.gridy = 0;
+        gbc_themphieunhap.gridwidth = 1;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 1;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(cb_tenncc, gbc_themphieunhap);
+
+        JLabel lb_tendtpn = new JLabel("Ten dien thoai:");
+        lb_tendtpn.setForeground(Color.white);
+        gbc_themphieunhap.gridx = 0;
+        gbc_themphieunhap.gridy = 1;
+        gbc_themphieunhap.gridwidth = 1;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 0;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(lb_tendtpn, gbc_themphieunhap);
+        cb_tendt = new JComboBox<>();
+        cb_tendt.setPreferredSize(new Dimension(150, 45));
+        gbc_themphieunhap.gridx = 1;
+        gbc_themphieunhap.gridy = 1;
+        gbc_themphieunhap.gridwidth = 1;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 1;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(cb_tendt, gbc_themphieunhap);
+
+        JLabel lb_sl = new JLabel("So luong:");
+        lb_sl.setForeground(Color.white);
+        gbc_themphieunhap.gridx = 0;
+        gbc_themphieunhap.gridy = 2;
+        gbc_themphieunhap.gridwidth = 1;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 0;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(lb_sl, gbc_themphieunhap);
+        tf_sl = new JTextField();
+        tf_sl.setPreferredSize(new Dimension(150, 45));
+        gbc_themphieunhap.gridx = 1;
+        gbc_themphieunhap.gridy = 2;
+        gbc_themphieunhap.gridwidth = 1;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 1;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(tf_sl, gbc_themphieunhap);
+
+        JPanel panel_btn = new JPanel();
+        panel_btn.setLayout(new GridLayout(1, 2, 50, 0));
+        panel_btn.setBackground(new Color(51, 51, 51));
+        gbc_themphieunhap.gridx = 0;
+        gbc_themphieunhap.gridy = 3;
+        gbc_themphieunhap.gridwidth = 2;
+        gbc_themphieunhap.gridheight = 1;
+        gbc_themphieunhap.weightx = 1;
+        gbc_themphieunhap.weighty = 1;
+        panel_themphieunhap.add(panel_btn, gbc_themphieunhap);
+        btn_xacnhanthemphieunhap = new JButton("Xac nhan");
+        btn_xacnhanthemphieunhap.addActionListener(this);
+        panel_btn.add(btn_xacnhanthemphieunhap);
+        btn_huythemphieunhap = new JButton("Huy");
+        panel_btn.add(btn_huythemphieunhap);
+
+        // endpanelthemphieunhap
+
         setVisible(true);
     }
 
@@ -879,7 +1033,27 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
             panel_right_bottom.revalidate();
             panel_right_bottom.repaint();
         } else if (e.getSource() == lb_thongkenhapkho) {
+            isNCCPanel = false;
+            isSanPhamPanel = false;
+            isPhieuNhap = false;
             panel_right.removeAll();
+            panel_thongkebottom_top.removeAll();
+            lb_tongtiennhap = new JLabel();
+            lb_tongtiennhap.setText("Tổng tiền nhập: " + PhieuNhapDAO.getInstance().countSum() + " VND");
+            lb_tongtiennhap.setForeground(Color.white);
+            lb_tongtiennhap.setFont(new Font("Arial", Font.BOLD, 20));
+            lb_tongtiennhap.setHorizontalAlignment(SwingConstants.CENTER);
+            panel_thongkebottom_top.add(lb_tongtiennhap, BorderLayout.CENTER);
+            panel_thongkebottom_top.revalidate();
+            panel_thongkebottom_top.repaint();
+            chartPanel.setChart(
+                    PhieuNhapDAO.getInstance().createBarChart("Tất cả", "Tất cả"));
+            panel_thongkebottom_bottom.add(chartPanel, BorderLayout.CENTER);
+            tableModel = PhieuNhapDAO.getInstance().loadDataToTable("PhieuNhap");
+            table.setModel(tableModel);
+            table.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+            table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor());
+            panel_thongkebottom_mid.add(scrollPane_table, BorderLayout.CENTER);
             panel_right.add(panel_thongkenhapkho, BorderLayout.CENTER);
             panel_right.revalidate();
             panel_right.repaint();
@@ -908,19 +1082,59 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btn_add && isSanPhamPanel) {
-            panel_right_bottom.removeAll();
-            panel_right_bottom.add(panel_themsp, BorderLayout.CENTER);
-            panel_right_bottom.revalidate();
-            panel_right_bottom.repaint();
-        } else if (e.getSource() == btn_refresh && isSanPhamPanel) {
-            panel_right_bottom.removeAll();
-            tableModel = DienThoaiDAO.getInstance().loadDataToTable("DienThoai");
-            table.setModel(tableModel);
-            panel_right_bottom.add(scrollPane_table, BorderLayout.CENTER);
-            panel_right_bottom.add(panel_right_bottom_top, BorderLayout.NORTH);
-            panel_right_bottom.revalidate();
-            panel_right_bottom.repaint();
+        if (e.getSource() == btn_add) {
+            if (isSanPhamPanel) {
+                panel_right_bottom.removeAll();
+                panel_right_bottom.add(panel_themsp, BorderLayout.CENTER);
+                panel_right_bottom.revalidate();
+                panel_right_bottom.repaint();
+            } else if (isNCCPanel) {
+                panel_right_bottom.removeAll();
+                panel_right_bottom.add(panel_themncc, BorderLayout.CENTER);
+                panel_right_bottom.revalidate();
+                panel_right_bottom.repaint();
+            } else if (isPhieuNhap) {
+                ArrayList<DienThoai> dsDT = new ArrayList<>();
+                dsDT = DienThoaiDAO.getInstance().selectAll();
+                for (DienThoai dt : dsDT) {
+                    cb_tendt.addItem(dt.getTenDt());
+                }
+                ArrayList<NhaCungCap> dsNCC = new ArrayList<>();
+                dsNCC = NhaCungCapDAO.getInstance().selectAll();
+                for (NhaCungCap ncc : dsNCC) {
+                    cb_tenncc.addItem(ncc.getTenNCC());
+                }
+                panel_right_bottom.removeAll();
+                panel_right_bottom.add(panel_themphieunhap, BorderLayout.CENTER);
+                panel_right_bottom.revalidate();
+                panel_right_bottom.repaint();
+            }
+        } else if (e.getSource() == btn_refresh) {
+            if (isSanPhamPanel) {
+                panel_right_bottom.removeAll();
+                tableModel = DienThoaiDAO.getInstance().loadDataToTable("DienThoai");
+                table.setModel(tableModel);
+                panel_right_bottom.add(scrollPane_table, BorderLayout.CENTER);
+                panel_right_bottom.add(panel_right_bottom_top, BorderLayout.NORTH);
+                panel_right_bottom.revalidate();
+                panel_right_bottom.repaint();
+            } else if (isNCCPanel) {
+                panel_right_bottom.removeAll();
+                tableModel = NhaCungCapDAO.getInstance().loadDataToTable("NhaCungCap");
+                table.setModel(tableModel);
+                panel_right_bottom.add(scrollPane_table, BorderLayout.CENTER);
+                panel_right_bottom.revalidate();
+                panel_right_bottom.repaint();
+            } else if (isPhieuNhap) {
+                panel_right_bottom.removeAll();
+                tableModel = PhieuNhapDAO.getInstance().loadDataToTable("PhieuNhap");
+                table.setModel(tableModel);
+                table.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+                table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor());
+                panel_right_bottom.add(scrollPane_table, BorderLayout.CENTER);
+                panel_right_bottom.revalidate();
+                panel_right_bottom.repaint();
+            }
         } else if (e.getSource() == btn_xacnhanthem) {
             DienThoai newdt = new DienThoai(tf_madt.getText(), tf_tendt.getText(),
                     Integer.parseInt(tf_giaban.getText()), Integer.parseInt(tf_gianhap.getText()), tf_maton.getText(),
@@ -928,84 +1142,156 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
                     Float.parseFloat(tf_kichthuocmanhinh.getText()), Integer.parseInt(tf_dungluongdt.getText()),
                     Integer.parseInt(tf_ram.getText()), Integer.parseInt(tf_baohanh.getText()), tf_mancc.getText());
             DienThoaiDAO.getInstance().insert(newdt);
-        } else if (e.getSource() == btn_delete && isSanPhamPanel) {
-            int[] selectRow = table.getSelectedRows();
-            ArrayList<DienThoai> dsxoa = new ArrayList<>();
-            if (selectRow.length > 0) {
-                for (int row : selectRow) {
-                    String ma_dt = String.valueOf(table.getValueAt(row, 0));
-                    String ten_dt = String.valueOf(table.getValueAt(row, 1));
-                    int gia_ban = Integer.parseInt(String.valueOf(table.getValueAt(row, 2)));
-                    int gia_nhap = Integer.parseInt(String.valueOf(table.getValueAt(row, 3)));
-                    String ma_ton = String.valueOf(table.getValueAt(row, 4));
-                    String xuat_xu = String.valueOf(table.getValueAt(row, 5));
-                    float trong_luong = Float.parseFloat(String.valueOf(table.getValueAt(row, 6)));
-                    float kich_thuoc_mh = Float.parseFloat(String.valueOf(table.getValueAt(row, 7)));
-                    int dung_luong = Integer.parseInt(String.valueOf(table.getValueAt(row, 8)));
-                    int ram = Integer.parseInt(String.valueOf(table.getValueAt(row, 9)));
-                    int bao_hanh = Integer.parseInt(String.valueOf(table.getValueAt(row, 10)));
-                    String ma_ncc = String.valueOf(table.getValueAt(row, 11));
+        } else if (e.getSource() == btn_xacnhanthemncc) {
+            NhaCungCap newncc = new NhaCungCap(tf_nccmancc.getText(), tf_ncctenncc.getText(),
+                    tf_nccquocgia.getText());
+            NhaCungCapDAO.getInstance().insert(newncc);
+        } else if (e.getSource() == btn_delete) {
+            if (isSanPhamPanel) {
+                int[] selectRow = table.getSelectedRows();
+                ArrayList<DienThoai> dsxoa = new ArrayList<>();
+                if (selectRow.length > 0) {
+                    for (int row : selectRow) {
+                        String ma_dt = String.valueOf(table.getValueAt(row, 0));
+                        String ten_dt = String.valueOf(table.getValueAt(row, 1));
+                        int gia_ban = Integer.parseInt(String.valueOf(table.getValueAt(row, 2)));
+                        int gia_nhap = Integer.parseInt(String.valueOf(table.getValueAt(row, 3)));
+                        String ma_ton = String.valueOf(table.getValueAt(row, 4));
+                        String xuat_xu = String.valueOf(table.getValueAt(row, 5));
+                        float trong_luong = Float.parseFloat(String.valueOf(table.getValueAt(row, 6)));
+                        float kich_thuoc_mh = Float.parseFloat(String.valueOf(table.getValueAt(row, 7)));
+                        int dung_luong = Integer.parseInt(String.valueOf(table.getValueAt(row, 8)));
+                        int ram = Integer.parseInt(String.valueOf(table.getValueAt(row, 9)));
+                        int bao_hanh = Integer.parseInt(String.valueOf(table.getValueAt(row, 10)));
+                        String ma_ncc = String.valueOf(table.getValueAt(row, 11));
 
-                    DienThoai dienThoai = new DienThoai(ma_dt, ten_dt, gia_ban, gia_nhap, ma_ton, xuat_xu, trong_luong,
-                            kich_thuoc_mh, dung_luong, ram, bao_hanh, ma_ncc);
-                    dsxoa.add(dienThoai);
-                }
-                StringBuilder dsxoaStr = new StringBuilder();
-                for (DienThoai dt : dsxoa) {
-                    dsxoaStr.append("Mã: ").append(dt.getMaDt())
-                            .append(", Tên: ").append(dt.getTenDt())
-                            .append("\n");
-                }
-                int confirm = JOptionPane.showConfirmDialog(
-                        null,
-                        "Bạn có chắc chắn muốn xóa các sản phẩm sau?\n" + dsxoaStr,
-                        "Xóa sản phẩm",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
-
-                if (confirm == JOptionPane.YES_OPTION) {
-                    for (DienThoai dt : dsxoa) {
-                        DienThoaiDAO.getInstance().delete(dt);
+                        DienThoai dienThoai = new DienThoai(ma_dt, ten_dt, gia_ban, gia_nhap, ma_ton, xuat_xu,
+                                trong_luong,
+                                kich_thuoc_mh, dung_luong, ram, bao_hanh, ma_ncc);
+                        dsxoa.add(dienThoai);
                     }
-                    tableModel = DienThoaiDAO.getInstance().loadDataToTable("DienThoai");
-                    table.setModel(tableModel);
+                    StringBuilder dsxoaStr = new StringBuilder();
+                    for (DienThoai dt : dsxoa) {
+                        dsxoaStr.append("Mã: ").append(dt.getMaDt())
+                                .append(", Tên: ").append(dt.getTenDt())
+                                .append("\n");
+                    }
+                    int confirm = JOptionPane.showConfirmDialog(
+                            null,
+                            "Bạn có chắc chắn muốn xóa các sản phẩm sau?\n" + dsxoaStr,
+                            "Xóa sản phẩm",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        for (DienThoai dt : dsxoa) {
+                            DienThoaiDAO.getInstance().delete(dt);
+                        }
+                        tableModel = DienThoaiDAO.getInstance().loadDataToTable("DienThoai");
+                        table.setModel(tableModel);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui long chon san pham trong table de xoa", "Xoa san pham",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Vui long chon san pham trong table de xoa", "Xoa san pham",
-                        JOptionPane.INFORMATION_MESSAGE);
+            } else if (isNCCPanel) {
+                int[] selectRow = table.getSelectedRows();
+                ArrayList<NhaCungCap> dsxoa = new ArrayList<>();
+                if (selectRow.length > 0) {
+                    for (int row : selectRow) {
+                        String ma_ncc = String.valueOf(table.getValueAt(row, 0));
+                        String ten_ncc = String.valueOf(table.getValueAt(row, 1));
+                        String quoc_gia = String.valueOf(table.getValueAt(row, 2));
+                        NhaCungCap ncc = new NhaCungCap(ma_ncc, ten_ncc, quoc_gia);
+                        dsxoa.add(ncc);
+                    }
+                    StringBuilder dsxoaStr = new StringBuilder();
+                    for (NhaCungCap ncc : dsxoa) {
+                        dsxoaStr.append("Mã: ").append(ncc.getMaNCC())
+                                .append(", Tên: ").append(ncc.getTenNCC())
+                                .append(", Quoc gia: ").append(ncc.getQuocGia())
+                                .append("\n");
+                    }
+                    int confirm = JOptionPane.showConfirmDialog(
+                            null,
+                            "Bạn có chắc chắn muốn xóa các sản phẩm sau?\n" + dsxoaStr,
+                            "Xóa sản phẩm",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        for (NhaCungCap ncc : dsxoa) {
+                            NhaCungCapDAO.getInstance().delete(ncc);
+                        }
+                        tableModel = NhaCungCapDAO.getInstance().loadDataToTable("NhaCungCap");
+                        table.setModel(tableModel);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui long chon san pham trong table de xoa", "Xoa san pham",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-        } else if (e.getSource() == btn_thongke) {
+        }
+
+        else if (e.getSource() == btn_thongke) {
             String selectedMonth = (String) cb_thang.getSelectedItem();
             String selectedYear = (String) cb_nam.getSelectedItem();
+            panel_thongkebottom_top.removeAll();
+            lb_tongtiennhap.setText("Tổng tiền nhập: "
+                    + PhieuNhapDAO.getInstance().countSumCondition(selectedMonth, selectedYear) + " VND");
+            lb_tongtiennhap.setForeground(Color.white);
+            lb_tongtiennhap.setFont(new Font("Arial", Font.BOLD, 20));
+            lb_tongtiennhap.setHorizontalAlignment(SwingConstants.CENTER);
+            panel_thongkebottom_top.add(lb_tongtiennhap, BorderLayout.CENTER);
+            panel_thongkebottom_mid.removeAll();
+            tableModel = PhieuNhapDAO.getInstance().loadDataToTableCondition(selectedMonth, selectedYear);
+            table.setModel(tableModel);
+            table.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+            table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor());
+            panel_thongkebottom_mid.add(scrollPane_table, BorderLayout.CENTER);
+            panel_thongkebottom_mid.revalidate();
+            panel_thongkebottom_mid.repaint();
+
             chartPanel.setChart(
-                    PhieuNhapDAO.getInstance().createLineChart(selectedMonth, selectedYear));
+                    PhieuNhapDAO.getInstance().createBarChart(selectedMonth, selectedYear));
             panel_thongkebottom_bottom.removeAll();
             panel_thongkebottom_bottom.add(chartPanel, BorderLayout.CENTER);
             panel_thongkebottom_bottom.revalidate();
             panel_thongkebottom_bottom.repaint();
             panel_thongkenhapkhobottom.revalidate();
             panel_thongkenhapkhobottom.repaint();
-        } else if (e.getSource() == btn_edit && isSanPhamPanel) {
-            int rowSelected = table.getSelectedRow();
-            if (rowSelected != -1) {
-                String ma_dt = String.valueOf(table.getValueAt(rowSelected, 0));
-                String ten_dt = String.valueOf(table.getValueAt(rowSelected, 1));
-                String gia_ban = String.valueOf((table.getValueAt(rowSelected, 2)));
-                String gia_nhap = String.valueOf((table.getValueAt(rowSelected, 3)));
-                String ma_ton = String.valueOf(table.getValueAt(rowSelected, 4));
-                String xuat_xu = String.valueOf(table.getValueAt(rowSelected, 5));
-                String trong_luong = String.valueOf(table.getValueAt(rowSelected, 6));
-                String ktmh = String.valueOf(table.getValueAt(rowSelected, 7));
-                String dung_luong = String.valueOf(table.getValueAt(rowSelected, 8));
-                String ram = String.valueOf(table.getValueAt(rowSelected, 9));
-                String bao_hanh = String.valueOf(table.getValueAt(rowSelected, 10));
-                String ma_ncc = String.valueOf(table.getValueAt(rowSelected, 11));
-                DienThoai dt = new DienThoai(ma_dt, ten_dt,
-                        Integer.parseInt(gia_ban), Integer.parseInt(gia_nhap), ma_ton,
-                        xuat_xu, Float.parseFloat(trong_luong),
-                        Float.parseFloat(ktmh), Integer.parseInt(dung_luong),
-                        Integer.parseInt(ram), Integer.parseInt(bao_hanh), ma_ncc);
-                editframe editFrame = new editframe(dt);
+        } else if (e.getSource() == btn_edit) {
+            if (isSanPhamPanel) {
+                int rowSelected = table.getSelectedRow();
+                if (rowSelected != -1) {
+                    String ma_dt = String.valueOf(table.getValueAt(rowSelected, 0));
+                    String ten_dt = String.valueOf(table.getValueAt(rowSelected, 1));
+                    String gia_ban = String.valueOf((table.getValueAt(rowSelected, 2)));
+                    String gia_nhap = String.valueOf((table.getValueAt(rowSelected, 3)));
+                    String ma_ton = String.valueOf(table.getValueAt(rowSelected, 4));
+                    String xuat_xu = String.valueOf(table.getValueAt(rowSelected, 5));
+                    String trong_luong = String.valueOf(table.getValueAt(rowSelected, 6));
+                    String ktmh = String.valueOf(table.getValueAt(rowSelected, 7));
+                    String dung_luong = String.valueOf(table.getValueAt(rowSelected, 8));
+                    String ram = String.valueOf(table.getValueAt(rowSelected, 9));
+                    String bao_hanh = String.valueOf(table.getValueAt(rowSelected, 10));
+                    String ma_ncc = String.valueOf(table.getValueAt(rowSelected, 11));
+                    DienThoai dt = new DienThoai(ma_dt, ten_dt,
+                            Integer.parseInt(gia_ban), Integer.parseInt(gia_nhap), ma_ton,
+                            xuat_xu, Float.parseFloat(trong_luong),
+                            Float.parseFloat(ktmh), Integer.parseInt(dung_luong),
+                            Integer.parseInt(ram), Integer.parseInt(bao_hanh), ma_ncc);
+                    editframe editFrame = new editframe(dt);
+                }
+            } else if (isNCCPanel) {
+                int rowSelected = table.getSelectedRow();
+                if (rowSelected != -1) {
+                    String ma_ncc = String.valueOf(table.getValueAt(rowSelected, 0));
+                    String ten_ncc = String.valueOf(table.getValueAt(rowSelected, 1));
+                    String quoc_gia = String.valueOf(table.getValueAt(rowSelected, 2));
+                    NhaCungCap ncc = new NhaCungCap(ma_ncc, ten_ncc, quoc_gia);
+                    editframencc editFrame = new editframencc(ncc);
+                }
             }
         } else if (e.getSource() == btn_huythem) {
             panel_right_bottom.removeAll();
@@ -1013,6 +1299,144 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener 
             panel_right_bottom.add(panel_right_bottom_top, BorderLayout.NORTH);
             panel_right_bottom.revalidate();
             panel_right_bottom.repaint();
+        } else if (e.getSource() == btn_huythemncc) {
+            panel_right_bottom.removeAll();
+            panel_right_bottom.add(scrollPane_table, BorderLayout.CENTER);
+            panel_right_bottom.revalidate();
+            panel_right_bottom.repaint();
+        } else if (e.getSource() == btn_xacnhanthemphieunhap) {
+            try {
+                // Lấy và kiểm tra dữ liệu đầu vào
+                String tenNCC = (String) cb_tenncc.getSelectedItem();
+                String tenDT = (String) cb_tendt.getSelectedItem();
+                if (tenNCC == null || tenDT == null || tenNCC.isEmpty() || tenDT.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà cung cấp và điện thoại!");
+                    return;
+                }
+                int sl;
+                try {
+                    sl = Integer.parseInt(tf_sl.getText());
+                    if (sl <= 0)
+                        throw new NumberFormatException();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Số lượng phải là số nguyên dương!");
+                    return;
+                }
+
+                // Lấy mã NCC và DT
+                String maNCC = null;
+                String maDT = null;
+                int gianhap = 0;
+                ArrayList<NhaCungCap> dsNCC = NhaCungCapDAO.getInstance().selectAll();
+                for (NhaCungCap ncc : dsNCC) {
+                    if (ncc.getTenNCC().equals(tenNCC)) {
+                        maNCC = ncc.getMaNCC();
+                        break;
+                    }
+                }
+                if (maNCC == null) {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy nhà cung cấp!");
+                    return;
+                }
+
+                ArrayList<DienThoai> dsDT = DienThoaiDAO.getInstance().selectAll();
+                for (DienThoai dt : dsDT) {
+                    if (dt.getTenDt().equals(tenDT)) {
+                        maDT = dt.getMaDt();
+                        gianhap = dt.getGiaNhap();
+                        break;
+                    }
+                }
+                if (maDT == null) {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy điện thoại!");
+                    return;
+                }
+
+                // Tính tổng tiền
+                int tongtien = sl * gianhap;
+
+                // Lấy ngày hiện tại
+                LocalDate currentDate = LocalDate.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                String formattedDate = currentDate.format(formatter);
+
+                // Lấy mã nhân viên (giả định từ phiên đăng nhập)
+                String maNV = "NV001"; // Nên lấy từ giao diện hoặc phiên đăng nhập
+
+                // Kiểm tra phiếu nhập
+                ArrayList<PhieuNhap> dsPhieuNhap = PhieuNhapDAO.getInstance().selectAll();
+                PhieuNhap phieuNhap = null;
+                boolean isNewPhieuNhap = true;
+
+                for (PhieuNhap pn : dsPhieuNhap) {
+                    if (pn.getNgayNhap().equals(formattedDate) && pn.getMaNV().equals(maNV)
+                            && pn.getMaNCC().equals(maNCC)) {
+                        phieuNhap = pn;
+                        isNewPhieuNhap = false;
+                        break;
+                    }
+                }
+
+                if (isNewPhieuNhap) {
+                    // Tạo phiếu nhập mới
+                    phieuNhap = new PhieuNhap(PhieuNhapDAO.getInstance().autoUpdateMaHDN(), maNCC, 1, formattedDate,
+                            tongtien, maNV);
+                    PhieuNhapDAO.getInstance().insert(phieuNhap);
+                }
+
+                // Xử lý chi tiết phiếu nhập
+                ArrayList<ChiTietPhieuNhap> dsCTPN = ChiTietPhieuNhapDAO.getInstance().selectAll();
+                boolean foundCTPN = false;
+
+                for (ChiTietPhieuNhap ct : dsCTPN) {
+                    if (ct.getMaHDNhap().equals(phieuNhap.getMaHDNhap()) && ct.getMaDT().equals(maDT)) {
+                        // Cập nhật chi tiết phiếu nhập nếu trùng maDT
+                        ct.setSoLuongNhap(ct.getSoLuongNhap() + sl);
+                        ct.setThanhTien(ct.getThanhTien() + tongtien);
+                        ChiTietPhieuNhapDAO.getInstance().update(ct);
+                        foundCTPN = true;
+                        break;
+                    }
+                }
+
+                if (!foundCTPN) {
+                    // Thêm chi tiết phiếu nhập mới và tăng soLoaiDT
+                    ChiTietPhieuNhap chiTietPhieuNhap = new ChiTietPhieuNhap(
+                            ChiTietPhieuNhapDAO.getInstance().autoUpdateMaCTPN(),
+                            phieuNhap.getMaHDNhap(), gianhap, tongtien, sl, maDT);
+                    ChiTietPhieuNhapDAO.getInstance().insert(chiTietPhieuNhap);
+                    if (!isNewPhieuNhap) {
+                        // Cập nhật soLoaiDT và tongtien nếu không phải phiếu nhập mới
+                        phieuNhap.setSoLoaiDT(phieuNhap.getSoLoaiDT() + 1);
+                    }
+                    // Cập nhật tổng tiền của phiếu nhập
+                    phieuNhap.setTongTien(phieuNhap.getTongTien() + tongtien);
+                    PhieuNhapDAO.getInstance().update(phieuNhap);
+                } else {
+                    // Cập nhật tổng tiền của phiếu nhập khi chỉ cập nhật chi tiết
+                    phieuNhap.setTongTien(phieuNhap.getTongTien() + tongtien);
+                    PhieuNhapDAO.getInstance().update(phieuNhap);
+                }
+
+                JOptionPane.showMessageDialog(null, "Thêm phiếu nhập thành công!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Lỗi: " + ex.getMessage());
+            }
         }
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        searchTable(tf_search.getText());
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        searchTable(tf_search.getText());
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        searchTable(tf_search.getText());
     }
 }

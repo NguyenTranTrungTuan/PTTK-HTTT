@@ -26,7 +26,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            String sql = "INSERT INTO DienThoai VALUES ('" + obj.getManCC() + "', N'" + obj.getTenNCC() + "', N'"
+            String sql = "INSERT INTO DienThoai VALUES ('" + obj.getMaNCC() + "', N'" + obj.getTenNCC() + "', N'"
                     + obj.getQuocGia() + "')";
             st.executeUpdate(sql);
             con.close();
@@ -46,7 +46,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
             Statement st = con.createStatement();
             String sql = "UPDATE NhaCungCap SET TenNCC = N'" + obj.getTenNCC() + "', QuocGia = N'"
                     + obj.getQuocGia() + "' WHERE MaNCC = '"
-                    + obj.getManCC() + "'";
+                    + obj.getMaNCC() + "'";
             st.executeUpdate(sql);
             con.close();
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            String sql = "DELETE FROM NhaCungCap WHERE MaNCC = '" + obj.getManCC() + "'";
+            String sql = "DELETE FROM NhaCungCap WHERE MaNCC = '" + obj.getMaNCC() + "'";
             st.executeUpdate(sql);
             con.close();
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM NhaCungCap WHERE MaNCC = '" + obj.getManCC() + "'");
+            ResultSet rs = st.executeQuery("SELECT * FROM NhaCungCap WHERE MaNCC = '" + obj.getMaNCC() + "'");
             if (rs.next()) {
                 NhaCungCap ncc = new NhaCungCap(rs.getString("MaNCC"), rs.getString("TenNCC"), rs.getString("QuocGia"));
                 return ncc;

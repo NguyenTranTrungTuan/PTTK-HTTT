@@ -31,9 +31,6 @@ public class cthdframe extends JFrame {
         table.getTableHeader().setForeground(Color.white);
 
         tableModel = ChiTietPhieuNhapDAO.getInstance().loadDataToTableCondition(mahdnhap);
-        if (tableModel.getRowCount() == 0) {
-            System.out.println("No data found for mahdnhap: " + mahdnhap);
-        }
         table.setModel(tableModel);
 
         JScrollPane scrollPane_table = new JScrollPane(table);

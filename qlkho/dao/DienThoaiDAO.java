@@ -189,4 +189,29 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
         }
         return tableModel;
     }
+
+    public String autoUpdateMaDT() {
+        String maDt = null;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT TOP 1 MaDT FROM DienThoai ORDER BY MaDT DESC");
+            if (rs.next()) {
+                maDt = rs.getString("MaDT");
+                int newMaDt = Integer.parseInt(maDt.substring(2)) + 1;
+                maDt = String.format("DT%03d", newMaDt);
+            } else {
+                maDt = "DT001";
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maDt;
+    }
+
 }

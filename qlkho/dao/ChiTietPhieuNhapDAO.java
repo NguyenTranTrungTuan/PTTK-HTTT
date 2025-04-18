@@ -215,4 +215,28 @@ public class ChiTietPhieuNhapDAO implements DAOInterface<ChiTietPhieuNhap> {
         return tableModel;
     }
 
+    public String autoUpdateMaCTPN() {
+        String maCTPN = null;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT TOP 1 MaCTPnhap FROM ChiTietPhieuNhap ORDER BY MaCTPnhap DESC");
+            if (rs.next()) {
+                maCTPN = rs.getString("MaCTPnhap");
+                int newMaCTPN = Integer.parseInt(maCTPN.substring(4)) + 1;
+                maCTPN = String.format("CTPN%03d", newMaCTPN);
+            } else {
+                maCTPN = "CTPN001";
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maCTPN;
+    }
+
 }
