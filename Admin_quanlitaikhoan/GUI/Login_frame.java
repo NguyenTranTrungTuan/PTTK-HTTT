@@ -5,8 +5,6 @@ import Admin_quanlitaikhoan.DTO.NhanVien;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import NhanVienBanHang.GUI.NhanVienFrame2; 
 
 public class Login_frame extends JFrame {
     public Login_frame() {
@@ -100,7 +98,7 @@ public class Login_frame extends JFrame {
 
                     if (nv != null) {
                         JOptionPane.showMessageDialog(null, "Đăng nhập thành công! Xin chào " + nv.getTennv(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                        new NhanVien_frame2(); // Chuyển đến giao diện admin
+                        new Admin_frame(); // Chuyển đến giao diện admin
                         dispose(); // Đóng frame đăng nhập
                     } else {
                         JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
