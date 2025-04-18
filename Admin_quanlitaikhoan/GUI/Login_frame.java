@@ -2,6 +2,8 @@ package Admin_quanlitaikhoan.GUI;
 
 import Admin_quanlitaikhoan.DAO.NhanVien_DAO;
 import Admin_quanlitaikhoan.DTO.NhanVien;
+import NhanVienBanHang.GUI.NhanVienFrame2;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -98,7 +100,7 @@ public class Login_frame extends JFrame {
 
                     if (nv != null) {
                         JOptionPane.showMessageDialog(null, "Đăng nhập thành công! Xin chào " + nv.getTennv(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                        new Admin_frame(); // Chuyển đến giao diện admin
+                         new NhanVienFrame2(); // Chuyển đến giao diện admin
                         dispose(); // Đóng frame đăng nhập
                     } else {
                         JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
