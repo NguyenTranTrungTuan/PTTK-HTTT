@@ -1,0 +1,168 @@
+
+/* */package GUI.user;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import DTO.DienThoai_DTO;
+
+import java.awt.Image;
+
+
+
+public class Model_ProductItem {
+
+    /**
+     * @return the Title
+     */
+    public String getTitle() {
+        return Title;
+    }
+
+    /**
+     * @param Title the Title to set
+     */
+    public void setTitle(String Title) {
+        this.Title = Title;
+    }
+
+    /**
+     * @return the Image
+     */
+    public String getImageicon() {
+        return Imageicon;
+    }
+
+    /**
+     * @param Image the Image to set
+     */
+    public void setImageicon(String Image) {
+        this.Imageicon = Image;
+    }
+
+    /**
+     * @return the price
+     */
+    public String getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+
+    public Model_ProductItem() {
+    }
+
+    public Model_ProductItem(String Title, String Image, String price) {
+        this.Title = Title;
+        this.Imageicon = Image;
+        this.price = price;
+    }
+    private String maSP;
+    private String Title;
+    private String Imageicon;
+    private String price;
+
+
+
+    private double priceAsDouble;   // giá bán
+    private double giaNhap;         // giá nhập
+    private String idTonkho;
+    private String xuatXu;
+    private String trongLuong;
+    private String kichThuocManHinh;
+    private String dungLuong;
+    private String ram;
+    private String idNCC;
+    private int baoHanh;
+    
+    public Model_ProductItem(String maSP, String Title, String Imageicon, String price, double priceAsDouble,
+                             double giaNhap, String idTonkho, String xuatXu, String trongLuong,
+                             String kichThuocManHinh, String dungLuong, String ram, String idNCC, int baoHanh){ 
+                                this.maSP = maSP;
+                                this.Title = Title;
+                                this.Imageicon = Imageicon;
+                                this.price = price;
+        this.priceAsDouble = priceAsDouble;
+        this.giaNhap = giaNhap;
+        this.idTonkho = idTonkho;
+        this.xuatXu = xuatXu;
+        this.trongLuong = trongLuong;
+        this.kichThuocManHinh = kichThuocManHinh;
+        this.dungLuong = dungLuong;
+        this.ram = ram;
+        this.idNCC = idNCC;
+        this.baoHanh = baoHanh;
+    }
+       // Getters & Setters
+       public String getMaSP() { return maSP; }
+       public void setMaSP(String maSP) { this.maSP = maSP; }
+   
+      
+   
+       public double getPriceAsDouble() { return priceAsDouble; }
+       public void setPriceAsDouble(double priceAsDouble) { this.priceAsDouble = priceAsDouble; }
+   
+       public double getGiaNhap() { return giaNhap; }
+       public void setGiaNhap(double giaNhap) { this.giaNhap = giaNhap; }
+   
+       public String getIdTonkho() { return idTonkho; }
+       public void setIdTonkho(String idTonkho) { this.idTonkho = idTonkho; }
+   
+       public String getXuatXu() { return xuatXu; }
+       public void setXuatXu(String xuatXu) { this.xuatXu = xuatXu; }
+   
+       public String getTrongLuong() { return trongLuong; }
+       public void setTrongLuong(String trongLuong) { this.trongLuong = trongLuong; }
+   
+       public String getKichThuocManHinh() { return kichThuocManHinh; }
+       public void setKichThuocManHinh(String kichThuocManHinh) { this.kichThuocManHinh = kichThuocManHinh; }
+   
+       public String getDungLuong() { return dungLuong; }
+       public void setDungLuong(String dungLuong) { this.dungLuong = dungLuong; }
+   
+       public String getRam() { return ram; }
+       public void setRam(String ram) { this.ram = ram; }
+   
+       public String getIdNCC() { return idNCC; }
+       public void setIdNCC(String idNCC) { this.idNCC = idNCC; }
+   
+       public int getBaoHanh() { return baoHanh; }
+       public void setBaoHanh(int baoHanh) { this.baoHanh = baoHanh; }
+    public Icon toImage(){
+        ImageIcon image = new ImageIcon("GUI/user/ProductImage/" +Imageicon+".png");
+        Image og = image.getImage();
+        int w = 140;
+        int h = 180;
+        int iw = image.getIconWidth();
+        int ih = image.getIconHeight();
+        double xscale = (double) w / iw;
+        double yscale = (double) h / ih;
+        double scale = Math.max(xscale, yscale);
+        int width = (int)(scale*iw);
+        int height = (int)(scale*ih);
+        Image scaledImage = og.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+        return new ImageIcon(scaledImage);
+    }
+    public double getGiaDouble() {
+        try {
+            return Double.parseDouble(price.replaceAll("[^\\d.]", ""));
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+    public DienThoai_DTO toDienThoaiDTO() {
+        DienThoai_DTO dto = new DienThoai_DTO();
+        dto.setID_SanPham(maSP);
+        dto.setTen_SanPham(Title);
+        dto.setGia_SanPham(getGiaDouble());
+        return dto;
+    }
+    
+}

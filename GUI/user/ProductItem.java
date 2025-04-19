@@ -1,34 +1,45 @@
 package GUI.user;
 import GUI.giohang.GioHangGUI;
-import qlgiohang.oop.Product;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import DTO.DienThoai_DTO;
+
+import java.awt.event.ActionEvent;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ProductItem extends JPanel implements ActionListener{
+public class ProductItem extends JPanel implements ActionListener {
     private MyButton addCart_btn;
     private JLabel Imagelb;
     private JLabel Namelb;
     private JLabel PriceTaglb;
     private boolean selected;
-    private GioHangGUI gioHangGUI; 
     private Model_ProductItem data;
-
+    private GioHangGUI gioHangGUI;
+  
+    
     public String getName(){
         return Namelb.getText();
     }
+  
+    
+    public ProductItem(Model_ProductItem data, GioHangGUI gioHangGUI) {
+        if (data == null || gioHangGUI == null) {
+            throw new IllegalArgumentException("Dữ liệu sản phẩm hoặc giao diện giỏ hàng không được null.");
+        }
 
-    public ProductItem(Model_ProductItem data,GioHangGUI gioHangGUI) {
+        this.data = data;
+        this.gioHangGUI = gioHangGUI;
+
+       
         initComponents(data);
-        this.selected = false;
-        setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238), 1));
-        setBackground(Color.WHITE); 
-        setPreferredSize(new Dimension(200, 300));
-        addCart_btn.addActionListener(this); // Đăng ký sự kiện với chính lớp này
-        this.gioHangGUI = gioHangGUI; // Lưu tham chiếu đến gioHangGUI
+
+        
+        addCart_btn.addActionListener(this);
     }
+    
 
     private void initComponents(Model_ProductItem data) {
         setBackground(Color.WHITE);
@@ -49,7 +60,7 @@ public class ProductItem extends JPanel implements ActionListener{
         Namelb.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         PriceTaglb = new JLabel("price");
-        PriceTaglb.setText(data.getPrice());
+        PriceTaglb.setText(String.format("%,.2f VND", data.getPrice()));
         PriceTaglb.setFont(new Font("Segoe UI", Font.BOLD, 16));
         PriceTaglb.setForeground(new Color(255, 102, 102));
         PriceTaglb.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -72,16 +83,20 @@ public class ProductItem extends JPanel implements ActionListener{
         add(Box.createVerticalGlue()); // Push everything upwards
     }
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addCart_btn) {
-            Product sanPhamMoi = new Product(
-                data.getTitle(),
-                Double.parseDouble(data.getPrice().replaceAll("[^\\d]", "")), // Chuyển giá từ String sang double
-                1 // Số lượng mặc định là 1
-            );
-            gioHangGUI.themSanPhamVaoGio(sanPhamMoi); // Thêm sản phẩm vào giỏ hàng
-            JOptionPane.showMessageDialog(this, "Đã thêm sản phẩm vào giỏ hàng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            handleAddToCart();
         }
     }
-}
 
+    private void handleAddToCart() {
+        // Thêm sản phẩm vào giỏ hàng
+        gioHangGUI.themSanPhamVaoGio(data);
+
+        // Hiển thị thông báo
+        JOptionPane.showMessageDialog(this,
+            "Sản phẩm \"" + data.getTitle() + "\" đã được thêm vào giỏ hàng!",
+            "Thông báo",
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+}

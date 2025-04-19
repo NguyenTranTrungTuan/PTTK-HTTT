@@ -19,9 +19,8 @@ public class HeaderPanel extends JPanel {
     protected DangKy dangkyFrame;
     protected DangNhap dangnhapFrame;
     private KhachHang_BLL khbll;
-    private GioHangGUI giohang;
     private TrangChu tc;
-
+    private GioHangGUI giohang;
     public KhachHang_DTO kh;
 
     // Regex cho email

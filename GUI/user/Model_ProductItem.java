@@ -40,30 +40,38 @@ public class Model_ProductItem {
     /**
      * @return the price
      */
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
     /**
      * @param price the price to set
      */
-    public void setPrice(String price) {
+    public void setPrice(Double price) {
         this.price = price;
+    }
+    public int getAmount() {
+        return amount;
+    }
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
 
     public Model_ProductItem() {
     }
 
-    public Model_ProductItem(String Title, String Image, String price) {
+    public Model_ProductItem(String Title, String Image, Double price,int amount) {
         this.Title = Title;
         this.Imageicon = Image;
         this.price = price;
+        this.amount = 0;
     }
 
     private String Title;
     private String Imageicon;
-    private String price;
+    private Double price;
+    private int amount;
 
     public Icon toImage(){
         ImageIcon image = new ImageIcon("GUI/user/ProductImage/" +Imageicon+".png");
