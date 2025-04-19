@@ -1,15 +1,7 @@
 package Admin_quanlitaikhoan.GUI;
 
-import Admin_quanlitaikhoan.DAO.KhachHang_DAO;
-import Admin_quanlitaikhoan.DAO.NhanVien_DAO;
-import Admin_quanlitaikhoan.DTO.KhachHang;
-import Admin_quanlitaikhoan.DTO.NhanVien;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import javax.swing.*;
 
 public class Admin_frame extends JFrame {
     JPanel panel_left, panel_right, panel_topleft, panel_bottomleft, contentPanel;
@@ -63,14 +55,7 @@ public class Admin_frame extends JFrame {
             panel_bottomleft.add(navButton);
             panel_bottomleft.add(Box.createVerticalStrut(10));
 
-            // Thêm sự kiện cho nút
-            navButton.addActionListener(e -> {
-                if (item.equals("Khách Hàng")) {
-                    loadKhachHangData();
-                } else if (item.equals("Nhân Viên")) {
-                    loadNhanVienData();
-                }
-            });
+
         }
 
         // Thêm panel_topleft và panel_bottomleft vào panel_left
@@ -133,80 +118,11 @@ public class Admin_frame extends JFrame {
         add(panel_left, BorderLayout.WEST);
         add(panel_right, BorderLayout.CENTER);
 
-        // Hiển thị giao diện ban đầu (mặc định là danh sách nhân viên)
-        loadNhanVienData();
 
         setVisible(true);
     }
 
-    // Phương thức tải dữ liệu khách hàng từ KhachHang_DAO
-    private void loadKhachHangData() {
-        KhachHang_DAO khDAO = KhachHang_DAO.getInstance();
-        ArrayList<KhachHang> listKH = khDAO.selectAll();
 
-        // Tạo bảng dữ liệu
-        String[] columnNames = {"Mã KH", "Tên KH", "SĐT", "Email", "Địa Chỉ", "Mật Khẩu"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        for (KhachHang kh : listKH) {
-            Object[] row = {
-                kh.getMakh(),
-                kh.getTenkh(),
-                kh.getSdt(),
-                kh.getEmail(),
-                kh.getDiachikh(),
-                kh.getPasswordkh()
-            };
-            model.addRow(row);
-        }
-
-        updateTable(model, "Danh Sách Khách Hàng");
-    }
-
-    // Phương thức tải dữ liệu nhân viên từ NhanVien_DAO
-    private void loadNhanVienData() {
-        NhanVien_DAO nvDAO = NhanVien_DAO.getInstance();
-        ArrayList<NhanVien> listNV = nvDAO.selectAll();
-
-        // Tạo bảng dữ liệu
-        String[] columnNames = {"Mã NV", "Tên NV", "Chức Vụ", "TT Liên Lạc", "Username", "Password", "Mã NQL"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-        for (NhanVien nv : listNV) {
-            Object[] row = {
-                nv.getMaNV(),
-                nv.getTennv(),
-                nv.getChucvu(),
-                nv.getTtlienlac(),
-                nv.getUsername(),
-                nv.getPassword(),
-                nv.getMaNQL()
-            };
-            model.addRow(row);
-        }
-
-        updateTable(model, "Danh Sách Nhân Viên");
-    }
-
-    // Phương thức cập nhật giao diện bảng
-    private void updateTable(DefaultTableModel model, String title) {
-        contentPanel.removeAll(); // Xóa nội dung cũ
-
-        // Thêm tiêu đề
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        titleLabel.setForeground(new Color(17, 45, 78)); // #112D4E - Xanh đen đậm
-        contentPanel.add(titleLabel, BorderLayout.NORTH);
-
-        // Thêm bảng
-        listTable = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(listTable);
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // Cập nhật giao diện
-        contentPanel.revalidate();
-        contentPanel.repaint();
-    }
 
 }

@@ -45,6 +45,7 @@ import NhanVienBanHang.DAO.ChiTietDonHang_DAO;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import NhanVienBanHang.Model.*;
 
 public class NhanVienFrame2 extends JFrame {
 
@@ -89,7 +90,7 @@ public class NhanVienFrame2 extends JFrame {
         }
     }
   
-    public NhanVienFrame2() {
+    public NhanVienFrame2(NhanVien nv) {
         
         setTitle("Nhan Vien Ban Hang");
         setSize(1690, 1024);
