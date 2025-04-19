@@ -21,7 +21,6 @@
         "."
     ],
     "java.project.referencedLibraries": [
-        "c:\\Users\\ACER\\OneDrive\\文档\\PTTK-HTTT\\PTTK-HTTT\\lib\\mssql-jdbc-12.10.0.jre11.jar",
-        "c:\\Users\\ACER\\OneDrive\\文档\\PTTK-HTTT\\PTTK-HTTT\\lib\\mysql-connector-j-9.2.0.jar"
+        "lib\\mysql-connector-j-9.2.0.jar"
     ]
 }

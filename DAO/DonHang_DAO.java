@@ -16,7 +16,7 @@ public class DonHang_DAO{
     public boolean OpenConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "Tbthsghj1357");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
             return true;
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e.getMessage());
