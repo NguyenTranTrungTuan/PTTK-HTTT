@@ -6,27 +6,17 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 public class KhachHang_DAO implements DAOInterface<KhachHang> {
-    private static KhachHang_DAO instance;
-
+    
     public static KhachHang_DAO getInstance() {
-        if (instance == null) {
-            instance = new KhachHang_DAO();
-        }
-        return instance;
+        return new KhachHang_DAO();
     }
 
-    private KhachHang_DAO() {}
-
-    private Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
-            String username = "sa";
-            String password = "123456";
-            return DriverManager.getConnection(url, username, password);
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new SQLException("Failed to connect to database: " + e.getMessage(), e);
-        }
+    private Connection getConnection() throws Exception {
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+        String username = "sa";
+        String password = "123456";
+        return DriverManager.getConnection(url, username, password);
     }
 
     @Override
@@ -41,8 +31,9 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
             stmt.setString(5, obj.getDiachikh());
             stmt.setString(6, obj.getPasswordkh());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error inserting KhachHang: " + e.getMessage(), e);
+            System.out.println("Insert successful!");
+        } catch (Exception e) {
+            System.out.println("Insert failed: " + e.getMessage());
         }
     }
 
@@ -58,8 +49,9 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
             stmt.setString(5, obj.getPasswordkh());
             stmt.setString(6, obj.getMakh());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating KhachHang: " + e.getMessage(), e);
+            System.out.println("Update successful!");
+        } catch (Exception e) {
+            System.out.println("Update failed: " + e.getMessage());
         }
     }
 
@@ -70,8 +62,9 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, obj.getMakh());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting KhachHang: " + e.getMessage(), e);
+            System.out.println("Delete successful!");
+        } catch (Exception e) {
+            System.out.println("Delete failed: " + e.getMessage());
         }
     }
 
@@ -92,8 +85,8 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
                 kh.setPasswordkh(rs.getString("passwordkh"));
                 result.add(kh);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error selecting all KhachHang: " + e.getMessage(), e);
+        } catch (Exception e) {
+            System.out.println("Select all failed: " + e.getMessage());
         }
         return result;
     }
@@ -116,8 +109,8 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
                     return kh;
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error selecting KhachHang by ID: " + e.getMessage(), e);
+        } catch (Exception e) {
+            System.out.println("Select by ID failed: " + e.getMessage());
         }
         return null;
     }
@@ -139,10 +132,33 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
                 kh.setPasswordkh(rs.getString("passwordkh"));
                 result.add(kh);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error selecting KhachHang by condition: " + e.getMessage(), e);
+        } catch (Exception e) {
+            System.out.println("Select by condition failed: " + e.getMessage());
         }
         return result;
+    }
+
+    public KhachHang checkLogin(String email, String passwordkh) {
+        String sql = "SELECT * FROM KhachHang WHERE email = ? AND passwordkh = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, passwordkh);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                KhachHang kh = new KhachHang();
+                kh.setMakh(rs.getString("maKH"));
+                kh.setTenkh(rs.getString("tenKH"));
+                kh.setSdt(rs.getString("sdt"));
+                kh.setEmail(rs.getString("email"));
+                kh.setDiachikh(rs.getString("diachikh"));
+                kh.setPasswordkh(rs.getString("passwordkh"));
+                return kh;
+            }
+        } catch (Exception e) {
+            System.out.println("Login failed: " + e.getMessage());
+        }
+        return null;
     }
 
     @Override
@@ -170,8 +186,8 @@ public class KhachHang_DAO implements DAOInterface<KhachHang> {
                 };
                 model.addRow(row);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error loading data to table: " + e.getMessage(), e);
+        } catch (Exception e) {
+            System.out.println("Load data to table failed: " + e.getMessage());
         }
         return model;
     }

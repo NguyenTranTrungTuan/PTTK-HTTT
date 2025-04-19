@@ -163,6 +163,7 @@ public class NhanVien_DAO implements DAOInterface<NhanVien> {
         return null;
     }
 
+
     @Override
     public DefaultTableModel loadDataToTable(String tableName) {
         // TODO Auto-generated method stub
