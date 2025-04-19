@@ -1,9 +1,10 @@
 package GUI.user;
-
+import GUI.giohang.GioHangGUI;
 import javax.swing.*;
 import BLL.DienThoai_BLL;
 import DTO.DienThoai_DTO;
-
+import qlgiohang.oop.Product;
+import DTO.GioHang_DTO;
 import java.awt.*;
 import java.awt.event.*;
 import java.math.BigDecimal;
@@ -15,19 +16,27 @@ public class ProductPanel extends JScrollPane {
     private ArrayList<Model_Product_Description> DescriptionList;
     private ProductDescription CurrentDescription;
     protected DienThoai_BLL dtbll;
+    private GioHangGUI gioHangGUI;
 
-    public ProductPanel(String typename, String searchtext, FilterPanel filter) { 
+    public ProductPanel(String typename, String searchtext, FilterPanel filter, GioHangGUI gioHangGUI) { 
+        this.gioHangGUI = gioHangGUI;
         initComponents();
-        if(typename.equals("All"))
+        if (typename.equals("All"))
             getAllSp(filter);
-        else if(typename.equals("Search")){
+        else if (typename.equals("Search")) {
             getSearchedItem(searchtext, filter);
-        }
-        else{
+        } else {
             getAllProductType(typename);
         }
         addEvent();
     }
+   /*public ProductPanel(String category, String search, FilterPanel filter, GioHangGUI gioHangGUI) {
+    
+        for (Model_ProductItem item : productList) {
+            ProductItem productItem = new ProductItem(item, gioHangGUI);
+            add(productItem);
+        }
+    }*/
 
     MouseListener mouseListener = new MouseListener() {
         @Override
@@ -83,8 +92,7 @@ public class ProductPanel extends JScrollPane {
                 ram = dt.getRAM();
                 thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
                 baoHanh = dt.getBaoHanh();
-
-                ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), String.valueOf(new BigDecimal(gia))));
+                ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), String.valueOf(new BigDecimal(gia))), gioHangGUI);
                 ProductList.add(item);
                 ItemPanel.add(item);
     
@@ -106,7 +114,7 @@ public class ProductPanel extends JScrollPane {
                     thuongHieu = dtbll.getThuongHieu(dth.getID_NCC());
                     baoHanh = dth.getBaoHanh();
 
-                    ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))));
+                    ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))), gioHangGUI);
                     ProductList.add(item);
                     ItemPanel.add(item);
         
@@ -146,7 +154,7 @@ public class ProductPanel extends JScrollPane {
                     thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
                     baoHanh = dt.getBaoHanh();
 
-                    ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))));
+                    ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))), gioHangGUI);
                     ProductList.add(item);
                     ItemPanel.add(item);
 
@@ -168,7 +176,7 @@ public class ProductPanel extends JScrollPane {
                         thuongHieu = dtbll.getThuongHieu(dth.getID_NCC());
                         baoHanh = dth.getBaoHanh();
 
-                        ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))));
+                        ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))), gioHangGUI);
                         ProductList.add(item);
                         ItemPanel.add(item);
 
@@ -198,10 +206,10 @@ public class ProductPanel extends JScrollPane {
             String thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
             int baoHanh = dt.getBaoHanh();
 
-            ProductItem item = new ProductItem(new Model_ProductItem(ten, id, String.valueOf(new BigDecimal(gia))));
+              // Truyền gioHangGUI vào ProductItem
+            ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), String.valueOf(new BigDecimal(gia))), gioHangGUI);
             ProductList.add(item);
             ItemPanel.add(item);
-
             Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
             DescriptionList.add(description);
         }
@@ -211,6 +219,23 @@ public class ProductPanel extends JScrollPane {
         for(ProductItem item:ProductList){
             item.addMouseListener(mouseListener);
         }
+        /*for (ProductItem item : ProductList) {
+            item.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        GioHangGUI.getInstance().addToCart(
+                            item.getID(),
+                            item.getName(),
+                            item.getPrice(),
+                            1
+                        );
+                        JOptionPane.showMessageDialog(null, "Đã thêm " + item.getName() + " vào giỏ hàng!");
+                    }
+                }
+            });
+        }*/
+        
     }
 
     private void initComponents() {
@@ -230,5 +255,6 @@ public class ProductPanel extends JScrollPane {
         setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         setPreferredSize(new Dimension(740, 540));
     }
+
 }
 

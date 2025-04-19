@@ -1,8 +1,13 @@
 package GUI.giohang;
 import qlgiohang.oop.Product;
-
+import GUI.user.Model_ProductItem;
+import GUI.user.Model_Product_Description;
+import DTO.DienThoai_DTO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import DTO.GioHang_DTO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -163,6 +168,59 @@ public class GioHangGUI extends JPanel implements ActionListener {
 
         itemPanel.add(productPanel);
     }
+    public void themSanPhamVaoGio(Product sanPhamMoi) {
+        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+        for (Product p : products) {
+            if (p.getTenSanPham().equals(sanPhamMoi.getTenSanPham())) {
+                p.setSoLuong(p.getSoLuong() + sanPhamMoi.getSoLuong());
+                itemPanel.removeAll();
+                for (Product sp : products) {
+                    addProduct(sp.getTenSanPham(), sp.getGiaMoi(), sp.getSoLuong());
+                }
+                updateTongTien();
+                itemPanel.revalidate();
+                itemPanel.repaint();
+                return;
+            }
+        }
+    
+        // Nếu chưa có, thêm mới
+        products.add(sanPhamMoi);
+        addProduct(sanPhamMoi.getTenSanPham(), sanPhamMoi.getGiaMoi(), sanPhamMoi.getSoLuong());
+        updateTongTien();
+        itemPanel.revalidate();
+        itemPanel.repaint();
+    }
+    private void addProduct(String tenSanPham, double giaMoi, int soLuong) {
+        Product product = new Product(tenSanPham, giaMoi, soLuong);
+        products.add(product);
+        addProduct(tenSanPham, giaMoi);
+    }
+    /*public void addToCart(String id, String name, double price, int quantity) {
+    // Kiểm tra xem sản phẩm đã có trong giỏ chưa
+    for (GioHang_DTO sp : danhSachGioHang) {
+        if (sp.getMaDT().equals(id)) {
+            sp.setSoLuong(sp.getSoLuong() + quantity);
+            capNhatHienThi(); // ví dụ: cập nhật lại bảng
+            return;
+        }
+    }
+
+    // Nếu chưa có thì thêm mới
+    GioHang_DTO spMoi = new GioHang_DTO(id, name, price, quantity);
+    danhSachGioHang.add(spMoi);
+    capNhatHienThi();
+}*/
+
+
+    private JPanel createNavPanel() {
+        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        navPanel.add(createNavLabel("Giỏ hàng", true));
+        navPanel.add(createNavLabel("Thông tin đặt hàng", false));
+        navPanel.add(createNavLabel("Thanh toán", false));
+        navPanel.add(createNavLabel("Hoàn tất", false));
+        return navPanel;
+    }    
 
     private JLabel createNavLabel(String text, boolean isActive) {
         JLabel label = new JLabel(text);
@@ -179,7 +237,7 @@ public class GioHangGUI extends JPanel implements ActionListener {
         }
         lbTongTienValue.setText(String.format("%,.0f₫", tongTien));
     }
-
+  
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnDatHang) {
