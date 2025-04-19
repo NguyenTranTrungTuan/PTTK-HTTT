@@ -128,7 +128,7 @@ public class NhanVien_DAO implements DAOInterface<NhanVien> {
                     rs.getString("chucvu"),
                     rs.getString("ttlienlac"),
                     rs.getString("Username"),
-                    rs.getString("Passwordnv"),
+                    rs.getString("passwordnv"),
                     rs.getString("maNQL")
                 );
                 list.add(nv);
@@ -140,7 +140,7 @@ public class NhanVien_DAO implements DAOInterface<NhanVien> {
     }
 
     public NhanVien checkLogin(String username, String Passwordnv) {
-        String sql = "SELECT * FROM NhanVien WHERE Username=? AND Passwordnv=?";
+        String sql = "SELECT * FROM NhanVien WHERE Username=? AND UasswordnV=?";
         try (Connection c = getConnection();
             PreparedStatement stmt = c.prepareStatement(sql)) {
             stmt.setString(1, username);
