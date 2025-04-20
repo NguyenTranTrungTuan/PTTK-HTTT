@@ -171,7 +171,6 @@ public class NhanVienFrame2 extends JFrame {
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
         panel_left_bottom.add(btnChonThoiDiem);
 
-        // Updated ActionListener for btnChonThoiDiem
         btnChonThoiDiem.addActionListener(e -> {
             handleButtonClick(btnChonThoiDiem);
             showDateRangePickerDialog();
@@ -196,7 +195,6 @@ public class NhanVienFrame2 extends JFrame {
         panel_bottomright.setLayout(new BorderLayout());
         panel_right.add(panel_bottomright);
 
-        // Initial table setup
         setupTable();
 
         btnXemDonHang.addActionListener(e -> {
@@ -224,16 +222,9 @@ public class NhanVienFrame2 extends JFrame {
             }
         };
 
-        // Setup JComboBox for Tình Trạng column
-        String[] tinhTrangOptions = {"Chưa Xử Lý", "Đã Xử Lý", "Đã Hủy"};
-        table.getColumnModel().getColumn(6).setCellEditor(new ComboBoxEditor(tinhTrangOptions, table));
-        table.getColumnModel().getColumn(6).setCellRenderer(new ComboBoxRenderer(tinhTrangOptions));
-
-        // Setup button for Chi Tiết Đơn Hàng column
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
 
-        // Table styling
         table.setBackground(new Color(51, 51, 51));
         table.setForeground(Color.WHITE);
         table.setGridColor(Color.BLACK);
@@ -243,7 +234,6 @@ public class NhanVienFrame2 extends JFrame {
         table.setSelectionBackground(new Color(100, 149, 237));
         table.setSelectionForeground(Color.WHITE);
 
-        // Mouse listener for row selection
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -269,7 +259,6 @@ public class NhanVienFrame2 extends JFrame {
         scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
         panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
 
-        // Display first row details if available
         if (tableModel.getRowCount() > 0) {
             String maDon = tableModel.getValueAt(0, 0).toString();
             String maKH = tableModel.getValueAt(0, 1).toString();
@@ -289,20 +278,14 @@ public class NhanVienFrame2 extends JFrame {
         JTable table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
+          return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
             }
         };
 
-        // Setup JComboBox for Tình Trạng column
-        String[] tinhTrangOptions = {"Chưa Xử Lý", "Đã Xử Lý", "Đã Hủy"};
-        table.getColumnModel().getColumn(6).setCellEditor(new ComboBoxEditor(tinhTrangOptions, table));
-        table.getColumnModel().getColumn(6).setCellRenderer(new ComboBoxRenderer(tinhTrangOptions));
 
-        // Setup button for Chi Tiết Đơn Hàng column
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
 
-        // Table styling
         table.setBackground(new Color(51, 51, 51));
         table.setForeground(Color.WHITE);
         table.setGridColor(Color.BLACK);
@@ -312,7 +295,6 @@ public class NhanVienFrame2 extends JFrame {
         table.setSelectionBackground(new Color(100, 149, 237));
         table.setSelectionForeground(Color.WHITE);
 
-        // Mouse listener for row selection
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -341,7 +323,6 @@ public class NhanVienFrame2 extends JFrame {
         panel_bottomright.revalidate();
         panel_bottomright.repaint();
 
-        // Display first row details if available
         if (tableModel.getRowCount() > 0) {
             String maDon = tableModel.getValueAt(0, 0).toString();
             String maKH = tableModel.getValueAt(0, 1).toString();
@@ -599,82 +580,5 @@ public class NhanVienFrame2 extends JFrame {
             dialog.setVisible(true);
         }
     }
-
-    public static class ComboBoxEditor extends AbstractCellEditor implements TableCellEditor {
-        private JComboBox<String> comboBox;
-        private JTable table;
-
-        public ComboBoxEditor(String[] items, JTable table) {
-            this.table = table;
-            comboBox = new JComboBox<>(items);
-            comboBox.setForeground(Color.WHITE);
-            comboBox.setBackground(new Color(51, 51, 51));
-            comboBox.setUI(new CustomComboBoxUI());
-            comboBox.setFont(new Font("Arial", Font.BOLD, 14));
-            comboBox.setPreferredSize(new Dimension(150, 35));
-            comboBox.addActionListener(e -> {
-                fireEditingStopped();
-                int row = table.getEditingRow();
-                if (row != -1) {
-                    String maDon = table.getValueAt(row, 0).toString();
-                    String newStatus = (String) comboBox.getSelectedItem();
-                    boolean updated = DonHang_DAO.getInstance().updateTinhTrang(maDon, newStatus);
-                    if (updated) {
-                        table.setValueAt(newStatus, row, 6);
-                        table.setRowSelectionInterval(row, row);
-                        table.repaint();
-                        JOptionPane.showMessageDialog(null, "Cập nhật tình trạng thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Cập nhật tình trạng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            comboBox.setSelectedItem(value);
-            if (isSelected) {
-                comboBox.setBackground(new Color(80, 120, 200));
-                comboBox.setPreferredSize(new Dimension(160, 40));
-            } else {
-                comboBox.setBackground(new Color(51, 51, 51));
-                comboBox.setPreferredSize(new Dimension(150, 35));
-            }
-            comboBox.setForeground(Color.WHITE);
-            return comboBox;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return comboBox.getSelectedItem();
-        }
-    }
-
-    public static class ComboBoxRenderer extends JComboBox<String> implements TableCellRenderer {
-        public ComboBoxRenderer(String[] items) {
-            super(items);
-            setForeground(Color.WHITE);
-            setBackground(new Color(51, 51, 51));
-            setUI(new CustomComboBoxUI());
-            setFont(new Font("Arial", Font.BOLD, 14));
-            setPreferredSize(new Dimension(150, 35));
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setSelectedItem(value);
-            setForeground(Color.WHITE);
-            if (isSelected || table.isCellSelected(row, column)) {
-                setBackground(new Color(80, 120, 200));
-                setPreferredSize(new Dimension(160, 40));
-            } else {
-                setBackground(new Color(51, 51, 51));
-                setPreferredSize(new Dimension(150, 35));
-            }
-            return this;
-        }
-    }
-
 
 }
