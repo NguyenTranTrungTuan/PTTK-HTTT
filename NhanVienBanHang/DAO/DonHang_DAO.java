@@ -3,10 +3,14 @@ package NhanVienBanHang.DAO;
 import NhanVienBanHang.Model.DonHang;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class DonHang_DAO implements DAOInterface<DonHang> {
@@ -43,6 +47,20 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
         return null;
     }
 
+    public static DonHang_DAO getInstance() {
+        return new DonHang_DAO();
+    }
+
+    private Connection getConnection() throws Exception {
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+        String username = "sa";
+        String password = "123456";
+        return DriverManager.getConnection(url, username, password);
+    }
+    
+
+
     @Override
         public DefaultTableModel loadDataToTable(String tableName) {
             DefaultTableModel tableModel = new DefaultTableModel();
@@ -76,6 +94,8 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
             }
             return tableModel;
         }
+
+
     public ArrayList<DonHang> getAllDonHang() {
         ArrayList<DonHang> list = new ArrayList<>();
         Connection con = null;
@@ -155,10 +175,52 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
 
 
     
-    public static DonHang_DAO getInstance() {
-        return new DonHang_DAO();
+
+
+    public DefaultTableModel loadDataToTableByDateRange(String tableName, Date startDate, Date endDate) {
+    DefaultTableModel tableModel = new DefaultTableModel();
+    Connection con = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    try {
+        con = getConnection();
+        String query = "SELECT * FROM " + tableName + " WHERE ngaydat BETWEEN ? AND ?";
+        stmt = con.prepareStatement(query);
+        stmt.setDate(1, new java.sql.Date(startDate.getTime()));
+        stmt.setDate(2, new java.sql.Date(endDate.getTime()));
+        rs = stmt.executeQuery();
+
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        String[] columnNames = new String[columnCount];
+        for (int i = 1; i <= columnCount; i++) {
+            columnNames[i - 1] = metaData.getColumnName(i);
+        }
+        tableModel.setColumnIdentifiers(columnNames);
+
+        while (rs.next()) {
+            Object[] row = new Object[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                row[i - 1] = rs.getObject(i);
+            }
+            tableModel.addRow(row);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Lỗi khi tải dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (con != null) con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+    return tableModel;
+}
+
+
 
     
 
