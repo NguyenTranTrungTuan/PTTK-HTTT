@@ -68,6 +68,7 @@ public class Model_ProductItem {
         this.Imageicon = Image;
         this.price = price;
         this.amount = Math.max(1, amount); // Đảm bảo số lượng tối thiểu là 1
+        
     }
 
     private String Title;

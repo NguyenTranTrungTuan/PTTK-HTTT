@@ -53,6 +53,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         // Panel thông tin bo tròn
         JPanel infoPanel = new RoundedPanel(15); // Panel bo tròn
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.add(Box.createHorizontalGlue());
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
@@ -75,10 +76,12 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
 
         // Tên + tag trong 1 dòng
         JPanel nameTagPanel = new JPanel();
-        nameTagPanel.setOpaque(false);
+       
+        nameTagPanel.setOpaque(true);
         nameTagPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         nameTagPanel.add(lblTen);
         nameTagPanel.add(lblTag);
+        nameTagPanel.setPreferredSize(new Dimension(200,30));
 
         topRow.add(nameTagPanel, BorderLayout.WEST);
 
@@ -95,6 +98,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         JLabel lblEmailTag = new JLabel("EMAIL");
         lblEmailTag.setFont(new Font("Arial", Font.PLAIN, 12));
         lblEmailTag.setForeground(Color.GRAY);
+        lblEmailTag.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(lblEmailTag);
 
         lblEmail = new JLabel("");
@@ -106,6 +110,8 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         JLabel lblAddressTag = new JLabel("ĐỊA CHỈ");
         lblAddressTag.setFont(new Font("Arial", Font.PLAIN, 12));
         lblAddressTag.setForeground(Color.GRAY);
+        lblAddressTag.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         infoPanel.add(lblAddressTag);
 
         lblAddress = new JLabel("");

@@ -14,7 +14,7 @@ public class TrangChu extends JFrame {
     private UserInfoPanel UserInfo;
     private FilterPanel Filter;
     private ConfirmFrame confirmFrame;
-
+   
 
 
     
@@ -67,7 +67,7 @@ public class TrangChu extends JFrame {
                 SwitchToShop();
             } else if (source == header.searchIcon && !header.searchBox.getText().equals("")) {
                 SwitchToFilter();
-            } else if (source == header.cartIcon) {
+            } else if (source == header.cartIcon&&!header.accountLabel.getText().equals("")) {
                 SwitchToCart();
             } else if (Filter != null && source == Filter.FilterButton &&
                     !Filter.MinPriceTF.getText().equals("Giá thấp nhất") &&
@@ -138,6 +138,9 @@ public class TrangChu extends JFrame {
 
  
     public void SwitchToCart() {
+        if(!header.accountLabel.getText().equals("")) {
+            gioHangGUI.kh = header.kh;
+        } 
         cardLayout.show(ContentPanel, "Cart");
     }
 
@@ -163,12 +166,12 @@ public class TrangChu extends JFrame {
 
    
     public void SwitchToUserMenu() {
-        UserInfo = new UserInfoPanel();
-        UserInfo.NameInfo.setText(header.kh.getTen_KhachHang());
+        UserInfo = new UserInfoPanel(header.kh);
+        /*UserInfo.NameInfo.setText(header.kh.getTen_KhachHang());
         UserInfo.PhoneInfo.setText(header.kh.getSdt_KhachHang());
         UserInfo.EmailInfo.setText(header.kh.getEmail_KhachHang());
         UserInfo.AddressInfo.setText(header.kh.getDiaChi_KhachHang());
-        UserInfo.PasswordInfo.setText(header.kh.getPass_KhachHang());
+        UserInfo.PasswordInfo.setText(header.kh.getPass_KhachHang());*/
 
         UserInfo.logoutButton.addMouseListener(mouseListener);
 

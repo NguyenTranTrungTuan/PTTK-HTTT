@@ -84,15 +84,15 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
 
         btnMinus = new JButton("-");
         styleButton(btnMinus);
-
+        btnMinus.setPreferredSize(new Dimension(40, 30));
         int amount = Math.max(1, product.getAmount());
         lbSoLuong = new JLabel(String.valueOf(amount));
-        lbSoLuong.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lbSoLuong.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lbSoLuong.setHorizontalAlignment(SwingConstants.CENTER);
 
         btnPlus = new JButton("+");
         styleButton(btnPlus);
-
+        btnPlus.setPreferredSize(new Dimension(40, 40));
         btnMinus.addActionListener(this);
         btnPlus.addActionListener(this);
 

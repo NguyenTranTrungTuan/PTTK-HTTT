@@ -23,7 +23,7 @@ public class GioHangGUI extends JPanel {
     private ThanhToanUIDesigner thanhToanPanel;
 
     private boolean isLoggedIn = true;
-    private KhachHang_DTO khachHang;
+    public KhachHang_DTO kh;
 
     public GioHangGUI() {
         this.setLayout(new BorderLayout());
@@ -31,10 +31,10 @@ public class GioHangGUI extends JPanel {
         this.cardLayout = new CardLayout();
         this.contentPanel = new JPanel(cardLayout);
         this.add(contentPanel, BorderLayout.CENTER);
-
+        
         JPanel gioHangPanel = initGioHangPanel();
         contentPanel.add(gioHangPanel, "GioHang");
-
+    
         thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel);
         contentPanel.add(thongTinDatHang, "ThongTinNhanHang");
 
@@ -185,18 +185,18 @@ public class GioHangGUI extends JPanel {
         }
 
         thongTinDatHang.setCustomerInfo(
-                khachHang.getTen_KhachHang(),
-                khachHang.getSdt_KhachHang(),
-                khachHang.getEmail_KhachHang(),
-                khachHang.getDiaChi_KhachHang()
+                kh.getTen_KhachHang(),
+                kh.getSdt_KhachHang(),
+                kh.getEmail_KhachHang(),
+                kh.getDiaChi_KhachHang()
         );
 
         thongTinDatHang.updateItems(products);
         cardLayout.show(contentPanel, "ThongTinNhanHang");
     }
 
-    public void setLoggedIn(boolean isLoggedIn, KhachHang_DTO khachHang) {
+    public void setLoggedIn(boolean isLoggedIn, KhachHang_DTO kh) {
         this.isLoggedIn = isLoggedIn;
-        this.khachHang = khachHang;
+        this.kh = kh;
     }
 }
