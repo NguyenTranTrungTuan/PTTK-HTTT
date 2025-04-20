@@ -1,10 +1,9 @@
 
 package NhanVienBanHang;
-import javax.swing.SwingUtilities;
 
-import Admin_quanlitaikhoan.GUI.Admin_frame;
 import NhanVienBanHang.GUI.NhanVienFrame2;
 import NhanVienBanHang.Model.NhanVien;
+import javax.swing.SwingUtilities;
 
 
 public class Main_NhanVien {
