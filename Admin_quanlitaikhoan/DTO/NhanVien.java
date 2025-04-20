@@ -9,6 +9,10 @@ public class NhanVien {
     private String Passwordnv;
     private String maNQL;
 
+        // Constructor mặc định
+        public NhanVien() {
+        }
+
     public NhanVien(String maNV, String tennv, String chucvu, String ttlienlac, String Username, String Passwordnv, String maNQL) {
         this.maNV = maNV;
         this.tennv = tennv;
@@ -58,6 +62,10 @@ public class NhanVien {
     public String getMaNQL() {
         return maNQL;
     }
+    public void setMaNQL(String maNQL) {
+        this.maNQL = maNQL;
+    }
+
 
     @Override
     public String toString() {

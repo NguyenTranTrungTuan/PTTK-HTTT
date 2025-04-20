@@ -8,6 +8,11 @@ public class KhachHang {
         private String diachikh;
         private String passwordkh;
 
+    public KhachHang() {
+    }
+
+
+
         public KhachHang(String makh, String tenkh, String sdt, String email, String diachikh, String passwordkh) {
             this.makh = makh;
             this.tenkh = tenkh;

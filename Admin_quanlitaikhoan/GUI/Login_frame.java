@@ -1,7 +1,7 @@
 package Admin_quanlitaikhoan.GUI;
 
 import Admin_quanlitaikhoan.DAO.NhanVien_DAO;
-import Admin_quanlitaikhoan.DTO.NhanVien;
+import NhanVienBanHang.Model.NhanVien;
 import NhanVienBanHang.GUI.NhanVienFrame2;
 
 import java.awt.*;
@@ -85,27 +85,37 @@ public class Login_frame extends JFrame {
         // Thêm panel đăng nhập vào backgroundPanel
         backgroundPanel.add(loginPanel);
 
-        // Sự kiện cho nút đăng nhập
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-
+                char[] passwordChars = passwordField.getPassword();
+                String password = new String(passwordChars);
+        
                 if (username.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 } else {
                     NhanVien_DAO dao = NhanVien_DAO.getInstance();
                     NhanVien nv = dao.checkLogin(username, password);
-
+        
                     if (nv != null) {
                         JOptionPane.showMessageDialog(null, "Đăng nhập thành công! Xin chào " + nv.getTennv(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                         new NhanVienFrame2(); // Chuyển đến giao diện admin
+        
+                        // Kiểm tra vai trò người dùng
+                        if (nv.getChucvu().equalsIgnoreCase("Admin")) {
+                            new Admin_frame(); // Chuyển đến giao diện Admin
+                        } else {
+                            new NhanVienFrame2(nv); // Chuyển đến giao diện Nhân viên
+                        }
+        
                         dispose(); // Đóng frame đăng nhập
                     } else {
                         JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+        
+                // Xóa mật khẩu khỏi bộ nhớ
+                java.util.Arrays.fill(passwordChars, '\0');
             }
         });
 

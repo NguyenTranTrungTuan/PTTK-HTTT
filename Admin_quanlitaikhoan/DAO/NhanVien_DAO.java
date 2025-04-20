@@ -1,6 +1,6 @@
 package Admin_quanlitaikhoan.DAO;
 
-import Admin_quanlitaikhoan.DTO.NhanVien;
+import NhanVienBanHang.Model.NhanVien;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -174,4 +174,32 @@ public class NhanVien_DAO implements DAOInterface<NhanVien> {
         }
         return model;
     }
+
+    public NhanVien checkLogin(String username, String password) {
+        String sql = "SELECT * FROM NhanVien WHERE username = ? AND passwordnv = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username); // Gán giá trị username
+            stmt.setString(2, password); // Gán giá trị password
+            ResultSet rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                // Nếu tìm thấy tài khoản, tạo đối tượng NhanVien
+                NhanVien nv = new NhanVien();
+                nv.setMaNV(rs.getString("maNV"));
+                nv.setTennv(rs.getString("tenNV"));
+                nv.setChucvu(rs.getString("chucvu"));
+                nv.setTtlienlac(rs.getString("ttlienlac"));
+                nv.setUsername(rs.getString("username"));
+                nv.setPassword(rs.getString("passwordnv"));
+                nv.setMaNQL(rs.getString("maNQL"));
+                return nv; // Trả về đối tượng NhanVien
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi kiểm tra đăng nhập: " + e.getMessage());
+        }
+        return null; // Trả về null nếu không tìm thấy tài khoản
+    }
+
+   
 }

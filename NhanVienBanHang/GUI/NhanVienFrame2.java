@@ -167,6 +167,7 @@ public class NhanVienFrame2 extends JFrame {
         btnChonThoiDiem.setFont(new Font("Arial", Font.PLAIN, 16));
         btnChonThoiDiem.setHorizontalAlignment(SwingConstants.LEFT);
         btnChonThoiDiem.setBorder(new RoundedBorder(10));
+        ImageIcon thoiDiemIcon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\back-in-time.png");
         addHoverEffect(btnChonThoiDiem, new Color(70, 70, 70), new Color(51, 51, 51));
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
         panel_left_bottom.add(btnChonThoiDiem);
@@ -221,6 +222,14 @@ public class NhanVienFrame2 extends JFrame {
                 return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
             }
         };
+
+            // Kiểm tra và xử lý các đơn hàng có tình trạng "Chưa Xử Lý"
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String tinhTrang = tableModel.getValueAt(i, 6).toString();
+            if ("Chưa Xử Lý".equalsIgnoreCase(tinhTrang)) {
+                tableModel.setValueAt(null, i, 2); // Đặt mã nhân viên là null
+            }
+        }
 
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
@@ -281,6 +290,14 @@ public class NhanVienFrame2 extends JFrame {
           return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
             }
         };
+
+            // Kiểm tra và xử lý các đơn hàng có tình trạng "Chưa Xử Lý"
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String tinhTrang = tableModel.getValueAt(i, 6).toString();
+            if ("Chưa Xử Lý".equalsIgnoreCase(tinhTrang)) {
+                tableModel.setValueAt(null, i, 2); // Đặt mã nhân viên là null
+            }
+        }
 
 
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
