@@ -167,7 +167,7 @@ public class TrangChu extends JFrame{
     };
 
     public void SwitchToFilter(){
-        ContentPanel.removeAll();;
+        ContentPanel.removeAll();
         ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.X_AXIS));
 
         Filter = new FilterPanel();
@@ -179,7 +179,7 @@ public class TrangChu extends JFrame{
         ContentPanel.add(productPanel);
 
         ContentPanel.revalidate();
-        //ContentPanel.repaint();
+        ContentPanel.repaint();
     }
 
    /* public void SwitchToShop() {
@@ -222,7 +222,7 @@ public class TrangChu extends JFrame{
         ContentPanel.add(catalogPanel);
         ContentPanel.add(productPanel);
         ContentPanel.revalidate();
-        //ContentPanel.repaint();
+        ContentPanel.repaint();
     }
 
     public void SwitchToUserMenu(){
