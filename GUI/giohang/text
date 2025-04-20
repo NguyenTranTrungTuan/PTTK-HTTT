@@ -1,168 +1,244 @@
+package GUI.giohang;
+import DTO.KhachHang_DTO;
+import GUI.user.Model_ProductItem;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
-/* */package GUI.user;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
-import DTO.DienThoai_DTO;
-
-import java.awt.Image;
-
-
-
-public class Model_ProductItem {
-
-    /**
-     * @return the Title
-     */
-    public String getTitle() {
-        return Title;
-    }
-
-    /**
-     * @param Title the Title to set
-     */
-    public void setTitle(String Title) {
-        this.Title = Title;
-    }
-
-    /**
-     * @return the Image
-     */
-    public String getImageicon() {
-        return Imageicon;
-    }
-
-    /**
-     * @param Image the Image to set
-     */
-    public void setImageicon(String Image) {
-        this.Imageicon = Image;
-    }
-
-    /**
-     * @return the price
-     */
-    public String getPrice() {
-        return price;
-    }
-
-    /**
-     * @param price the price to set
-     */
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-
-    public Model_ProductItem() {
-    }
-
-    public Model_ProductItem(String Title, String Image, String price) {
-        this.Title = Title;
-        this.Imageicon = Image;
-        this.price = price;
-    }
-    private String maSP;
-    private String Title;
-    private String Imageicon;
-    private String price;
-
-
-
-    private double priceAsDouble;   // giá bán
-    private double giaNhap;         // giá nhập
-    private String idTonkho;
-    private String xuatXu;
-    private String trongLuong;
-    private String kichThuocManHinh;
-    private String dungLuong;
-    private String ram;
-    private String idNCC;
-    private int baoHanh;
+public class GioHangGUI extends JPanel implements ActionListener {
+    private JLabel lbTongTienValue;
+    private JPanel itemPanel;
+    private List<Model_ProductItem> products;
+    private JButton btnDatHang;
+    private ThongTinDatHang thongTinNhanHang;
+    private JPanel contentPanel;
+    private ThanhToanUIDesigner thanhtoan;
+    private CardLayout cardLayout;
     
-    public Model_ProductItem(String maSP, String Title, String Imageicon, String price, double priceAsDouble,
-                             double giaNhap, String idTonkho, String xuatXu, String trongLuong,
-                             String kichThuocManHinh, String dungLuong, String ram, String idNCC, int baoHanh){ 
-                                this.maSP = maSP;
-                                this.Title = Title;
-                                this.Imageicon = Imageicon;
-                                this.price = price;
-        this.priceAsDouble = priceAsDouble;
-        this.giaNhap = giaNhap;
-        this.idTonkho = idTonkho;
-        this.xuatXu = xuatXu;
-        this.trongLuong = trongLuong;
-        this.kichThuocManHinh = kichThuocManHinh;
-        this.dungLuong = dungLuong;
-        this.ram = ram;
-        this.idNCC = idNCC;
-        this.baoHanh = baoHanh;
-    }
-       // Getters & Setters
-       public String getMaSP() { return maSP; }
-       public void setMaSP(String maSP) { this.maSP = maSP; }
-   
-      
-   
-       public double getPriceAsDouble() { return priceAsDouble; }
-       public void setPriceAsDouble(double priceAsDouble) { this.priceAsDouble = priceAsDouble; }
-   
-       public double getGiaNhap() { return giaNhap; }
-       public void setGiaNhap(double giaNhap) { this.giaNhap = giaNhap; }
-   
-       public String getIdTonkho() { return idTonkho; }
-       public void setIdTonkho(String idTonkho) { this.idTonkho = idTonkho; }
-   
-       public String getXuatXu() { return xuatXu; }
-       public void setXuatXu(String xuatXu) { this.xuatXu = xuatXu; }
-   
-       public String getTrongLuong() { return trongLuong; }
-       public void setTrongLuong(String trongLuong) { this.trongLuong = trongLuong; }
-   
-       public String getKichThuocManHinh() { return kichThuocManHinh; }
-       public void setKichThuocManHinh(String kichThuocManHinh) { this.kichThuocManHinh = kichThuocManHinh; }
-   
-       public String getDungLuong() { return dungLuong; }
-       public void setDungLuong(String dungLuong) { this.dungLuong = dungLuong; }
-   
-       public String getRam() { return ram; }
-       public void setRam(String ram) { this.ram = ram; }
-   
-       public String getIdNCC() { return idNCC; }
-       public void setIdNCC(String idNCC) { this.idNCC = idNCC; }
-   
-       public int getBaoHanh() { return baoHanh; }
-       public void setBaoHanh(int baoHanh) { this.baoHanh = baoHanh; }
-    public Icon toImage(){
-        ImageIcon image = new ImageIcon("GUI/user/ProductImage/" +Imageicon+".png");
-        Image og = image.getImage();
-        int w = 140;
-        int h = 180;
-        int iw = image.getIconWidth();
-        int ih = image.getIconHeight();
-        double xscale = (double) w / iw;
-        double yscale = (double) h / ih;
-        double scale = Math.max(xscale, yscale);
-        int width = (int)(scale*iw);
-        int height = (int)(scale*ih);
-        Image scaledImage = og.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 
-        return new ImageIcon(scaledImage);
+    public GioHangGUI() {
+        products = new ArrayList<>();
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+        this.setLayout(new BorderLayout());
+        this.add(contentPanel, BorderLayout.CENTER);
+
+        JPanel gioHangPanel = initGioHangPanel();
+        contentPanel.add(gioHangPanel, "GioHang");
+
+        thongTinNhanHang = new ThongTinDatHang(cardLayout, contentPanel);
+        contentPanel.add(thongTinNhanHang, "ThongTinNhanHang");
+
+        thanhtoan = new ThanhToanUIDesigner(cardLayout, contentPanel);
+        contentPanel.add(thanhtoan, "ThanhToan");
+        //hoaDonPanel = new HoaDonPanel(cardLayout, contentPanel);
+       
+        //contentPanel.add(hoaDonPanel, "HoaDon");
+
     }
-    public double getGiaDouble() {
-        try {
-            return Double.parseDouble(price.replaceAll("[^\\d.]", ""));
-        } catch (NumberFormatException e) {
-            return 0.0;
+
+    private JPanel initGioHangPanel() {
+        JPanel gioHangPanel = new JPanel(new BorderLayout(0,0));
+        gioHangPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Điều hướng trên cùng
+        gioHangPanel.add(createNavPanel(), BorderLayout.NORTH);
+
+        itemPanel = new JPanel();
+        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
+        
+        gioHangPanel.add(new JScrollPane(itemPanel), BorderLayout.CENTER);
+
+
+
+        // Panel tổng tiền + nút
+        JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JLabel lbTongTienLabel = new JLabel("Tổng tiền:");
+        lbTongTienLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        totalPanel.add(lbTongTienLabel);
+
+        lbTongTienValue = new JLabel("0₫");
+        lbTongTienValue.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbTongTienValue.setForeground(Color.RED);
+        totalPanel.add(lbTongTienValue);
+
+        bottomPanel.add(totalPanel, BorderLayout.WEST);
+
+        // Xóa tất cả
+        JButton btnXoaTatCa = new JButton("Xóa tất cả");
+        btnXoaTatCa.setBackground(Color.RED);
+        btnXoaTatCa.setForeground(Color.WHITE);
+        btnXoaTatCa.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnXoaTatCa.addActionListener(e -> {
+            products.clear();
+            itemPanel.removeAll();
+            updateTongTien();
+            itemPanel.revalidate();
+            itemPanel.repaint();
+        });
+        bottomPanel.add(btnXoaTatCa, BorderLayout.CENTER);
+
+        // Đặt hàng
+        btnDatHang = new JButton("ĐẶT HÀNG");
+        btnDatHang.setBackground(new Color(215, 0, 24));
+        btnDatHang.setForeground(Color.WHITE);
+        btnDatHang.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btnDatHang.setPreferredSize(new Dimension(250, 45));
+        btnDatHang.setFocusPainted(false);
+        btnDatHang.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnDatHang.addActionListener(this);
+        bottomPanel.add(btnDatHang, BorderLayout.EAST);
+
+        gioHangPanel.add(bottomPanel, BorderLayout.SOUTH);
+        return gioHangPanel;
+    }
+
+    private JPanel createNavPanel() {
+        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        navPanel.add(createNavLabel("Giỏ hàng", true));
+        navPanel.add(createNavLabel("Thông tin đặt hàng", false));
+        navPanel.add(createNavLabel("Thanh toán", false));
+        navPanel.add(createNavLabel("Hoàn tất", false));
+        return navPanel;
+    }
+
+    private JLabel createNavLabel(String text, boolean isActive) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        label.setForeground(isActive ? new Color(230, 0, 0) : Color.GRAY);
+        label.setBorder(new EmptyBorder(0, 10, 0, 10));
+        return label;
+    }
+
+    public void themSanPhamVaoGio(Model_ProductItem data) {
+        boolean daTonTai = false;
+        for (Model_ProductItem p : products) {
+            if (p.getTitle().equals(data.getTitle())) {
+                p.setAmount(p.getAmount() + data.getAmount());
+                daTonTai = true;
+                break;
+            }
+        }
+        if (!daTonTai) products.add(data);
+
+        refreshProductList();
+        updateTongTien();
+    }
+
+    private void refreshProductList() {
+        itemPanel.removeAll();
+        for (Model_ProductItem item : products) {
+            itemPanel.add(createProductPanel(item));
+        }
+        itemPanel.revalidate();
+        itemPanel.repaint();
+    }
+
+    private JPanel createProductPanel(Model_ProductItem data) {
+     
+        JPanel productPanel = new JPanel(new BorderLayout(10, 10));
+        productPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        productPanel.setBackground(Color.WHITE);
+        
+        // Hình ảnh
+        JLabel lbhinhanh = new JLabel();
+        lbhinhanh.setIcon(new ImageIcon("GUI/user/ProductImage/" + data.getImageicon() + ".png"));
+        lbhinhanh.setHorizontalAlignment(SwingConstants.CENTER);
+        lbhinhanh.setPreferredSize(new Dimension(140, 80));
+        productPanel.add(lbhinhanh, BorderLayout.WEST);
+
+        // Chi tiết sản phẩm
+        JPanel detailsPanel = new JPanel(new BorderLayout());
+        detailsPanel.setBackground(Color.WHITE);
+
+        JLabel lbTenSanPham = new JLabel(data.getTitle());
+        lbTenSanPham.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        detailsPanel.add(lbTenSanPham, BorderLayout.NORTH);
+
+        JLabel lbGiaMoi = new JLabel(String.format("%,.0f₫", data.getPrice()));
+        lbGiaMoi.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lbGiaMoi.setForeground(Color.RED);
+        detailsPanel.add(lbGiaMoi, BorderLayout.CENTER);
+
+        productPanel.add(detailsPanel, BorderLayout.CENTER);
+
+        // Số lượng và nút
+        JPanel quantityPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        quantityPanel.setPreferredSize(new Dimension(200,80));
+        JLabel lbSoLuong = new JLabel(String.valueOf(data.getAmount()));
+        JButton btnGiam = new JButton("-");
+        JButton btnThem = new JButton("+");
+        JButton btnXoa = new JButton("Xóa");
+        lbSoLuong.setPreferredSize(new Dimension(20, 30));
+        btnGiam.setPreferredSize(new Dimension(50, 30));
+        btnThem.setPreferredSize(new Dimension(50, 30));
+        btnXoa.setPreferredSize(new Dimension(70, 30));
+        btnGiam.setBackground(Color.GRAY);
+        btnThem.setBackground(Color.GRAY);
+        btnXoa.setBackground(Color.RED);
+        btnGiam.setForeground(Color.WHITE);
+        btnThem.setForeground(Color.WHITE);
+        btnXoa.setForeground(Color.WHITE);
+        btnGiam.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnThem.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnXoa.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnGiam.addActionListener(e -> {
+            int current = data.getAmount();
+            if (current > 1) {
+                data.setAmount(current - 1);
+            } else {
+                products.remove(data);
+            }
+            refreshProductList();
+            updateTongTien();
+        });
+
+        btnThem.addActionListener(e -> {
+            data.setAmount(data.getAmount() + 1);
+            refreshProductList();
+            updateTongTien();
+        });
+
+        btnXoa.addActionListener(e -> {
+            products.remove(data);
+            refreshProductList();
+            updateTongTien();
+        });
+
+        quantityPanel.add(btnGiam);
+        quantityPanel.add(lbSoLuong);
+        quantityPanel.add(btnThem);
+        quantityPanel.add(btnXoa);
+ 
+        productPanel.add(quantityPanel, BorderLayout.EAST);
+       
+        return productPanel;
+    }
+
+    private void updateTongTien() {
+        double tongTien = 0;
+        for (Model_ProductItem product : products) {
+            tongTien += product.getPrice() * product.getAmount();
+        }
+        lbTongTienValue.setText(String.format("%,.0f₫", tongTien));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnDatHang) {
+            if (products.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi đặt hàng.",
+                        "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            thongTinNhanHang.updateItems(products);
+            cardLayout.show(contentPanel, "ThongTinNhanHang");
         }
     }
-    public DienThoai_DTO toDienThoaiDTO() {
-        DienThoai_DTO dto = new DienThoai_DTO();
-        dto.setID_SanPham(maSP);
-        dto.setTen_SanPham(Title);
-        dto.setGia_SanPham(getGiaDouble());
-        return dto;
-    }
-    
 }

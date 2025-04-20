@@ -29,6 +29,7 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         initComponents();
         pack();
         setLocationRelativeTo(parent);
+        
     }
 
     private void initComponents() {
@@ -69,9 +70,7 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         String[] methodNames = {
                 "Thanh toán khi nhận hàng",
                 "Chuyển khoản ngân hàng qua mã QR",
-                "VNPAY",
-                "OnePay Qua thẻ Visa/Master/JCB/Napas",
-                "Khác"
+               
         };
 
         String[] iconPaths = {
@@ -102,7 +101,7 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
 
         contentPane.add(Box.createVerticalStrut(15));
         contentPane.add(confirmButton);
-
+        
         add(contentPane);
     }
 
@@ -173,29 +172,10 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         }
     }
 
-    // Getter để lấy phương thức thanh toán sau khi xác nhận
+    
     public String getSelectedMethod() {
         return selectedMethod;
     }
 
-    // Ví dụ sử dụng
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Thanh Toán Demo");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 600);
-            frame.setLocationRelativeTo(null);
-
-            JButton showDialogButton = new JButton("Chọn phương thức thanh toán");
-            showDialogButton.addActionListener(e -> {
-                PaymentMethodDialog dialog = new PaymentMethodDialog(frame, method -> {
-                    System.out.println("Người dùng đã chọn: " + method);
-                });
-                dialog.setVisible(true);
-            });
-
-            frame.getContentPane().add(showDialogButton);
-            frame.setVisible(true);
-        });
-    }
+    
 }
