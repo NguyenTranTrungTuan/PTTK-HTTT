@@ -1,15 +1,14 @@
 package NhanVienBanHang.GUI;
 
+import NhanVienBanHang.DAO.ChiTietDonHang_DAO;
+import NhanVienBanHang.DAO.DonHang_DAO;
+import NhanVienBanHang.Model.NhanVien;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.plaf.basic.*;
 import javax.swing.table.*;
-import NhanVienBanHang.DAO.DonHang_DAO;
-import NhanVienBanHang.DAO.ChiTietDonHang_DAO;
-import NhanVienBanHang.Model.NhanVien;
-import com.toedter.calendar.JDateChooser;
-import java.util.Date;
 
 public class NhanVienFrame2 extends JFrame {
     private JButton activeButton = null;
@@ -363,23 +362,32 @@ public class NhanVienFrame2 extends JFrame {
 
     private void showDateRangePickerDialog() {
         JDialog dateDialog = new JDialog(this, "Chọn Khoảng Thời Gian", true);
-        dateDialog.setSize(400, 200);
+        dateDialog.setSize(500, 250);
         dateDialog.setLocationRelativeTo(this);
-        dateDialog.setLayout(new GridLayout(3, 2, 10, 10));
+        dateDialog.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JLabel startLabel = new JLabel("Ngày Bắt Đầu:");
         startLabel.setForeground(Color.WHITE);
-        JDateChooser startDateChooser = new JDateChooser();
-        startDateChooser.setDateFormatString("yyyy-MM-dd");
-        startDateChooser.setBackground(new Color(51, 51, 51));
-        startDateChooser.setForeground(Color.WHITE);
+        JSpinner startDateSpinner = new JSpinner(new SpinnerDateModel());
+        startDateSpinner.setEditor(new JSpinner.DateEditor(startDateSpinner, "yyyy-MM-dd"));
+        JComponent startEditor = startDateSpinner.getEditor();
+        JFormattedTextField startField = ((JSpinner.DefaultEditor) startEditor).getTextField();
+        startField.setBackground(new Color(51, 51, 51));
+        startField.setForeground(Color.WHITE);
+        startField.setBorder(BorderFactory.createLineBorder(new Color(130, 130, 130)));
 
         JLabel endLabel = new JLabel("Ngày Kết Thúc:");
         endLabel.setForeground(Color.WHITE);
-        JDateChooser endDateChooser = new JDateChooser();
-        endDateChooser.setDateFormatString("yyyy-MM-dd");
-        endDateChooser.setBackground(new Color(51, 51, 51));
-        endDateChooser.setForeground(Color.WHITE);
+        JSpinner endDateSpinner = new JSpinner(new SpinnerDateModel());
+        endDateSpinner.setEditor(new JSpinner.DateEditor(endDateSpinner, "yyyy-MM-dd"));
+        JComponent endEditor = endDateSpinner.getEditor();
+        JFormattedTextField endField = ((JSpinner.DefaultEditor) endEditor).getTextField();
+        endField.setBackground(new Color(51, 51, 51));
+        endField.setForeground(Color.WHITE);
+        endField.setBorder(BorderFactory.createLineBorder(new Color(130, 130, 130)));
 
         JButton confirmButton = new JButton("Xác Nhận");
         confirmButton.setBackground(new Color(70, 130, 180));
@@ -391,16 +399,22 @@ public class NhanVienFrame2 extends JFrame {
         cancelButton.setForeground(Color.WHITE);
         cancelButton.setFocusPainted(false);
 
-        dateDialog.add(startLabel);
-        dateDialog.add(startDateChooser);
-        dateDialog.add(endLabel);
-        dateDialog.add(endDateChooser);
-        dateDialog.add(cancelButton);
-        dateDialog.add(confirmButton);
+        gbc.gridx = 0; gbc.gridy = 0;
+        dateDialog.add(startLabel, gbc);
+        gbc.gridx = 1;
+        dateDialog.add(startDateSpinner, gbc);
+        gbc.gridx = 0; gbc.gridy = 1;
+        dateDialog.add(endLabel, gbc);
+        gbc.gridx = 1;
+        dateDialog.add(endDateSpinner, gbc);
+        gbc.gridx = 0; gbc.gridy = 2;
+        dateDialog.add(cancelButton, gbc);
+        gbc.gridx = 1;
+        dateDialog.add(confirmButton, gbc);
 
         confirmButton.addActionListener(e -> {
-            Date startDate = startDateChooser.getDate();
-            Date endDate = endDateChooser.getDate();
+            Date startDate = (Date) startDateSpinner.getValue();
+            Date endDate = (Date) endDateSpinner.getValue();
             if (startDate == null || endDate == null) {
                 ShowNotification("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc!", "Lỗi");
                 return;
@@ -661,4 +675,6 @@ public class NhanVienFrame2 extends JFrame {
             return this;
         }
     }
+
+
 }
