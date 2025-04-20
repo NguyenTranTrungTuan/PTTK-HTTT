@@ -21,6 +21,13 @@
         "."
     ],
     "java.project.referencedLibraries": [
+<<<<<<< HEAD
         "lib\\mysql-connector-j-9.2.0.jar"
     ]
+=======
+        "C:\\Users\\ACER\\source\\repos\\PTTK-HTTT\\PTTK-HTTT\\lib\\mssql-jdbc-12.10.0.jre11.jar",
+        "C:\\Users\\ACER\\source\\repos\\PTTK-HTTT\\PTTK-HTTT\\lib\\mysql-connector-j-9.2.0.jar"
+    ],
+  
+>>>>>>> 02e4d2e76f1dd4a4f03c0668735407728ebc7aab
 }

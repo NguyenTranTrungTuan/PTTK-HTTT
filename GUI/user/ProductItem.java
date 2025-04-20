@@ -1,24 +1,45 @@
 package GUI.user;
+import GUI.giohang.GioHangGUI;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import java.awt.*;
+import DTO.DienThoai_DTO;
 
-public class ProductItem extends JPanel {
+import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public class ProductItem extends JPanel implements ActionListener {
     private MyButton addCart_btn;
     private JLabel Imagelb;
     private JLabel Namelb;
     private JLabel PriceTaglb;
     private boolean selected;
-
+    private Model_ProductItem data;
+    private GioHangGUI gioHangGUI;
+  
+    
     public String getName(){
         return Namelb.getText();
     }
+  
+    
+    public ProductItem(Model_ProductItem data, GioHangGUI gioHangGUI) {
+        if (data == null || gioHangGUI == null) {
+            throw new IllegalArgumentException("Dữ liệu sản phẩm hoặc giao diện giỏ hàng không được null.");
+        }
 
-    public ProductItem(Model_ProductItem data) {
+        this.data = data;
+        this.gioHangGUI = gioHangGUI;
+
+       
         initComponents(data);
+
+        
+        addCart_btn.addActionListener(this);
     }
+    
 
     private void initComponents(Model_ProductItem data) {
         setBackground(Color.WHITE);
@@ -39,7 +60,7 @@ public class ProductItem extends JPanel {
         Namelb.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         PriceTaglb = new JLabel("price");
-        PriceTaglb.setText(data.getPrice());
+        PriceTaglb.setText(String.format("%,.2f VND", data.getPrice()));
         PriceTaglb.setFont(new Font("Segoe UI", Font.BOLD, 16));
         PriceTaglb.setForeground(new Color(255, 102, 102));
         PriceTaglb.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -61,5 +82,21 @@ public class ProductItem extends JPanel {
         add(Box.createVerticalStrut(10));
         add(Box.createVerticalGlue()); // Push everything upwards
     }
-}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addCart_btn) {
+            handleAddToCart();
+        }
+    }
 
+    private void handleAddToCart() {
+        // Thêm sản phẩm vào giỏ hàng
+        gioHangGUI.themSanPhamVaoGio(data);
+
+        // Hiển thị thông báo
+        JOptionPane.showMessageDialog(this,
+            "Sản phẩm \"" + data.getTitle() + "\" đã được thêm vào giỏ hàng!",
+            "Thông báo",
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+}
