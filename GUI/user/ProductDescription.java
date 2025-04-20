@@ -72,22 +72,4 @@ public class ProductDescription extends JFrame {
         setLocationRelativeTo(null); // Center the frame on the screen
         setVisible(true);
     }
-
-    // // Main method for testing
-    // public static void main(String[] args) {
-    //     // Create a sample Model_Product_Description object
-    //     Model_Product_Description data = new Model_Product_Description(
-    //         10,           // soLuong (Quantity)
-    //         "China",      // XuatXu (Origin)
-    //         "150g",       // TrongLuong (Weight)
-    //         "6.5 inches", // KichThuocManHinh (Screen Size)
-    //         "128GB",      // DungLuong (Storage)
-    //         "8GB",        // RAM
-    //         "Samsung",    // ThuongHieu (Brand)
-    //         12            // BaoHanh (Warranty in months)
-    //     );
-
-    //     // Create and display the ProductDescription frame
-    //     SwingUtilities.invokeLater(() -> new ProductDescription(data));
-    // }
 }

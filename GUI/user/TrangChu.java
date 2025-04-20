@@ -234,17 +234,11 @@ public class TrangChu extends JFrame{
         // }
         ContentPanel.setLayout(new BoxLayout(ContentPanel, BoxLayout.Y_AXIS));
 
-        UserInfo = new UserInfoPanel();
-        UserInfo.NameInfo.setText(header.kh.getTen_KhachHang());
-        UserInfo.PhoneInfo.setText(header.kh.getSdt_KhachHang());
-        UserInfo.EmailInfo.setText(header.kh.getEmail_KhachHang());
-        UserInfo.AddressInfo.setText(header.kh.getDiaChi_KhachHang());
-        UserInfo.PasswordInfo.setText(header.kh.getPass_KhachHang());
+        UserInfo = new UserInfoPanel(header.kh);
+        
 
         UserInfo.logoutButton.addMouseListener(mouseListener);
 
-        // ContentPanel.add(UserMenu);
-        // ContentPanel.add(Box.createHorizontalStrut(20));
         ContentPanel.add(UserInfo);
         ContentPanel.revalidate();
         ContentPanel.repaint();

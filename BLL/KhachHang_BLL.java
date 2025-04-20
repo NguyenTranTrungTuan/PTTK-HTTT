@@ -34,6 +34,18 @@ public class KhachHang_BLL {
         return null;
     }
 
+    public String changeKhachHangData(KhachHang_DTO newdata){
+        if(!khachhangDao.hasKhachHangID(newdata.getId_KhachHang())){
+            System.err.println(newdata.getId_KhachHang());
+            return "khách hàng không tồn tại!";
+        }
+        if(khachhangDao.changeKhachHangData(newdata)){
+            return "Cập nhật dữ liệu khách hàng thành công!";
+        }
+
+        return "Cập nhật dữ liệu Khách hàng thất bại!";
+    }
+
     public String addKhachHang(KhachHang_DTO kh){
         if(khachhangDao.hasKhachHangID(kh.getId_KhachHang())){
             return "khách hàng đã tồn tại!";

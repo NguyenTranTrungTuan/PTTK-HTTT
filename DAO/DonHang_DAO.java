@@ -177,7 +177,7 @@ public class DonHang_DAO{
     public boolean hasDonHangID(String id){                        
         if (OpenConnection()) {
             try {            
-                String sql = "SELECT * FROM DONHANG WHERE DONHANG.MaDon="+id;
+                String sql = "SELECT * FROM DONHANG WHERE DONHANG.MaDon='"+id+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next())

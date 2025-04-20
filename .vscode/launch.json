@@ -7,6 +7,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "PaymentMethodDialog",
+      "request": "launch",
+      "mainClass": "GUI.giohang.PaymentMethodDialog",
+      "projectName": "PTTK-HTTT_27f61f88"
+    },
+    {
+      "type": "java",
       "name": "GioHangGUI",
       "request": "launch",
       "mainClass": "GUI.giohang.GioHangGUI",

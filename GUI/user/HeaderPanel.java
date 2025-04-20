@@ -66,18 +66,6 @@ public class HeaderPanel extends JPanel {
                     addDangNhapEvent();
                 }
             }
-            // if (e.getSource() == cartIcon) {
-            //     giohang=new GioHangGUI();
-            //     JPanel contentPanel = tc.getContentPanel();
-            //     if (contentPanel != null) {
-            //         contentPanel.removeAll(); 
-            //         contentPanel.add(giohang); 
-            //         contentPanel.revalidate(); 
-            //         contentPanel.repaint();    
-            //     } else {
-            //         System.out.println("ContentPanel is null!"); 
-            //     }
-            // }
     }
         @Override
         public void mousePressed(MouseEvent e) {}
