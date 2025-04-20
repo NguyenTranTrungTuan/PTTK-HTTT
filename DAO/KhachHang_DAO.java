@@ -11,7 +11,7 @@ public class KhachHang_DAO {
     public boolean OpenConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "Tbthsghj1357");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
             return true;
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e.getMessage());
@@ -84,6 +84,32 @@ public class KhachHang_DAO {
         return null;
     }
 
+    public boolean changeKhachHangData(KhachHang_DTO newdata){
+        boolean result = false;
+        if (OpenConnection()) {
+            try {                    
+                String query1 = "UPDATE KHACHHANG "+
+                                "SET TenKH = ?, SDT = ?, Email = ?, DiaChiKH = ?, Passwordkh = ? "+
+                                "WHERE MaKH = ?";
+                PreparedStatement stmt1 = con.prepareStatement(query1);
+                stmt1.setString(1, newdata.getTen_KhachHang());
+                stmt1.setString(2, newdata.getSdt_KhachHang());
+                stmt1.setString(3, newdata.getEmail_KhachHang());
+                stmt1.setString(4, newdata.getDiaChi_KhachHang());
+                stmt1.setString(5, newdata.getPass_KhachHang());
+                stmt1.setString(6, newdata.getId_KhachHang());
+
+                if (stmt1.executeUpdate()>=1)
+                    result = true;
+            } catch (SQLException ex) {
+                System.out.println(ex);            
+            } finally{
+                closeConnection();  
+            } 
+        }
+        return result;
+    }
+
     public boolean addKhachHang(KhachHang_DTO kh){
         boolean result = false;
         if (OpenConnection()) {
@@ -130,7 +156,7 @@ public class KhachHang_DAO {
     public boolean hasKhachHangEmail(String email){
         if (OpenConnection()) {
             try {            
-                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.Email="+email;
+                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.Email='"+email+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next())
@@ -147,7 +173,7 @@ public class KhachHang_DAO {
     public boolean hasKhachHangID(String id){                        
         if (OpenConnection()) {
             try {            
-                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH="+id;
+                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH='"+id+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next())
