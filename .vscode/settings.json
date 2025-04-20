@@ -16,7 +16,6 @@
             "connectionTimeout": 30
         }
     ],
-
     "java.project.referencedLibraries": [
         "lib/jcalendar-1.4.jar"
     ]
