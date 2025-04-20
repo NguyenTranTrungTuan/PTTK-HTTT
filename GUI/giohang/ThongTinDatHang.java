@@ -6,6 +6,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMethodDialog.PaymentMethodCallback {
@@ -21,7 +22,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     private JPanel panelDanhSachSanPham;
 
     // Biến kiểm tra trạng thái đăng nhập
-    private boolean isLoggedIn = false; 
+    private boolean isLoggedIn = true; 
 
     public ThongTinDatHang(CardLayout cardLayout, JPanel contentPanel) {
         this.cardLayout = cardLayout;
@@ -53,13 +54,13 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         // Panel thông tin bo tròn
         JPanel infoPanel = new RoundedPanel(15); // Panel bo tròn
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.add(Box.createHorizontalGlue());
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
         // Dòng 1: Họ tên + Tag + SĐT
         JPanel topRow = new JPanel(new BorderLayout());
         topRow.setOpaque(false);
+        topRow.setMaximumSize(new Dimension(300,30));
 
         // Tên
         lblTen = new JLabel("Chưa đăng nhập");
@@ -76,12 +77,14 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
 
         // Tên + tag trong 1 dòng
         JPanel nameTagPanel = new JPanel();
-       
-        nameTagPanel.setOpaque(true);
+        nameTagPanel.setOpaque(false);
         nameTagPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         nameTagPanel.add(lblTen);
         nameTagPanel.add(lblTag);
-        nameTagPanel.setPreferredSize(new Dimension(200,30));
+
+        // Đặt kích thước tối đa cho nameTagPanel để tránh tên quá dài
+        nameTagPanel.setMaximumSize(new Dimension(300, 20)); // Giới hạn chiều rộng tối đa
+        nameTagPanel.setPreferredSize(new Dimension(300, 20)); // Đảm bảo chiều rộng cố định
 
         topRow.add(nameTagPanel, BorderLayout.WEST);
 
@@ -89,6 +92,11 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lblSdt = new JLabel("");
         lblSdt.setFont(new Font("Arial", Font.PLAIN, 14));
         lblSdt.setForeground(new Color(60, 120, 180));
+
+        // Đặt kích thước tối đa cho lblSdt để tránh số điện thoại bị cắt
+        lblSdt.setMaximumSize(new Dimension(150, 20)); // Giới hạn chiều rộng tối đa cho số điện thoại
+        lblSdt.setPreferredSize(new Dimension(150, 20)); // Đảm bảo chiều rộng cố định
+
         topRow.add(lblSdt, BorderLayout.EAST);
 
         infoPanel.add(topRow);
@@ -98,25 +106,30 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         JLabel lblEmailTag = new JLabel("EMAIL");
         lblEmailTag.setFont(new Font("Arial", Font.PLAIN, 12));
         lblEmailTag.setForeground(Color.GRAY);
-        lblEmailTag.setAlignmentX(Component.LEFT_ALIGNMENT);
-        infoPanel.add(lblEmailTag);
+        lblEmailTag.setAlignmentX(SwingConstants.LEFT);
 
         lblEmail = new JLabel("");
         lblEmail.setFont(new Font("Arial", Font.PLAIN, 13));
-        infoPanel.add(lblEmail);
+
+        JPanel emailRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        emailRow.setOpaque(false);
+        emailRow.add(lblEmailTag);
+        emailRow.add(lblEmail);
+        infoPanel.add(emailRow);
 
         // Dòng ĐỊA CHỈ
         infoPanel.add(Box.createVerticalStrut(10));
         JLabel lblAddressTag = new JLabel("ĐỊA CHỈ");
         lblAddressTag.setFont(new Font("Arial", Font.PLAIN, 12));
         lblAddressTag.setForeground(Color.GRAY);
-        lblAddressTag.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        infoPanel.add(lblAddressTag);
+        lblAddressTag.setAlignmentX(SwingConstants.LEFT);
 
         lblAddress = new JLabel("");
-        lblAddress.setFont(new Font("Arial", Font.PLAIN, 13));
-        infoPanel.add(lblAddress);
+        JPanel addressRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        addressRow.setOpaque(false);
+        addressRow.add(lblAddressTag);
+        addressRow.add(lblAddress);
+        infoPanel.add(addressRow);
 
         formPanel.add(infoPanel);
         formPanel.add(Box.createVerticalStrut(20));
@@ -165,7 +178,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(Color.WHITE);
 
-        btnTiepTuc = new JButton("TIẾP TỤC");
+        btnTiepTuc = new JButton("THANH TOÁN");
         btnTiepTuc.setFont(new Font("Arial", Font.BOLD, 16));
         btnTiepTuc.setForeground(Color.WHITE);
         btnTiepTuc.setBackground(Color.RED);
@@ -229,7 +242,9 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
             infoPanel.setBackground(Color.WHITE);
             infoPanel.add(new JLabel(product.getTitle()));
             infoPanel.add(new JLabel("Số lượng: " + product.getAmount()));
-            infoPanel.add(new JLabel("Giá: " + product.getPrice() + "₫"));
+            DecimalFormat formatter = new DecimalFormat("#,###");
+            String formattedPrice = formatter.format(product.getPrice().intValueExact()*product.getAmount());
+            infoPanel.add(new JLabel("Giá: " + formattedPrice + "₫"));
     
             itemPanel.add(infoPanel, BorderLayout.CENTER);
     
@@ -255,10 +270,10 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
                 JOptionPane.showMessageDialog(this, "Vui lòng đăng nhập trước khi tiếp tục!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if (txtHoTen.getText().isEmpty() || txtSoDienThoai.getText().isEmpty() || txtDiaChi.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            // if (txtHoTen.getText().isEmpty() || txtSoDienThoai.getText().isEmpty() || txtDiaChi.getText().isEmpty()) {
+            //     JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+            //     return;
+            // }
             if (phuongThucThanhToan == null) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phương thức thanh toán!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;

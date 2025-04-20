@@ -85,14 +85,14 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
         btnMinus = new JButton("-");
         styleButton(btnMinus);
         btnMinus.setPreferredSize(new Dimension(40, 30));
-        int amount = Math.max(1, product.getAmount());
+        int amount = product.getAmount();
         lbSoLuong = new JLabel(String.valueOf(amount));
         lbSoLuong.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lbSoLuong.setHorizontalAlignment(SwingConstants.CENTER);
 
         btnPlus = new JButton("+");
         styleButton(btnPlus);
-        btnPlus.setPreferredSize(new Dimension(40, 40));
+        btnPlus.setPreferredSize(new Dimension(40, 30));
         btnMinus.addActionListener(this);
         btnPlus.addActionListener(this);
 
@@ -115,10 +115,12 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
     }
 
     private void styleButton(JButton button) {
-        button.setPreferredSize(new Dimension(40, 30));
+        button.setPreferredSize(new Dimension(40, 30)); // bạn có thể tăng lên nếu cần
         button.setFocusPainted(false);
         button.setBackground(new Color(240, 240, 240));
-        button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 18)); // nhỏ hơn nếu bị tràn
+        button.setMargin(new Insets(0, 0, 0, 0)); // xóa padding
+        button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY)); // viền rõ hơn nếu muốn
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
