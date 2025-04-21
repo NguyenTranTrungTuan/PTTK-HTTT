@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,6 +93,22 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
                 e.printStackTrace();
             }
             return tableModel;
+        }
+
+
+        public boolean updateTinhTrang(String maDon, String tinhTrang) throws Exception {
+            String sql = "UPDATE DonHang SET tinhTrang = ? WHERE maDon = ?";
+            try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, tinhTrang); // Gán giá trị mới cho cột "tinhTrang"
+                stmt.setString(2, maDon);     // Gán giá trị mã đơn hàng cần cập nhật
+                int rowsUpdated = stmt.executeUpdate(); // Thực thi câu lệnh SQL
+                return rowsUpdated > 0; // Trả về true nếu có ít nhất một dòng được cập nhật
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật tình trạng: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
 
 
@@ -189,6 +206,9 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
     }
     return tableModel;
 }
+
+
+
 
 
 

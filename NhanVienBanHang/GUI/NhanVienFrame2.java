@@ -168,6 +168,8 @@ public class NhanVienFrame2 extends JFrame {
         btnChonThoiDiem.setHorizontalAlignment(SwingConstants.LEFT);
         btnChonThoiDiem.setBorder(new RoundedBorder(10));
         ImageIcon thoiDiemIcon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\back-in-time.png");
+        thoiDiemIcon = ImageResizer.resizeImageIcon(thoiDiemIcon, 20, 20);
+        btnChonThoiDiem.setIcon(thoiDiemIcon);
         addHoverEffect(btnChonThoiDiem, new Color(70, 70, 70), new Color(51, 51, 51));
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
         panel_left_bottom.add(btnChonThoiDiem);
@@ -231,8 +233,59 @@ public class NhanVienFrame2 extends JFrame {
             }
         }
 
+          // Thêm MouseListener để xử lý sự kiện nhấp chuột vào cột "Tình Trạng"
+    table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int row = table.rowAtPoint(e.getPoint());
+            int column = table.columnAtPoint(e.getPoint());
+
+            // Kiểm tra nếu người dùng nhấn vào cột "Tình Trạng" (cột 6)
+            if (column == 6) {
+                String currentStatus = table.getValueAt(row, column).toString();
+                String[] options = {"Chưa Xử Lý", "Đã Xử Lý", "Đã Hủy"};
+                String newStatus = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Chọn trạng thái mới:",
+                        "Thay Đổi Tình Trạng",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        currentStatus
+                );
+
+                // Nếu người dùng chọn trạng thái mới
+                if (newStatus != null && !newStatus.equals(currentStatus)) {
+                    table.setValueAt(newStatus, row, column); // Cập nhật giá trị trong bảng
+
+                    // Cập nhật trạng thái trong cơ sở dữ liệu
+                    String maDon = table.getValueAt(row, 0).toString();
+                    boolean updated = false;
+                    try {
+                        updated = DonHang_DAO.getInstance().updateTinhTrang(maDon, newStatus);
+                    } catch (Exception e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                    if (updated) {
+                        JOptionPane.showMessageDialog(null, "Cập nhật tình trạng thành công!", "Thành Công", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cập nhật tình trạng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        }
+    });
+
+
+        
+
+        
+
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
+
+
 
         table.setBackground(new Color(51, 51, 51));
         table.setForeground(Color.WHITE);
