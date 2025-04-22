@@ -7,6 +7,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Main_NhanVien",
+      "request": "launch",
+      "mainClass": "NhanVienBanHang.Main_NhanVien",
+      "projectName": "QuanLyBanDienThoai_2c9944d7"
+    },
+    {
+      "type": "java",
       "name": "PaymentMethodDialog",
       "request": "launch",
       "mainClass": "GUI.giohang.PaymentMethodDialog",
