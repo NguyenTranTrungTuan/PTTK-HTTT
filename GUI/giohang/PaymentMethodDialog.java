@@ -1,5 +1,4 @@
 package GUI.giohang;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -29,6 +28,7 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         initComponents();
         pack();
         setLocationRelativeTo(parent);
+        
     }
 
     private void initComponents() {
@@ -68,22 +68,12 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         // Payment methods
         String[] methodNames = {
                 "Thanh toán khi nhận hàng",
-                "Chuyển khoản ngân hàng qua mã QR",
-                "VNPAY",
-                "OnePay Qua thẻ Visa/Master/JCB/Napas",
-                "Khác"
-        };
-
-        String[] iconPaths = {
-                "/images/cod_icon.png",
-                "/images/qr_icon.png",
-                "/images/vnpay_icon.png",
-                "/images/onepay_icon.png",
-                "/images/dots_icon.png"
+                "Chuyển khoản ngân hàng",
+               
         };
 
         for (int i = 0; i < methodNames.length; i++) {
-            JButton methodButton = createMethodButton(methodNames[i], iconPaths[i]);
+            JButton methodButton = createMethodButton(methodNames[i]);
             methodButtons.add(methodButton);
             contentPane.add(methodButton);
             contentPane.add(Box.createVerticalStrut(8));
@@ -102,19 +92,15 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
 
         contentPane.add(Box.createVerticalStrut(15));
         contentPane.add(confirmButton);
-
+        
         add(contentPane);
     }
 
-    private JButton createMethodButton(String text, String iconPath) {
+    private JButton createMethodButton(String text) {
         JButton button = new JButton(text);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        try {
-            button.setIcon(new ImageIcon(getClass().getResource(iconPath)));
-        } catch (Exception e) {
-            System.out.println("Không tìm thấy icon: " + iconPath);
-        }
+    
         button.setIconTextGap(15);
         button.setPreferredSize(new Dimension(350, 45));
         button.setMaximumSize(new Dimension(350, 45));
@@ -173,29 +159,10 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         }
     }
 
-    // Getter để lấy phương thức thanh toán sau khi xác nhận
+    
     public String getSelectedMethod() {
         return selectedMethod;
     }
 
-    // Ví dụ sử dụng
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Thanh Toán Demo");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 600);
-            frame.setLocationRelativeTo(null);
-
-            JButton showDialogButton = new JButton("Chọn phương thức thanh toán");
-            showDialogButton.addActionListener(e -> {
-                PaymentMethodDialog dialog = new PaymentMethodDialog(frame, method -> {
-                    System.out.println("Người dùng đã chọn: " + method);
-                });
-                dialog.setVisible(true);
-            });
-
-            frame.getContentPane().add(showDialogButton);
-            frame.setVisible(true);
-        });
-    }
+    
 }

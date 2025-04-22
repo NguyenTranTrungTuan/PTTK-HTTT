@@ -1,7 +1,6 @@
 package DAO;
 
 import DTO.DienThoai_DTO;
-import DTO.KhachHang_DTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,11 +11,15 @@ public class DienThoai_DAO {
     public boolean OpenConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "Tbthsghj1357");
-            System.out.print("/nKet Noi Thanh Cong!");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
             return true;
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("JDBC Driver not found: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
@@ -66,7 +69,7 @@ public class DienThoai_DAO {
     public DienThoai_DTO getDTFromID(String id){
         if (OpenConnection()) {
             try {            
-                String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT="+id;
+                String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT='"+id+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()){
@@ -221,7 +224,7 @@ public class DienThoai_DAO {
     public boolean hasDienThoaiID(String id){                        
         if (OpenConnection()) {
             try {            
-            String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT="+id;
+            String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT='"+id+"'";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next())

@@ -1,167 +1,111 @@
 package GUI.giohang;
-import qlgiohang.oop.Product;
+
+import DTO.ChiTietDon_DTO;
+import DTO.DienThoai_DTO;
+import DTO.DonHang_DTO;
+import DTO.KhachHang_DTO;
+import BLL.PhieuNhap_BLL;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
-public class GioHangGUI extends JPanel implements ActionListener {
-    private JLabel lbTongTienValue;
+public class GioHangGUI extends JPanel {
+
+    private ArrayList<ChiTietDon_DTO> products;
+
+    private JLabel labelTongTienValue;
     private JPanel itemPanel;
-    private List<Product> products;
-    private JButton btnDatHang;
-    private ThongTinDatHang thongTinNhanHang;
-    private JPanel contentPanel;
-    private ThanhToanUIDesigner thanhtoan;
     private CardLayout cardLayout;
+    private JPanel contentPanel;
+    private JButton btnDatHang;
+
+    protected DonHang_DTO ThongTinDonHang;
+    private PhieuNhap_BLL pnbll;
+    public KhachHang_DTO kh;
+
+    private Double total = 0.0;
 
     public GioHangGUI() {
-        products = new ArrayList<>();
-        cardLayout = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
+        this.pnbll = new PhieuNhap_BLL();
         this.setLayout(new BorderLayout());
+        this.products = new ArrayList<>();
+
+        this.cardLayout = new CardLayout();
+        this.contentPanel = new JPanel(cardLayout);
         this.add(contentPanel, BorderLayout.CENTER);
+        
         JPanel gioHangPanel = initGioHangPanel();
         contentPanel.add(gioHangPanel, "GioHang");
-        thongTinNhanHang = new ThongTinDatHang(cardLayout, contentPanel);
-        contentPanel.add(thongTinNhanHang, "ThongTinNhanHang");
-        thanhtoan=new ThanhToanUIDesigner(cardLayout, contentPanel);
-        contentPanel.add(thanhtoan, "ThanhToan");
-        updateTongTien();
     }
-    private JPanel initGioHangPanel() {
-        JPanel gioHangPanel = new JPanel(new BorderLayout());
-        gioHangPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
-        navPanel.add(createNavLabel("Giỏ hàng", true));
-        navPanel.add(createNavLabel("Thông tin đặt hàng", false));
-        navPanel.add(createNavLabel("Thanh toán", false));
-        navPanel.add(createNavLabel("Hoàn tất", false));
-        gioHangPanel.add(navPanel, BorderLayout.NORTH);
+    private JPanel initGioHangPanel() {
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 0));
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainPanel.setBackground(Color.WHITE);
+
+        mainPanel.add(createNavPanel(), BorderLayout.NORTH);
 
         itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
-        itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        itemPanel.setBackground(Color.WHITE);
+        mainPanel.add(new JScrollPane(itemPanel), BorderLayout.CENTER);
 
-        addProduct("Màn hình Asus TUF GAMING VG279QE5A-R 27\" IPS 146Hz chuyên game", 3290000);
-        addProduct("Laptop Dell Inspiron 15 3000", 15990000);
-        gioHangPanel.add(new JScrollPane(itemPanel), BorderLayout.CENTER);
-
-        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
         bottomPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+        bottomPanel.setBackground(Color.WHITE);
 
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        totalPanel.setBackground(Color.WHITE);
+
         JLabel lbTongTienLabel = new JLabel("Tổng tiền:");
         lbTongTienLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        labelTongTienValue = new JLabel("0₫");
+        labelTongTienValue.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        labelTongTienValue.setForeground(Color.RED);
+
         totalPanel.add(lbTongTienLabel);
+        totalPanel.add(labelTongTienValue);
 
-        lbTongTienValue = new JLabel("0₫");
-        lbTongTienValue.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lbTongTienValue.setForeground(Color.RED);
-        totalPanel.add(lbTongTienValue);
-        bottomPanel.add(totalPanel, BorderLayout.WEST);
+        JButton btnXoaTatCa = new JButton("Xóa tất cả");
+        btnXoaTatCa.setBackground(Color.RED);
+        btnXoaTatCa.setForeground(Color.WHITE);
+        btnXoaTatCa.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnXoaTatCa.addActionListener(e -> {
+            products.clear();
+            refreshProductList();
+        });
 
-        btnDatHang = new JButton("ĐẶT HÀNG NGAY");
+        btnDatHang = new JButton("ĐẶT HÀNG");
         btnDatHang.setBackground(new Color(215, 0, 24));
         btnDatHang.setForeground(Color.WHITE);
         btnDatHang.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnDatHang.setPreferredSize(new Dimension(250, 45));
+        btnDatHang.setPreferredSize(new Dimension(200, 45));
         btnDatHang.setFocusPainted(false);
         btnDatHang.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnDatHang.addActionListener(this);
-        bottomPanel.add(btnDatHang, BorderLayout.EAST);
-        gioHangPanel.add(bottomPanel, BorderLayout.SOUTH);
+        btnDatHang.addActionListener(this::handleDatHang);
 
-        return gioHangPanel;
+        bottomPanel.add(totalPanel, BorderLayout.WEST);
+        bottomPanel.add(btnXoaTatCa, BorderLayout.CENTER);
+        bottomPanel.add(btnDatHang, BorderLayout.EAST);
+
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+        return mainPanel;
     }
 
-    private void addProduct(String tenSanPham, double giaMoi) {
-        JPanel productPanel = new JPanel(new BorderLayout(10, 10));
-        productPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        productPanel.setBackground(Color.WHITE);
-        Product product = new Product(tenSanPham, giaMoi, 1);
-        products.add(product);
+    private JPanel createNavPanel() {
+        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        navPanel.setBackground(Color.WHITE);
 
-        JLabel lbhinhanh = new JLabel(new ImageIcon("src/images/phone.png"));
-        lbhinhanh.setHorizontalAlignment(SwingConstants.CENTER);
-        lbhinhanh.setPreferredSize(new Dimension(140, 80));
-        productPanel.add(lbhinhanh, BorderLayout.WEST);
+        navPanel.add(createNavLabel("Giỏ hàng", true));
+        navPanel.add(createNavLabel("Thông tin đặt hàng", false));
 
-        JPanel detailsPanel = new JPanel(new BorderLayout());
-        detailsPanel.setBackground(Color.WHITE);
-        JLabel lbTenSanPham = new JLabel(tenSanPham);
-        lbTenSanPham.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        detailsPanel.add(lbTenSanPham, BorderLayout.NORTH);
-
-        JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pricePanel.setBackground(Color.WHITE);
-        JLabel lbGiaMoi = new JLabel(String.format("%,.0f₫", giaMoi));
-        lbGiaMoi.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lbGiaMoi.setForeground(Color.RED);
-        pricePanel.add(lbGiaMoi);
-        detailsPanel.add(pricePanel, BorderLayout.CENTER);
-
-        productPanel.add(detailsPanel, BorderLayout.CENTER);
-
-        JPanel quantityPanel = new JPanel();
-        quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        quantityPanel.setPreferredSize(new Dimension(150,80));
-        JButton btnGiam = new JButton("-");
-        btnGiam.setPreferredSize(new Dimension(30, 30));
-        btnGiam.setBackground(Color.LIGHT_GRAY);
-        btnGiam.setForeground(Color.BLACK);
-        btnGiam.setOpaque(true);
-        JLabel lbSoLuong = new JLabel(String.valueOf(product.getSoLuong()));
-        lbSoLuong.setPreferredSize(new Dimension(30, 30));
-        lbSoLuong.setHorizontalAlignment(SwingConstants.CENTER);
-        JButton btnThem = new JButton("+");
-        btnThem.setPreferredSize(new Dimension(30, 30));
-        btnThem.setBackground(Color.LIGHT_GRAY);
-        btnThem.setOpaque(true);
-        btnGiam.addActionListener(e -> {
-            if (product.getSoLuong() > 1) {
-                product.setSoLuong(product.getSoLuong() - 1);
-                lbSoLuong.setText(String.valueOf(product.getSoLuong()));
-                updateTongTien();
-            } else if (product.getSoLuong() == 1) {
-                // Xóa sản phẩm nếu số lượng giảm về 0
-                products.remove(product);
-                itemPanel.remove(productPanel);
-                itemPanel.revalidate();
-                itemPanel.repaint();
-                updateTongTien();
-            }
-        });
-
-        btnThem.addActionListener(e -> {
-            product.setSoLuong(product.getSoLuong() + 1);
-            lbSoLuong.setText(String.valueOf(product.getSoLuong()));
-            updateTongTien();
-        });
-
-        JButton btnXoa = new JButton("Xóa");
-        btnXoa.setBackground(Color.RED);
-        btnXoa.setPreferredSize(new Dimension(60, 30));
-        btnXoa.addActionListener(e -> {
-            products.remove(product);
-            itemPanel.remove(productPanel);
-            itemPanel.revalidate();
-            itemPanel.repaint();
-            updateTongTien();
-        });
-        //them cac nut vao 
-        quantityPanel.add(btnGiam);
-        quantityPanel.add(lbSoLuong);
-        quantityPanel.add(btnThem);
-        quantityPanel.add(btnXoa);
-        productPanel.add(quantityPanel, BorderLayout.EAST);
-
-        itemPanel.add(productPanel);
+        return navPanel;
     }
 
     private JLabel createNavLabel(String text, boolean isActive) {
@@ -172,31 +116,99 @@ public class GioHangGUI extends JPanel implements ActionListener {
         return label;
     }
 
-    private void updateTongTien() {
-        double tongTien = 0;
-        for (Product product : products) {
-            tongTien += product.getGiaMoi() * product.getSoLuong();
-        }
-        lbTongTienValue.setText(String.format("%,.0f₫", tongTien));
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnDatHang) {
-            if (products.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi đặt hàng.", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                return;
+    public void themSanPhamVaoGio(DienThoai_DTO dt) {
+        boolean daTonTai = false;
+        for (ChiTietDon_DTO chitiet : products) {
+            DienThoai_DTO dienthoai = chitiet.getThongTinSanPham();
+            if (dt.getID_SanPham().equals(dienthoai.getID_SanPham())) {
+                chitiet.setSoLuongMua(chitiet.getSoLuongMua() + 1);
+                daTonTai = true;
+                break;
             }
-            thongTinNhanHang.updateItems(products);
-            cardLayout.show(contentPanel, "ThongTinNhanHang");
         }
+        ChiTietDon_DTO chitiet = new ChiTietDon_DTO("", dt, 1, dt.getGia_SanPham(), pnbll.getAllIDCTPhieuNhapFromIDDienThoai(dt.getID_SanPham()).get(0));
+        if (!daTonTai) {
+            products.add(chitiet);
+        }
+        refreshProductList();
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Giỏ hàng");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.add(new GioHangGUI());
-        frame.setVisible(true);
+    private void refreshProductList() {
+        itemPanel.removeAll();
+
+        for (ChiTietDon_DTO chitiet : products) {
+            ChiTietDon_DTO currentItem = chitiet;
+
+            CartItemPanel cartItem = new CartItemPanel(currentItem, this::updateTongTien, e -> {
+                products.remove(currentItem);
+                refreshProductList();
+            });
+
+            RoundedPanel wrapper = new RoundedPanel(20);
+            wrapper.setLayout(new BorderLayout());
+            wrapper.setBackground(Color.WHITE);
+            wrapper.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            ));
+            wrapper.add(cartItem, BorderLayout.CENTER);
+            wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
+
+            itemPanel.add(Box.createVerticalStrut(10));
+            itemPanel.add(wrapper);
+        }
+
+        itemPanel.add(Box.createVerticalStrut(10));
+        updateTongTien();
+        itemPanel.revalidate();
+        itemPanel.repaint();
+    }
+
+    private void updateTongTien() {
+        total = 0.0;
+        for (ChiTietDon_DTO chitiet : products){
+            total+= chitiet.getThanhTien();
+        }
+
+        labelTongTienValue.setText(String.format("%,.0f₫", total));
+    }
+
+    private void handleDatHang(ActionEvent e) {
+        if (products.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi đặt hàng.",
+                    "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ThongTinDonHang = new DonHang_DTO(
+                "", 
+                kh.getId_KhachHang(), 
+                "", 
+                "", 
+                layNgayHienTai(), 
+                "", 
+                "Chưa xử lý", 
+                products, 
+                total
+                );
+
+        ThongTinDatHang thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel,kh,ThongTinDonHang,this);
+        thongTinDatHang.updateItems(products);
+
+        contentPanel.add(thongTinDatHang, "ThongTinNhanHang");
+        cardLayout.show(contentPanel, "ThongTinNhanHang");
+    }
+
+    public void resetGioHang() {
+        products.clear();
+        refreshProductList();
+        cardLayout.show(contentPanel, "GioHang");
+    }
+    
+
+    public String layNgayHienTai() {
+        LocalDate ngayHienTai = LocalDate.now();
+        DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return ngayHienTai.format(dinhDang);
     }
 }

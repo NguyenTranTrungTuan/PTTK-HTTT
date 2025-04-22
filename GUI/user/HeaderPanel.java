@@ -19,9 +19,6 @@ public class HeaderPanel extends JPanel {
     protected DangKy dangkyFrame;
     protected DangNhap dangnhapFrame;
     private KhachHang_BLL khbll;
-    private GioHangGUI giohang;
-    private TrangChu tc;
-
     public KhachHang_DTO kh;
 
     // Regex cho email
@@ -33,8 +30,7 @@ public class HeaderPanel extends JPanel {
         "^0[35789][0-9]{8}$";
 
 
-    public HeaderPanel(TrangChu tc) {
-        this.tc=tc;
+    public HeaderPanel() {
         initComponents();
     }
 
@@ -67,18 +63,6 @@ public class HeaderPanel extends JPanel {
                     addDangNhapEvent();
                 }
             }
-            // if (e.getSource() == cartIcon) {
-            //     giohang=new GioHangGUI();
-            //     JPanel contentPanel = tc.getContentPanel();
-            //     if (contentPanel != null) {
-            //         contentPanel.removeAll(); 
-            //         contentPanel.add(giohang); 
-            //         contentPanel.revalidate(); 
-            //         contentPanel.repaint();    
-            //     } else {
-            //         System.out.println("ContentPanel is null!"); 
-            //     }
-            // }
     }
         @Override
         public void mousePressed(MouseEvent e) {}
@@ -158,7 +142,7 @@ public class HeaderPanel extends JPanel {
         });
     }
 
-    private void addDangNhapEvent(){
+    protected void addDangNhapEvent(){
         dangnhapFrame.btnDangNhap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String email = dangnhapFrame.txtEmail.getText().trim();

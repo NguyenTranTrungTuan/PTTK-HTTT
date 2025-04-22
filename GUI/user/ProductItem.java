@@ -1,24 +1,30 @@
 package GUI.user;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 
 import java.awt.*;
 
-public class ProductItem extends JPanel {
-    private MyButton addCart_btn;
+public class ProductItem extends JPanel{
+    protected MyButton addCart_btn;
     private JLabel Imagelb;
-    private JLabel Namelb;
-    private JLabel PriceTaglb;
-    private boolean selected;
-
+    protected JLabel Namelb;
+    protected JLabel PriceTaglb;
+    protected Model_ProductItem data;
+  
+    
     public String getName(){
         return Namelb.getText();
     }
-
+  
+    
     public ProductItem(Model_ProductItem data) {
+        if (data == null) {
+            throw new IllegalArgumentException("Dữ liệu sản phẩm không được null.");
+        }
+        this.data = data;
         initComponents(data);
     }
+    
 
     private void initComponents(Model_ProductItem data) {
         setBackground(Color.WHITE);
@@ -39,7 +45,7 @@ public class ProductItem extends JPanel {
         Namelb.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         PriceTaglb = new JLabel("price");
-        PriceTaglb.setText(data.getPrice());
+        PriceTaglb.setText(String.format("%,.2f VND", data.getPrice()));
         PriceTaglb.setFont(new Font("Segoe UI", Font.BOLD, 16));
         PriceTaglb.setForeground(new Color(255, 102, 102));
         PriceTaglb.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -61,5 +67,16 @@ public class ProductItem extends JPanel {
         add(Box.createVerticalStrut(10));
         add(Box.createVerticalGlue()); // Push everything upwards
     }
-}
+    
 
+    // private void handleAddToCart() {
+    //     // Thêm sản phẩm vào giỏ hàng
+    //     gioHangGUI.themSanPhamVaoGio(data);
+
+    //     // Hiển thị thông báo
+    //     JOptionPane.showMessageDialog(this,
+    //         "Sản phẩm \"" + data.getTitle() + "\" đã được thêm vào giỏ hàng!",
+    //         "Thông báo",
+    //         JOptionPane.INFORMATION_MESSAGE);
+    // }
+}
