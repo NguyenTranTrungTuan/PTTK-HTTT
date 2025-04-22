@@ -1,45 +1,49 @@
 package GUI.giohang;
 
+import DTO.ChiTietDon_DTO;
+import DTO.DienThoai_DTO;
+import DTO.DonHang_DTO;
 import DTO.KhachHang_DTO;
-import GUI.user.Model_ProductItem;
+import BLL.DonHang_BLL;
+import BLL.PhieuNhap_BLL;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GioHangGUI extends JPanel {
-    private List<Model_ProductItem> products;
-    private JLabel lbTongTienValue;
+
+    private ArrayList<ChiTietDon_DTO> products;
+
+    private JLabel labelTongTienValue;
     private JPanel itemPanel;
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private JButton btnDatHang;
 
-    private ThongTinDatHang thongTinDatHang;
-    private ThanhToanUIDesigner thanhToanPanel;
-
-    private boolean isLoggedIn = true;
+    protected DonHang_DTO ThongTinDonHang;
+    private DonHang_BLL dhbll;
+    private PhieuNhap_BLL pnbll;
     public KhachHang_DTO kh;
 
+    private Double total = 0.0;
+
     public GioHangGUI() {
+        this.dhbll = new DonHang_BLL();
+        this.pnbll = new PhieuNhap_BLL();
         this.setLayout(new BorderLayout());
         this.products = new ArrayList<>();
+
         this.cardLayout = new CardLayout();
         this.contentPanel = new JPanel(cardLayout);
         this.add(contentPanel, BorderLayout.CENTER);
         
         JPanel gioHangPanel = initGioHangPanel();
         contentPanel.add(gioHangPanel, "GioHang");
-    
-        thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel);
-        contentPanel.add(thongTinDatHang, "ThongTinNhanHang");
-
-        thanhToanPanel = new ThanhToanUIDesigner(cardLayout, contentPanel);
-        contentPanel.add(thanhToanPanel, "ThanhToan");
     }
 
     private JPanel initGioHangPanel() {
@@ -64,12 +68,12 @@ public class GioHangGUI extends JPanel {
         JLabel lbTongTienLabel = new JLabel("Tổng tiền:");
         lbTongTienLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        lbTongTienValue = new JLabel("0₫");
-        lbTongTienValue.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lbTongTienValue.setForeground(Color.RED);
+        labelTongTienValue = new JLabel("0₫");
+        labelTongTienValue.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        labelTongTienValue.setForeground(Color.RED);
 
         totalPanel.add(lbTongTienLabel);
-        totalPanel.add(lbTongTienValue);
+        totalPanel.add(labelTongTienValue);
 
         JButton btnXoaTatCa = new JButton("Xóa tất cả");
         btnXoaTatCa.setBackground(Color.RED);
@@ -103,8 +107,6 @@ public class GioHangGUI extends JPanel {
 
         navPanel.add(createNavLabel("Giỏ hàng", true));
         navPanel.add(createNavLabel("Thông tin đặt hàng", false));
-        navPanel.add(createNavLabel("Thanh toán", false));
-        navPanel.add(createNavLabel("Hoàn tất", false));
 
         return navPanel;
     }
@@ -117,17 +119,19 @@ public class GioHangGUI extends JPanel {
         return label;
     }
 
-    public void themSanPhamVaoGio(Model_ProductItem data) {
+    public void themSanPhamVaoGio(DienThoai_DTO dt) {
         boolean daTonTai = false;
-        for (Model_ProductItem p : products) {
-            if (p.getTitle().equals(data.getTitle())) {
-                p.setAmount(p.getAmount() + data.getAmount());
+        for (ChiTietDon_DTO chitiet : products) {
+            DienThoai_DTO dienthoai = chitiet.getThongTinSanPham();
+            if (dt.getID_SanPham().equals(dienthoai.getID_SanPham())) {
+                chitiet.setSoLuongMua(chitiet.getSoLuongMua() + 1);
                 daTonTai = true;
                 break;
             }
         }
+        ChiTietDon_DTO chitiet = new ChiTietDon_DTO(dhbll.getNextCTDHID(), dt, 1, dt.getGia_SanPham(), pnbll.getAllIDCTPhieuNhapFromIDDienThoai(dt.getID_SanPham()).get(0));
         if (!daTonTai) {
-            products.add(data);
+            products.add(chitiet);
         }
         refreshProductList();
     }
@@ -135,8 +139,8 @@ public class GioHangGUI extends JPanel {
     private void refreshProductList() {
         itemPanel.removeAll();
 
-        for (Model_ProductItem item : new ArrayList<>(products)) {
-            Model_ProductItem currentItem = item;
+        for (ChiTietDon_DTO chitiet : products) {
+            ChiTietDon_DTO currentItem = chitiet;
 
             CartItemPanel cartItem = new CartItemPanel(currentItem, this::updateTongTien, e -> {
                 products.remove(currentItem);
@@ -164,11 +168,12 @@ public class GioHangGUI extends JPanel {
     }
 
     private void updateTongTien() {
-        BigDecimal total = products.stream()
-                .map(p -> p.getPrice().multiply(BigDecimal.valueOf(p.getAmount())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        total = 0.0;
+        for (ChiTietDon_DTO chitiet : products){
+            total+= chitiet.getThanhTien();
+        }
 
-        lbTongTienValue.setText(String.format("%,.0f₫", total));
+        labelTongTienValue.setText(String.format("%,.0f₫", total));
     }
 
     private void handleDatHang(ActionEvent e) {
@@ -178,25 +183,35 @@ public class GioHangGUI extends JPanel {
             return;
         }
 
-        if (!isLoggedIn) {
-            JOptionPane.showMessageDialog(this, "Vui lòng đăng nhập trước khi đặt hàng!",
-                    "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        ThongTinDonHang = new DonHang_DTO(
+                dhbll.getNextDHID(), 
+                kh.getId_KhachHang(), 
+                "", 
+                "", 
+                layNgayHienTai(), 
+                "", 
+                "Chưa xử lý", 
+                products, 
+                total
+                );
 
-        thongTinDatHang.setCustomerInfo(
-                kh.getTen_KhachHang(),
-                kh.getSdt_KhachHang(),
-                kh.getEmail_KhachHang(),
-                kh.getDiaChi_KhachHang()
-        );
-
+        ThongTinDatHang thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel,kh,ThongTinDonHang,this);
         thongTinDatHang.updateItems(products);
+
+        contentPanel.add(thongTinDatHang, "ThongTinNhanHang");
         cardLayout.show(contentPanel, "ThongTinNhanHang");
     }
 
-    public void setLoggedIn(boolean isLoggedIn, KhachHang_DTO kh) {
-        this.isLoggedIn = isLoggedIn;
-        this.kh = kh;
+    public void resetGioHang() {
+        products.clear();
+        refreshProductList();
+        cardLayout.show(contentPanel, "GioHang");
+    }
+    
+
+    public String layNgayHienTai() {
+        LocalDate ngayHienTai = LocalDate.now();
+        DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return ngayHienTai.format(dinhDang);
     }
 }

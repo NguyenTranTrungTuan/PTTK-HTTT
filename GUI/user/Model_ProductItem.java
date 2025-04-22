@@ -57,13 +57,18 @@ public class Model_ProductItem {
         this.amount = Math.max(1, amount); // Đảm bảo số lượng tối thiểu là 1
     }
 
+    public String getID() {
+        return ID;
+    }
+
     // Constructor mặc định
     public Model_ProductItem() {
         this.amount = 1; // Số lượng mặc định là 1
     }
 
     // Constructor có tham số
-    public Model_ProductItem(String Title, String Image, BigDecimal price, int amount) {
+    public Model_ProductItem(String id,String Title, String Image, BigDecimal price, int amount) {
+        this.ID = id;
         this.Title = Title;
         this.Imageicon = Image;
         this.price = price;
@@ -71,6 +76,7 @@ public class Model_ProductItem {
         
     }
 
+    private String ID;
     private String Title;
     private String Imageicon;
     private BigDecimal price;

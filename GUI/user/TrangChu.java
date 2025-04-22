@@ -14,10 +14,7 @@ public class TrangChu extends JFrame {
     private UserInfoPanel UserInfo;
     private FilterPanel Filter;
     private ConfirmFrame confirmFrame;
-   
 
-
-    
     private GioHangGUI gioHangGUI;
     private CardLayout cardLayout; 
 
@@ -67,8 +64,16 @@ public class TrangChu extends JFrame {
                 SwitchToShop();
             } else if (source == header.searchIcon && !header.searchBox.getText().equals("")) {
                 SwitchToFilter();
-            } else if (source == header.cartIcon&&!header.accountLabel.getText().equals("")) {
-                SwitchToCart();
+            } else if (source == header.cartIcon) {
+                System.out.println("test");
+                System.out.println(header.accountLabel.getText());
+                if(!header.accountLabel.getText().equals("")){
+                    SwitchToCart();
+                }else{
+                    header.dangnhapFrame = new DangNhap();
+                    header.addDangNhapEvent();
+                }
+                
             } else if (Filter != null && source == Filter.FilterButton &&
                     !Filter.MinPriceTF.getText().equals("Giá thấp nhất") &&
                     !Filter.MaxPriceTF.getText().equals("Giá cao nhất")) {
@@ -122,7 +127,7 @@ public class TrangChu extends JFrame {
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
         filterPanel.setBackground(Color.decode("#cfdef3"));
 
-        productPanel = new ProductPanel("Search", header.searchBox.getText(), null, gioHangGUI);
+        productPanel = new ProductPanel("Search", header.searchBox.getText(), null, gioHangGUI, header);
 
         filterPanel.add(Filter);
         filterPanel.add(productPanel);
@@ -156,7 +161,7 @@ public class TrangChu extends JFrame {
             label.addMouseListener(mouseListener);
         }
 
-        productPanel = new ProductPanel(category, keyword, filter, gioHangGUI);
+        productPanel = new ProductPanel(category, keyword, filter, gioHangGUI, header);
         newShopPanel.add(catalogPanel);
         newShopPanel.add(productPanel);
 
@@ -167,11 +172,6 @@ public class TrangChu extends JFrame {
    
     public void SwitchToUserMenu() {
         UserInfo = new UserInfoPanel(header.kh);
-        /*UserInfo.NameInfo.setText(header.kh.getTen_KhachHang());
-        UserInfo.PhoneInfo.setText(header.kh.getSdt_KhachHang());
-        UserInfo.EmailInfo.setText(header.kh.getEmail_KhachHang());
-        UserInfo.AddressInfo.setText(header.kh.getDiaChi_KhachHang());
-        UserInfo.PasswordInfo.setText(header.kh.getPass_KhachHang());*/
 
         UserInfo.logoutButton.addMouseListener(mouseListener);
 
@@ -181,7 +181,7 @@ public class TrangChu extends JFrame {
 
     // Khởi tạo giao diện
     public void initComponents() {
-        header = new HeaderPanel(this);
+        header = new HeaderPanel();
         header.accountLabel.addMouseListener(mouseListener);
         header.logoIcon.addMouseListener(mouseListener);
         header.searchIcon.addMouseListener(mouseListener);
@@ -202,7 +202,7 @@ public class TrangChu extends JFrame {
             label.addMouseListener(mouseListener);
         }
 
-        productPanel = new ProductPanel("All", null, null, gioHangGUI);
+        productPanel = new ProductPanel("All", null, null, gioHangGUI, header);
         shopPanel.add(catalogPanel);
         shopPanel.add(productPanel);
 

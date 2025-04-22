@@ -1,13 +1,17 @@
 package GUI.giohang;
 import GUI.user.Model_ProductItem;
 import javax.swing.*;
+
+import DTO.DonHang_DTO;
+
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class HoaDonPanel extends JPanel {
+
     public HoaDonPanel(String hoTen, String sdt, String diaChi,
-                       List<Model_ProductItem> products, String paymentMethod,
+                       DonHang_DTO thongtindonhang,
                        CardLayout cardLayout, JPanel contentPanel) {
 
         setLayout(new BorderLayout());
@@ -42,7 +46,7 @@ public class HoaDonPanel extends JPanel {
 
 
         receipt.append("\nPhương thức thanh toán: ").append(paymentMethod);
-receipt.append(String.format("\n\nTỔNG CỘNG: %,d₫", total.intValue())); 
+        receipt.append(String.format("\n\nTỔNG CỘNG: %,d₫", total.intValue())); 
 
         receiptArea.setText(receipt.toString());
 

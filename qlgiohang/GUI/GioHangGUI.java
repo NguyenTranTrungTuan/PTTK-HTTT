@@ -16,7 +16,6 @@ public class GioHangGUI extends JPanel implements ActionListener {
     private JButton btnDatHang;
     private ThongTinDatHang thongTinNhanHang;
     private JPanel contentPanel;
-    private ThanhToanUIDesigner thanhtoan;
     private CardLayout cardLayout;
 
     public GioHangGUI() {
@@ -29,8 +28,6 @@ public class GioHangGUI extends JPanel implements ActionListener {
         contentPanel.add(gioHangPanel, "GioHang");
         thongTinNhanHang = new ThongTinDatHang(cardLayout, contentPanel);
         contentPanel.add(thongTinNhanHang, "ThongTinNhanHang");
-        thanhtoan=new ThanhToanUIDesigner(cardLayout, contentPanel);
-        contentPanel.add(thanhtoan, "ThanhToan");
         updateTongTien();
     }
     private JPanel initGioHangPanel() {
@@ -48,8 +45,8 @@ public class GioHangGUI extends JPanel implements ActionListener {
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
         itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-        addProduct("Màn hình Asus TUF GAMING VG279QE5A-R 27\" IPS 146Hz chuyên game", 3290000);
-        addProduct("Laptop Dell Inspiron 15 3000", 15990000);
+        // addProduct("Màn hình Asus TUF GAMING VG279QE5A-R 27\" IPS 146Hz chuyên game", 3290000);
+        // addProduct("Laptop Dell Inspiron 15 3000", 15990000);
         gioHangPanel.add(new JScrollPane(itemPanel), BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -190,13 +187,5 @@ public class GioHangGUI extends JPanel implements ActionListener {
             thongTinNhanHang.updateItems(products);
             cardLayout.show(contentPanel, "ThongTinNhanHang");
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Giỏ hàng");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.add(new GioHangGUI());
-        frame.setVisible(true);
     }
 }

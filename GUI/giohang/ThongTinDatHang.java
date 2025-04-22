@@ -1,30 +1,41 @@
 package GUI.giohang;
 
-import GUI.user.Model_ProductItem;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import BLL.DonHang_BLL;
+import DTO.ChiTietDon_DTO;
+import DTO.DonHang_DTO;
+import DTO.KhachHang_DTO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.ArrayList;
+
 
 public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMethodDialog.PaymentMethodCallback {
     private CardLayout cardLayout;
     private JPanel contentPanel;
-    private JButton btnTiepTuc;
+    private JButton btnThanhtoan;
     private JButton btnQuayLai;
-    private JTextField txtHoTen, txtSoDienThoai, txtDiaChi;
     private JLabel lblPhuongThuc;
     private JLabel lblTen, lblTag, lblSdt, lblEmail, lblAddress; 
-    private String phuongThucThanhToan;
-    private List<Model_ProductItem> products;
+
     private JPanel panelDanhSachSanPham;
+    private GioHangGUI giohang;
 
-    // Biến kiểm tra trạng thái đăng nhập
-    private boolean isLoggedIn = true; 
+    private String phuongThucThanhToan;
 
-    public ThongTinDatHang(CardLayout cardLayout, JPanel contentPanel) {
+    private DonHang_DTO ThongTinDonHang;
+    private DonHang_BLL dhbll;
+
+    public ThongTinDatHang(CardLayout cardLayout, JPanel contentPanel,KhachHang_DTO kh, DonHang_DTO ThongTinDonHang, GioHangGUI giohang) {
+        this.ThongTinDonHang = ThongTinDonHang;
+        this.giohang = giohang;
+        this.dhbll = new DonHang_BLL();
+
         this.cardLayout = cardLayout;
         this.contentPanel = contentPanel;
         setLayout(new BorderLayout());
@@ -34,8 +45,6 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
         navPanel.add(createNavLabel("Giỏ hàng", false));
         navPanel.add(createNavLabel("Thông tin đặt hàng", true));
-        navPanel.add(createNavLabel("Thanh toán", false));
-        navPanel.add(createNavLabel("Hoàn tất", false));
         add(navPanel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel();
@@ -63,7 +72,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         topRow.setMaximumSize(new Dimension(300,30));
 
         // Tên
-        lblTen = new JLabel("Chưa đăng nhập");
+        lblTen = new JLabel(kh.getTen_KhachHang());
         lblTen.setFont(new Font("Arial", Font.BOLD, 15));
 
         // Tag hồng
@@ -89,13 +98,9 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         topRow.add(nameTagPanel, BorderLayout.WEST);
 
         // SĐT
-        lblSdt = new JLabel("");
+        lblSdt = new JLabel(kh.getSdt_KhachHang());
         lblSdt.setFont(new Font("Arial", Font.PLAIN, 14));
         lblSdt.setForeground(new Color(60, 120, 180));
-
-        // Đặt kích thước tối đa cho lblSdt để tránh số điện thoại bị cắt
-        lblSdt.setMaximumSize(new Dimension(150, 20)); // Giới hạn chiều rộng tối đa cho số điện thoại
-        lblSdt.setPreferredSize(new Dimension(150, 20)); // Đảm bảo chiều rộng cố định
 
         topRow.add(lblSdt, BorderLayout.EAST);
 
@@ -108,7 +113,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lblEmailTag.setForeground(Color.GRAY);
         lblEmailTag.setAlignmentX(SwingConstants.LEFT);
 
-        lblEmail = new JLabel("");
+        lblEmail = new JLabel(kh.getEmail_KhachHang());
         lblEmail.setFont(new Font("Arial", Font.PLAIN, 13));
 
         JPanel emailRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -124,7 +129,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lblAddressTag.setForeground(Color.GRAY);
         lblAddressTag.setAlignmentX(SwingConstants.LEFT);
 
-        lblAddress = new JLabel("");
+        lblAddress = new JLabel(kh.getDiaChi_KhachHang());
         JPanel addressRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addressRow.setOpaque(false);
         addressRow.add(lblAddressTag);
@@ -178,13 +183,13 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(Color.WHITE);
 
-        btnTiepTuc = new JButton("THANH TOÁN");
-        btnTiepTuc.setFont(new Font("Arial", Font.BOLD, 16));
-        btnTiepTuc.setForeground(Color.WHITE);
-        btnTiepTuc.setBackground(Color.RED);
-        btnTiepTuc.setFocusPainted(false);
-        btnTiepTuc.setPreferredSize(new Dimension(200, 40));
-        btnTiepTuc.addActionListener(this);
+        btnThanhtoan = new JButton("THANH TOÁN");
+        btnThanhtoan.setFont(new Font("Arial", Font.BOLD, 16));
+        btnThanhtoan.setForeground(Color.WHITE);
+        btnThanhtoan.setBackground(Color.RED);
+        btnThanhtoan.setFocusPainted(false);
+        btnThanhtoan.setPreferredSize(new Dimension(200, 40));
+        btnThanhtoan.addActionListener(this);
 
         btnQuayLai = new JButton("QUAY LẠI");
         btnQuayLai.setFont(new Font("Arial", Font.BOLD, 16));
@@ -195,7 +200,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         btnQuayLai.addActionListener(this);
 
         buttonPanel.add(btnQuayLai);
-        buttonPanel.add(btnTiepTuc);
+        buttonPanel.add(btnThanhtoan);
 
         formPanel.add(Box.createVerticalStrut(20));
         formPanel.add(buttonPanel);
@@ -209,24 +214,24 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         label.setForeground(isActive ? Color.RED : Color.GRAY);
         return label;
     }
-    public void updateItems(List<Model_ProductItem> products) {
+
+
+    public void updateItems(ArrayList<ChiTietDon_DTO> products) {
         if (products == null || products.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không có sản phẩm nào trong giỏ hàng!", 
                                           "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
-    
-        this.products = products;
         panelDanhSachSanPham.removeAll();
     
-        for (Model_ProductItem product : products) {
+        for (ChiTietDon_DTO chitiet : products) {
             JPanel itemPanel = new JPanel(new BorderLayout(10, 10));
             itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             itemPanel.setBackground(Color.WHITE);
     
             JLabel imageLabel = new JLabel();
             try {
-                String imagePath = "GUI/user/ProductImage/" + product.getImageicon() + ".png";
+                String imagePath = "GUI/user/ProductImage/" + chitiet.getThongTinSanPham().getID_SanPham() + ".png";
                 ImageIcon icon = new ImageIcon(imagePath);
                 Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(img));
@@ -240,10 +245,11 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
             JPanel infoPanel = new JPanel();
             infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
             infoPanel.setBackground(Color.WHITE);
-            infoPanel.add(new JLabel(product.getTitle()));
-            infoPanel.add(new JLabel("Số lượng: " + product.getAmount()));
+            infoPanel.add(new JLabel(chitiet.getThongTinSanPham().getTen_SanPham()));
+            infoPanel.add(new JLabel("Số lượng: " + chitiet.getSoLuongMua()));
+
             DecimalFormat formatter = new DecimalFormat("#,###");
-            String formattedPrice = formatter.format(product.getPrice().intValueExact()*product.getAmount());
+            String formattedPrice = formatter.format(chitiet.getThongTinSanPham().getGia_SanPham()*chitiet.getSoLuongMua());
             infoPanel.add(new JLabel("Giá: " + formattedPrice + "₫"));
     
             itemPanel.add(infoPanel, BorderLayout.CENTER);
@@ -255,30 +261,24 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         panelDanhSachSanPham.revalidate();
         panelDanhSachSanPham.repaint();
     }
-    public void setCustomerInfo(String ten, String sdt, String email, String diaChi) {
-        lblTen.setText(ten != null && !ten.isEmpty() ? ten : "Chưa đăng nhập");
-        lblSdt.setText(sdt != null && !sdt.isEmpty() ? sdt : "Không có số điện thoại");
-        lblEmail.setText(email != null && !email.isEmpty() ? email : "Không có email");
-        lblAddress.setText(diaChi != null && !diaChi.isEmpty() ? diaChi : "Không có địa chỉ");
-    }
     
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnTiepTuc) {
-            if (!isLoggedIn) {
-                JOptionPane.showMessageDialog(this, "Vui lòng đăng nhập trước khi tiếp tục!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            // if (txtHoTen.getText().isEmpty() || txtSoDienThoai.getText().isEmpty() || txtDiaChi.getText().isEmpty()) {
-            //     JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.WARNING_MESSAGE);
-            //     return;
-            // }
+        if (e.getSource() == btnThanhtoan) {
             if (phuongThucThanhToan == null) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phương thức thanh toán!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            cardLayout.show(contentPanel, "ThanhToan");
+
+            ThongTinDonHang.setPTTT(phuongThucThanhToan);
+            ThongTinDonHang.setDiaChiDat(lblAddress.getText());
+            ThongTinDonHang.output();
+
+            dhbll.addDonHang(ThongTinDonHang); // thêm đơn hàng mới vào csdl
+
+            JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
+            giohang.resetGioHang();
         }
         if (e.getSource() == btnQuayLai) {
             cardLayout.show(contentPanel, "GioHang");
@@ -289,9 +289,5 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     public void onPaymentMethodSelected(String method) {
         phuongThucThanhToan = method;
         lblPhuongThuc.setText(method);
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        this.isLoggedIn = loggedIn;
     }
 }

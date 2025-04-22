@@ -3,7 +3,6 @@ import GUI.giohang.GioHangGUI;
 import javax.swing.*;
 import BLL.DienThoai_BLL;
 import DTO.DienThoai_DTO;
-import DTO.GioHang_DTO;
 import java.awt.*;
 import java.awt.event.*;
 import java.math.BigDecimal;
@@ -11,13 +10,15 @@ import java.util.ArrayList;
 
 public class ProductPanel extends JScrollPane {
     private JPanel ItemPanel;
-    private ArrayList<ProductItem> ProductList;
+    protected ArrayList<ProductItem> ProductList;
     private ArrayList<Model_Product_Description> DescriptionList;
     private ProductDescription CurrentDescription;
     protected DienThoai_BLL dtbll;
     private GioHangGUI gioHangGUI;
+    private HeaderPanel header;
+    
 
-    public ProductPanel(String typename, String searchtext, FilterPanel filter, GioHangGUI gioHangGUI) { 
+    public ProductPanel(String typename, String searchtext, FilterPanel filter, GioHangGUI gioHangGUI, HeaderPanel hder) { 
         this.gioHangGUI = gioHangGUI;
         initComponents();
         if (typename.equals("All"))
@@ -27,7 +28,7 @@ public class ProductPanel extends JScrollPane {
         } else {
             getAllProductType(typename);
         }
-       
+        header = hder;
         addEvent();
     }
    /*public ProductPanel(String category, String search, FilterPanel filter, GioHangGUI gioHangGUI) {
@@ -96,7 +97,7 @@ public class ProductPanel extends JScrollPane {
                 baoHanh = dt.getBaoHanh();
                 
                   // Truyền gioHangGUI vào ProductItem
-                ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong), gioHangGUI);
+                ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
                 ProductList.add(item);
                 ItemPanel.add(item);
 
@@ -119,7 +120,7 @@ public class ProductPanel extends JScrollPane {
                     baoHanh = dth.getBaoHanh();
 
                       // Truyền gioHangGUI vào ProductItem
-                    ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong), gioHangGUI);
+                    ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
                     ProductList.add(item);
                     ItemPanel.add(item);
 
@@ -159,7 +160,7 @@ public class ProductPanel extends JScrollPane {
                     thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
                     baoHanh = dt.getBaoHanh();
 
-                    ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong), gioHangGUI);
+                    ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
                     ProductList.add(item);
                     ItemPanel.add(item);
 
@@ -181,7 +182,7 @@ public class ProductPanel extends JScrollPane {
                         thuongHieu = dtbll.getThuongHieu(dth.getID_NCC());
                         baoHanh = dth.getBaoHanh();
 
-                        ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong), gioHangGUI);
+                        ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
                         ProductList.add(item);
                         ItemPanel.add(item);
 
@@ -212,7 +213,7 @@ public class ProductPanel extends JScrollPane {
             int baoHanh = dt.getBaoHanh();
 
               // Truyền gioHangGUI vào ProductItem
-            ProductItem item = new ProductItem(new Model_ProductItem(ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong), gioHangGUI);
+            ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
             ProductList.add(item);
             ItemPanel.add(item);
             Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
@@ -223,24 +224,33 @@ public class ProductPanel extends JScrollPane {
     private void addEvent(){
         for(ProductItem item:ProductList){
             item.addMouseListener(mouseListener);
-        }
-        /*for (ProductItem item : ProductList) {
-            item.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getButton() == MouseEvent.BUTTON1) {
-                        GioHangGUI.getInstance().addToCart(
-                            item.getID(),
-                            item.getName(),
-                            item.getPrice(),
-                            1
-                        );
-                        JOptionPane.showMessageDialog(null, "Đã thêm " + item.getName() + " vào giỏ hàng!");
+            item.addCart_btn.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (e.getSource() == item.addCart_btn) {
+                        if (!header.accountLabel.getText().equals("")){
+                            handleAddToCart(item);
+                        }
+                        else{
+                            header.dangnhapFrame = new DangNhap();
+                            header.addDangNhapEvent();
+                        }
                     }
                 }
             });
-        }*/
+        }
         
+        
+    }
+
+    private void handleAddToCart(ProductItem item) {
+        // Thêm sản phẩm vào giỏ hàng
+        gioHangGUI.themSanPhamVaoGio(dtbll.getDTFromID(item.data.getID()));
+
+        // Hiển thị thông báo
+        JOptionPane.showMessageDialog(this,
+            "Sản phẩm \"" + item.Namelb.getText() + "\" đã được thêm vào giỏ hàng!",
+            "Thông báo",
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void initComponents() {

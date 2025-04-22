@@ -1,14 +1,17 @@
 package GUI.giohang;
 
-import GUI.user.Model_ProductItem;
-
 import javax.swing.*;
+
+import DTO.ChiTietDon_DTO;
+import DTO.DienThoai_DTO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CartItemPanel extends RoundedPanel implements ActionListener {
-    private final Model_ProductItem product;
+    private final DienThoai_DTO product;
+    private ChiTietDon_DTO chitiet;
     private JLabel lbSoLuong;
     private final Runnable onUpdate;
     private final ActionListener onDelete;
@@ -16,9 +19,10 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
     private JButton btnMinus;
     private JButton btnPlus;
 
-    public CartItemPanel(Model_ProductItem product, Runnable onUpdate, ActionListener onDelete) {
+    public CartItemPanel(ChiTietDon_DTO chitiet, Runnable onUpdate, ActionListener onDelete) {
         super(20);
-        this.product = product;
+        this.chitiet = chitiet;
+        this.product = chitiet.getThongTinSanPham();
         this.onUpdate = onUpdate;
         this.onDelete = onDelete;
 
@@ -32,7 +36,7 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
     }
 
     private JLabel createImageLabel() {
-        String imagePath = "GUI/user/ProductImage/" + product.getImageicon() + ".png";
+        String imagePath = "GUI/user/ProductImage/" + product.getID_SanPham() + ".png";
         ImageIcon icon;
         try {
             icon = new ImageIcon(imagePath);
@@ -53,11 +57,11 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(Color.WHITE);
 
-        JLabel lbTitle = new JLabel(product.getTitle());
+        JLabel lbTitle = new JLabel(product.getTen_SanPham());
         lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lbTitle.setForeground(Color.BLACK);
 
-        JLabel lbPrice = new JLabel(String.format("%,.0f₫", product.getPrice()));
+        JLabel lbPrice = new JLabel(String.format("%,.0f₫", product.getGia_SanPham()));
         lbPrice.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         lbPrice.setForeground(new Color(220, 20, 60));
 
@@ -85,8 +89,7 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
         btnMinus = new JButton("-");
         styleButton(btnMinus);
         btnMinus.setPreferredSize(new Dimension(40, 30));
-        int amount = product.getAmount();
-        lbSoLuong = new JLabel(String.valueOf(amount));
+        lbSoLuong = new JLabel(String.valueOf(chitiet.getSoLuongMua()));
         lbSoLuong.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lbSoLuong.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -128,14 +131,14 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == btnMinus) {
-            if (product.getAmount() > 1) {
-                product.setAmount(product.getAmount() - 1);
-                lbSoLuong.setText(String.valueOf(product.getAmount()));
+            if (chitiet.getSoLuongMua() > 1) {
+                chitiet.setSoLuongMua(chitiet.getSoLuongMua() - 1);
+                lbSoLuong.setText(String.valueOf(chitiet.getSoLuongMua()));
                 onUpdate.run(); // cập nhật tổng tiền
             }
         } else if (source == btnPlus) {
-            product.setAmount(product.getAmount() + 1);
-            lbSoLuong.setText(String.valueOf(product.getAmount()));
+            chitiet.setSoLuongMua(chitiet.getSoLuongMua() + 1);
+            lbSoLuong.setText(String.valueOf(chitiet.getSoLuongMua()));
             onUpdate.run(); // cập nhật tổng tiền
         }
     }

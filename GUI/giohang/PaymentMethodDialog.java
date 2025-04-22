@@ -69,20 +69,20 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         // Payment methods
         String[] methodNames = {
                 "Thanh toán khi nhận hàng",
-                "Chuyển khoản ngân hàng qua mã QR",
+                "Chuyển khoản ngân hàng",
                
         };
 
-        String[] iconPaths = {
-                "/images/cod_icon.png",
-                "/images/qr_icon.png",
-                "/images/vnpay_icon.png",
-                "/images/onepay_icon.png",
-                "/images/dots_icon.png"
-        };
+        // String[] iconPaths = {
+        //         "/images/cod_icon.png",
+        //         "/images/qr_icon.png",
+        //         "/images/vnpay_icon.png",
+        //         "/images/onepay_icon.png",
+        //         "/images/dots_icon.png"
+        // };
 
         for (int i = 0; i < methodNames.length; i++) {
-            JButton methodButton = createMethodButton(methodNames[i], iconPaths[i]);
+            JButton methodButton = createMethodButton(methodNames[i]);
             methodButtons.add(methodButton);
             contentPane.add(methodButton);
             contentPane.add(Box.createVerticalStrut(8));
@@ -105,15 +105,11 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
         add(contentPane);
     }
 
-    private JButton createMethodButton(String text, String iconPath) {
+    private JButton createMethodButton(String text) {
         JButton button = new JButton(text);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        try {
-            button.setIcon(new ImageIcon(getClass().getResource(iconPath)));
-        } catch (Exception e) {
-            System.out.println("Không tìm thấy icon: " + iconPath);
-        }
+    
         button.setIconTextGap(15);
         button.setPreferredSize(new Dimension(350, 45));
         button.setMaximumSize(new Dimension(350, 45));

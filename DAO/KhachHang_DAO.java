@@ -62,7 +62,7 @@ public class KhachHang_DAO {
     public KhachHang_DTO getKhachHangfromID(String id){
         if (OpenConnection()) {
             try {            
-                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH="+id;
+                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH='"+id+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()){

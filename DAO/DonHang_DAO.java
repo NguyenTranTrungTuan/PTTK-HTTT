@@ -76,7 +76,7 @@ public class DonHang_DAO{
         ArrayList<ChiTietDon_DTO> arr = new  ArrayList<>();
         if (OpenConnection()){
             try{
-                String query = "SELECT * FROM CHITIETDONHANG WHERE CHITIETDONHANG.MaCTPnhap = CHITIETPHIEUNHAP.MaCTPnhap AND CHITIETDONHANG.MaDon = ?";
+                String query = "SELECT * FROM CHITIETDONHANG, CHITIETPHIEUNHAP WHERE CHITIETDONHANG.MaCTPnhap = CHITIETPHIEUNHAP.MaCTPnhap AND CHITIETDONHANG.MaDon = ?";
                 PreparedStatement prstmt = con.prepareStatement(query);
                 prstmt.setString(1, id);
                 ResultSet rs = prstmt.executeQuery();
@@ -104,7 +104,7 @@ public class DonHang_DAO{
         ArrayList<ChiTietDon_DTO> arr = new  ArrayList<>();
         if (OpenConnection()){
             try{
-                String query = "SELECT * FROM CHITIETDONHANG WHERE CHITIETDONHANG.MaCTPnhap = CHITIETPHIEUNHAP.MaCTPnhap";
+                String query = "SELECT * FROM CHITIETDONHANG, CHITIETPHIEUNHAP WHERE CHITIETDONHANG.MaCTPnhap = CHITIETPHIEUNHAP.MaCTPnhap";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {

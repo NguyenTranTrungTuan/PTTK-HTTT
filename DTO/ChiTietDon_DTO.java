@@ -7,6 +7,21 @@ public class ChiTietDon_DTO {
     private double thanhtien;
     private String MaCTPnhap;
 
+
+    public void output() {
+        System.out.println("    Mã chi tiết đơn    : " + MaCTDH);
+        if (thongTinSanPham != null) {
+            System.out.println("    Mã sản phẩm        : " + thongTinSanPham.getID_SanPham());
+            System.out.println("    Tên sản phẩm       : " + thongTinSanPham.getTen_SanPham());
+            System.out.println("    Giá sản phẩm       : " + thongTinSanPham.getGia_SanPham());
+        } else {
+            System.out.println("    Sản phẩm           : [Không có thông tin]");
+        }
+        System.out.println("    Số lượng mua       : " + soLuongMua);
+        System.out.println("    Thành tiền         : " + thanhtien);
+        System.out.println("    Mã chi tiết PN     : " + MaCTPnhap);
+    }
+
     
     public ChiTietDon_DTO() {
         this.MaCTDH = "";
@@ -55,7 +70,7 @@ public class ChiTietDon_DTO {
 
     public void setSoLuongMua(int soLuongMua) {
         this.soLuongMua = soLuongMua;
-        // this.thanhtien = tinhThanhTien();  // Cập nhật lại giá tiền sau khi thay đổi số lượng mua
+        this.thanhtien = tinhThanhTien();  // Cập nhật lại giá tiền sau khi thay đổi số lượng mua
     }
 
     // Getter cho giaTien
@@ -63,8 +78,8 @@ public class ChiTietDon_DTO {
         return thanhtien;
     }
 
-    // // Phương thức tính giá tiền
-    // private double tinhThanhTien() {
-    //     return thongTinSanPham != null ? thongTinSanPham.getGia_SanPham() * soLuongMua : 0.0;
-    // }
+    // Phương thức tính giá tiền
+    private double tinhThanhTien() {
+        return thongTinSanPham != null ? thongTinSanPham.getGia_SanPham() * soLuongMua : 0.0;
+    }
 }

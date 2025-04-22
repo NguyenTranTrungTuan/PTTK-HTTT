@@ -19,8 +19,6 @@ public class HeaderPanel extends JPanel {
     protected DangKy dangkyFrame;
     protected DangNhap dangnhapFrame;
     private KhachHang_BLL khbll;
-    private TrangChu tc;
-    private GioHangGUI giohang;
     public KhachHang_DTO kh;
 
     // Regex cho email
@@ -32,8 +30,7 @@ public class HeaderPanel extends JPanel {
         "^0[35789][0-9]{8}$";
 
 
-    public HeaderPanel(TrangChu tc) {
-        this.tc=tc;
+    public HeaderPanel() {
         initComponents();
     }
 
@@ -145,7 +142,7 @@ public class HeaderPanel extends JPanel {
         });
     }
 
-    private void addDangNhapEvent(){
+    protected void addDangNhapEvent(){
         dangnhapFrame.btnDangNhap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String email = dangnhapFrame.txtEmail.getText().trim();

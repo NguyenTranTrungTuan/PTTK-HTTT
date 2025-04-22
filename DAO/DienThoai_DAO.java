@@ -70,7 +70,7 @@ public class DienThoai_DAO {
     public DienThoai_DTO getDTFromID(String id){
         if (OpenConnection()) {
             try {            
-                String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT="+id;
+                String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT='"+id+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()){
