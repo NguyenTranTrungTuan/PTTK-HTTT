@@ -271,7 +271,12 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
                 return;
             }
 
-            ThongTinDonHang.setPTTT(phuongThucThanhToan);
+            if(phuongThucThanhToan.equals("Thanh toán khi nhận hàng")){
+                ThongTinDonHang.setPTTT("COD");
+            }
+            else{
+                ThongTinDonHang.setPTTT("Chuyển khoản");
+            }
             ThongTinDonHang.setDiaChiDat(lblAddress.getText());
             ThongTinDonHang.output();
 

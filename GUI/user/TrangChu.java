@@ -16,6 +16,8 @@ public class TrangChu extends JFrame {
     private ConfirmFrame confirmFrame;
 
     private GioHangGUI gioHangGUI;
+    private JPanel shopPanel;
+    private JPanel searchPanel;
     private CardLayout cardLayout; 
 
     public TrangChu() {
@@ -42,22 +44,22 @@ public class TrangChu extends JFrame {
             Object source = e.getSource();
 
             if (source == catalogPanel.headerLabel) {
-                updateProductPanel("All", null, null);
+                updateShopPanel("All");
             } else if (source == catalogPanel.SamsungLabel) {
                 catalogPanel.paintLabel("SAMSUNG");
-                updateProductPanel("Samsung", null, null);
+                updateShopPanel("Samsung");
             } else if (source == catalogPanel.AppleLabel) {
                 catalogPanel.paintLabel("APPLE");
-                updateProductPanel("Apple", null, null);
+                updateShopPanel("Apple");
             } else if (source == catalogPanel.XiaomiLabel) {
                 catalogPanel.paintLabel("XIAOMI");
-                updateProductPanel("Xiaomi", null, null);
+                updateShopPanel("Xiaomi");
             } else if (source == catalogPanel.OppoLabel) {
                 catalogPanel.paintLabel("OPPO");
-                updateProductPanel("Oppo", null, null);
+                updateShopPanel("Oppo");
             } else if (source == catalogPanel.NokiaLabel) {
                 catalogPanel.paintLabel("NOKIA");
-                updateProductPanel("Nokia", null, null);
+                updateShopPanel("Nokia");
             } else if (source == header.accountLabel && !header.accountLabel.getText().equals("")) {
                 SwitchToUserMenu();
             } else if (source == header.logoIcon) {
@@ -78,7 +80,7 @@ public class TrangChu extends JFrame {
                     !Filter.MinPriceTF.getText().equals("Giá thấp nhất") &&
                     !Filter.MaxPriceTF.getText().equals("Giá cao nhất")) {
                 String keyword = header.searchBox.getText().equals("Search...") ? null : header.searchBox.getText();
-                updateProductPanel("Search", keyword, Filter);
+                updateSearchPanel("Search", keyword, Filter);
             } else if (UserInfo != null && source == UserInfo.logoutButton) {
                 confirmFrame = new ConfirmFrame();
                 confirmFrame.confirmbtn.addMouseListener(this);
@@ -123,16 +125,12 @@ public class TrangChu extends JFrame {
         Filter = new FilterPanel();
         Filter.FilterButton.addMouseListener(mouseListener);
 
-        JPanel filterPanel = new JPanel();
-        filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
-        filterPanel.setBackground(Color.decode("#cfdef3"));
-
         productPanel = new ProductPanel("Search", header.searchBox.getText(), null, gioHangGUI, header);
 
-        filterPanel.add(Filter);
-        filterPanel.add(productPanel);
+        searchPanel.removeAll();
+        searchPanel.add(Filter);
+        searchPanel.add(productPanel);
 
-        ContentPanel.add(filterPanel, "Filter");
         cardLayout.show(ContentPanel, "Filter");
     }
 
@@ -149,11 +147,17 @@ public class TrangChu extends JFrame {
         cardLayout.show(ContentPanel, "Cart");
     }
 
+    public void SwitchToUserMenu() {
+        UserInfo.khachhang = header.kh;
+        UserInfo.initComponents(header.kh);
+        UserInfo.revalidate();
+        UserInfo.repaint();
 
-    public void updateProductPanel(String category, String keyword, FilterPanel filter) {
-        JPanel newShopPanel = new JPanel();
-        newShopPanel.setLayout(new BoxLayout(newShopPanel, BoxLayout.X_AXIS));
-        newShopPanel.setBackground(Color.decode("#cfdef3"));
+        cardLayout.show(ContentPanel, "UserMenu");
+    }
+
+
+    public void updateShopPanel(String category) {
 
         catalogPanel = new CatalogPanel();
         catalogPanel.headerLabel.addMouseListener(mouseListener);
@@ -161,22 +165,32 @@ public class TrangChu extends JFrame {
             label.addMouseListener(mouseListener);
         }
 
-        productPanel = new ProductPanel(category, keyword, filter, gioHangGUI, header);
-        newShopPanel.add(catalogPanel);
-        newShopPanel.add(productPanel);
+        productPanel = new ProductPanel(category, null, null, gioHangGUI, header);
+        shopPanel.removeAll();
+        shopPanel.add(catalogPanel);
+        shopPanel.add(productPanel);
 
-        ContentPanel.add(newShopPanel, "Shop");
+        shopPanel.revalidate();
+        shopPanel.repaint();
         cardLayout.show(ContentPanel, "Shop");
     }
 
-   
-    public void SwitchToUserMenu() {
-        UserInfo = new UserInfoPanel(header.kh);
+    public void updateSearchPanel(String category, String keyword, FilterPanel filter){
+        Filter = new FilterPanel();
+        Filter.FilterButton.addMouseListener(mouseListener);
 
-        UserInfo.logoutButton.addMouseListener(mouseListener);
+        productPanel = new ProductPanel(category, keyword, filter, gioHangGUI, header);
+        searchPanel.add(Filter);
+        searchPanel.add(productPanel);
 
-        ContentPanel.add(UserInfo, "UserMenu");
-        cardLayout.show(ContentPanel, "UserMenu");
+        // ContentPanel.add(searchPanel, "Filter");
+        searchPanel.removeAll();
+        searchPanel.add(Filter);
+        searchPanel.add(productPanel);
+
+        searchPanel.revalidate();
+        searchPanel.repaint();
+        cardLayout.show(ContentPanel, "Filter");
     }
 
     // Khởi tạo giao diện
@@ -192,7 +206,7 @@ public class TrangChu extends JFrame {
         ContentPanel = new JPanel(cardLayout);
 
         // Tạo Shop Panel
-        JPanel shopPanel = new JPanel();
+        shopPanel = new JPanel();
         shopPanel.setLayout(new BoxLayout(shopPanel, BoxLayout.X_AXIS));
         shopPanel.setBackground(Color.decode("#cfdef3"));
 
@@ -206,9 +220,22 @@ public class TrangChu extends JFrame {
         shopPanel.add(catalogPanel);
         shopPanel.add(productPanel);
 
+        // Thêm shopPanel vào cardlayout
         ContentPanel.add(shopPanel, "Shop");
+
+        // Thêm giỏ hàng vào cardlayout
         ContentPanel.add(gioHangGUI, "Cart");
-        ContentPanel.add(new JPanel(), "UserMenu"); 
+
+        // Thêm userPanel vào cardlayout
+        UserInfo = new UserInfoPanel();
+        UserInfo.logoutButton.addMouseListener(mouseListener);
+        ContentPanel.add(UserInfo, "UserMenu"); 
+
+        // Thêm search Panel vào cardlayout
+        searchPanel = new JPanel();
+        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
+        searchPanel.setBackground(Color.decode("#cfdef3"));
+        ContentPanel.add(searchPanel, "Filter");
 
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.decode("#cfdef3"));

@@ -171,13 +171,14 @@ public class UserInfoPanel extends JPanel{
     }
 
 
-    public UserInfoPanel(KhachHang_DTO kh){
-        khachhang = kh;
+    public UserInfoPanel(){
         khbll = new KhachHang_BLL();
-        initComponents(kh);
+        EditInfoButton.addMouseListener(mouseListener);
+        EditPasswordButton.addMouseListener(mouseListener);
+        // initComponents(kh);
     }
 
-    private void initComponents(KhachHang_DTO kh){
+    protected void initComponents(KhachHang_DTO kh){
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         headerLabel.setForeground(Color.BLACK);
         headerLabel.setOpaque(false);
@@ -270,14 +271,11 @@ public class UserInfoPanel extends JPanel{
         BtnPanel.add(logoutButton);
         BtnPanel.add(Box.createHorizontalGlue());
 
-        setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 20));
+        setBorder(BorderFactory.createEmptyBorder(20, 50, 50, 50));
         setMaximumSize(new Dimension(740, 440));
         setBackground(Color.decode("#cfdef3"));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentY(TOP_ALIGNMENT);
-
-        EditInfoButton.addMouseListener(mouseListener);
-        EditPasswordButton.addMouseListener(mouseListener);
 
         add(headerPanel);
         add(InfoPanel);

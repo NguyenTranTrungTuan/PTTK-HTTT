@@ -34,14 +34,48 @@ public class DonHang_DAO{
         }
     }
 
-    public String getLatestDHID(){
-        ArrayList<DonHang_DTO> arr = getAllDonHang();
-        return arr.get(arr.size()-1).getMaDon();
+    public String getNextDHID(Connection con){
+        String latestID = "";
+        try {
+            String sql = "SELECT MaDon FROM DONHANG ORDER BY MaDon DESC LIMIT 1";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                latestID = rs.getString("MaDon");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String prefix = latestID.replaceAll("\\d+", "");
+        String numberic = latestID.replaceAll("[^\\d]", "");
+
+        int number = Integer.parseInt(numberic);
+        number++;
+        String nextnumberic = String.format("0%" + numberic.length() + "d", number);
+        return (prefix+nextnumberic).replace(" ", ""); 
     }
 
-    public String getLatestCTDHID(){
-        ArrayList<ChiTietDon_DTO> arr = getAllCTDH();
-        return arr.get(arr.size()-1).getMaCTDH();
+    public String getNextCTDHID(Connection con){
+        String latestID = "";
+        try {
+            String sql = "SELECT MaCTDH FROM CHITIETDONHANG ORDER BY MaCTDH DESC LIMIT 1";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                latestID = rs.getString("MaCTDH");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String prefix = latestID.replaceAll("\\d+", "");
+        String numberic = latestID.replaceAll("[^\\d]", "");
+
+        int number = Integer.parseInt(numberic);
+        number++;
+        String nextnumberic = String.format("0%" + numberic.length() + "d", number);
+        return (prefix+nextnumberic).replace(" ", ""); 
     }
 
     public ArrayList<DonHang_DTO> getAllDonHang(){
@@ -134,36 +168,36 @@ public class DonHang_DAO{
             try {                    
                 String query1 = "INSERT INTO DONHANG VALUES(?,?,?,?,?,?,?,?)";
                 PreparedStatement stmt1 = con.prepareStatement(query1);
-                
-                stmt1.setString(1, dh.getMaDon());
+                String DonHangID = getNextDHID(con);
+                stmt1.setString(1, DonHangID);
                 stmt1.setString(2, dh.getIdKhachHang());
-                stmt1.setString(3, dh.getIdNhanVien());
+                stmt1.setString(3, null);
                 stmt1.setString(4, dh.getDiaChiDat());
                 stmt1.setString(5, dh.getNgayDat());
                 stmt1.setString(6, dh.getPTTT());
                 stmt1.setString(7, dh.getTinhTrangDonHang());
                 stmt1.setDouble(8, dh.getTongTien());
-                
-                for(ChiTietDon_DTO ct:dh.getDsSanPhamMua()){
-                    try{
-                        String query2 = "INSERT INTO CHITIETDONHANG VALUES(?,?,?,?,?,?)";
-                        PreparedStatement stmt2 = con.prepareStatement(query2);
+                if(stmt1.executeUpdate()>=1){
+                    for(ChiTietDon_DTO ct:dh.getDsSanPhamMua()){
+                        try{
+                            String query2 = "INSERT INTO CHITIETDONHANG VALUES(?,?,?,?,?,?)";
+                            PreparedStatement stmt2 = con.prepareStatement(query2);
 
-                        stmt2.setString(1, ct.getMaCTDH());
-                        stmt2.setInt(2, ct.getSoLuongMua());
-                        stmt2.setDouble(3, ct.getThanhTien());
-                        stmt2.setString(4, dh.getMaDon());
-                        stmt2.setDouble(5, ct.getThongTinSanPham().getGia_SanPham());
-                        stmt2.setString(6, ct.getMaCTPnhap());
+                            stmt2.setString(1, getNextCTDHID(con));
+                            stmt2.setInt(2, ct.getSoLuongMua());
+                            stmt2.setDouble(3, ct.getThanhTien());
+                            stmt2.setString(4, DonHangID);
+                            stmt2.setDouble(5, ct.getThongTinSanPham().getGia_SanPham());
+                            stmt2.setString(6, ct.getMaCTPnhap());
 
-                        if(stmt2.executeUpdate()>=1)
-                            success_count++;
-                    } catch (SQLException ex) {
-                        System.out.println(ex);
-                    } 
+                            if(stmt2.executeUpdate()>=1)
+                                success_count++;
+                        } catch (SQLException ex) {
+                            System.out.println(ex);
+                        } 
+                    }
                 }
-
-                if (stmt1.executeUpdate()>=1 && success_count == dh.getDsSanPhamMua().size())
+                if (success_count == dh.getDsSanPhamMua().size())
                     result = true;
             } catch (SQLException ex) {
                 System.out.println(ex);            

@@ -17,36 +17,6 @@ public class DonHang_BLL {
         return dhDao.getAllCTDH();
     }
 
-    public String getLatestDHID(){
-        return dhDao.getLatestDHID();
-    }
-
-    public String getLatestCTDHID(){
-        return dhDao.getLatestCTDHID();
-    }
-
-    public String getNextDHID(){
-        String latestID = getLatestDHID();
-        String prefix = latestID.replaceAll("\\d+", "");
-        String numberic = latestID.replaceAll("[^\\d]", "");
-
-        int number = Integer.parseInt(numberic);
-        number++;
-        String nextnumberic = String.format("0%" + numberic.length() + "d", number);
-        return (prefix+nextnumberic).replace(" ", ""); 
-    }
-
-    public String getNextCTDHID(){
-        String latestID = getLatestCTDHID();
-        String prefix = latestID.replaceAll("\\d+", "");
-        String numberic = latestID.replaceAll("[^\\d]", "");
-
-        int number = Integer.parseInt(numberic);
-        number++;
-        String nextnumberic = String.format("0%" + numberic.length() + "d", number);
-        return (prefix+nextnumberic).replace(" ", ""); 
-    }
-
     public String addDonHang(DonHang_DTO dh){
         if(dhDao.hasDonHangID(dh.getMaDon())){
             return "Đơn hàng đã tồn tại!";

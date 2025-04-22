@@ -1,5 +1,4 @@
 package GUI.giohang;
-import GUI.user.Model_ProductItem;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -72,14 +71,6 @@ public class PaymentMethodDialog extends JDialog implements ActionListener {
                 "Chuyển khoản ngân hàng",
                
         };
-
-        // String[] iconPaths = {
-        //         "/images/cod_icon.png",
-        //         "/images/qr_icon.png",
-        //         "/images/vnpay_icon.png",
-        //         "/images/onepay_icon.png",
-        //         "/images/dots_icon.png"
-        // };
 
         for (int i = 0; i < methodNames.length; i++) {
             JButton methodButton = createMethodButton(methodNames[i]);

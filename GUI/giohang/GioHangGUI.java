@@ -4,7 +4,6 @@ import DTO.ChiTietDon_DTO;
 import DTO.DienThoai_DTO;
 import DTO.DonHang_DTO;
 import DTO.KhachHang_DTO;
-import BLL.DonHang_BLL;
 import BLL.PhieuNhap_BLL;
 
 import javax.swing.*;
@@ -26,14 +25,12 @@ public class GioHangGUI extends JPanel {
     private JButton btnDatHang;
 
     protected DonHang_DTO ThongTinDonHang;
-    private DonHang_BLL dhbll;
     private PhieuNhap_BLL pnbll;
     public KhachHang_DTO kh;
 
     private Double total = 0.0;
 
     public GioHangGUI() {
-        this.dhbll = new DonHang_BLL();
         this.pnbll = new PhieuNhap_BLL();
         this.setLayout(new BorderLayout());
         this.products = new ArrayList<>();
@@ -129,7 +126,7 @@ public class GioHangGUI extends JPanel {
                 break;
             }
         }
-        ChiTietDon_DTO chitiet = new ChiTietDon_DTO(dhbll.getNextCTDHID(), dt, 1, dt.getGia_SanPham(), pnbll.getAllIDCTPhieuNhapFromIDDienThoai(dt.getID_SanPham()).get(0));
+        ChiTietDon_DTO chitiet = new ChiTietDon_DTO("", dt, 1, dt.getGia_SanPham(), pnbll.getAllIDCTPhieuNhapFromIDDienThoai(dt.getID_SanPham()).get(0));
         if (!daTonTai) {
             products.add(chitiet);
         }
@@ -184,7 +181,7 @@ public class GioHangGUI extends JPanel {
         }
 
         ThongTinDonHang = new DonHang_DTO(
-                dhbll.getNextDHID(), 
+                "", 
                 kh.getId_KhachHang(), 
                 "", 
                 "", 
