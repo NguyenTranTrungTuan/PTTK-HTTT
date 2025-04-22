@@ -1,11 +1,11 @@
 package NhanVienBanHang.GUI;
 
+import NhanVienBanHang.BUS.NhanVien_BUS;
 import NhanVienBanHang.DAO.ChiTietDonHang_DAO;
-import NhanVienBanHang.DAO.DonHang_DAO;
 import NhanVienBanHang.Model.NhanVien;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
+import java.sql.Date;
 import javax.swing.*;
 import javax.swing.plaf.basic.*;
 import javax.swing.table.*;
@@ -80,51 +80,51 @@ public class NhanVienFrame2 extends JFrame {
         setSize(1690, 1024);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
+    
         // Left panel setup
         panel_left = new JPanel();
         panel_left.setPreferredSize(new Dimension(300, 0));
         panel_left.setBackground(Color.black);
         add(panel_left, BorderLayout.WEST);
         panel_left.setLayout(null);
-
+    
         panel_left_top = new JPanel();
         panel_left_top.setLayout(null);
         panel_left_top.setBounds(10, 10, 250, 150);
         panel_left_top.setBackground(new Color(51, 51, 51));
         panel_left.add(panel_left_top);
-
+    
         JLabel imageAvatar = new JLabel();
         ImageIcon icon = new ImageIcon("E:\\Lap trinh Java\\QuanLyBanDienThoai\\NhanVienBanHang\\Icon\\user.png");
         ImageIcon resizedIcon = ImageResizer.resizeImageIcon(icon, 50, 50);
         imageAvatar.setIcon(resizedIcon);
         imageAvatar.setBounds(40, 10, 90, 80);
         panel_left_top.add(imageAvatar);
-
+    
         JLabel labelName = new JLabel(nv.getTennv());
         labelName.setBounds(110, 30, 100, 20);
         labelName.setForeground(Color.white);
         panel_left_top.add(labelName);
-
+    
         JLabel labelRole = new JLabel();
         labelRole.setBounds(110, 50, 100, 30);
         labelRole.setText("<html>" + nv.getChucvu() + "</html>");
         labelRole.setForeground(Color.white);
         panel_left_top.add(labelRole);
-
+    
         panel_left_bottom = new JPanel();
         panel_left_bottom.setLayout(new BoxLayout(panel_left_bottom, BoxLayout.Y_AXIS));
         panel_left_bottom.setBounds(10, 170, 250, 600);
         panel_left_bottom.setBackground(new Color(51, 51, 51));
         panel_left.add(panel_left_bottom);
-
+    
         JLabel labelDanhMuc = new JLabel("Danh Mục");
         labelDanhMuc.setForeground(Color.WHITE);
         labelDanhMuc.setFont(new Font("Arial", Font.BOLD, 20));
         labelDanhMuc.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel_left_bottom.add(labelDanhMuc);
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
-
+    
         JButton btnXemDonHang = new JButton("Đơn Hàng");
         btnXemDonHang.setBackground(new Color(51, 51, 51));
         btnXemDonHang.setForeground(Color.WHITE);
@@ -138,7 +138,7 @@ public class NhanVienFrame2 extends JFrame {
         addHoverEffect(btnXemDonHang, new Color(70, 70, 70), new Color(51, 51, 51));
         panel_left_bottom.add(btnXemDonHang);
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
-
+    
         JButton btnBaoCao = new JButton("Báo Cáo");
         btnBaoCao.setBackground(new Color(51, 51, 51));
         btnBaoCao.setForeground(Color.WHITE);
@@ -152,14 +152,14 @@ public class NhanVienFrame2 extends JFrame {
         addHoverEffect(btnBaoCao, new Color(70, 70, 70), new Color(51, 51, 51));
         panel_left_bottom.add(btnBaoCao);
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 20)));
-
+    
         JLabel labelCongCu = new JLabel("Công Cụ");
         labelCongCu.setForeground(Color.WHITE);
         labelCongCu.setFont(new Font("Arial", Font.BOLD, 20));
         labelCongCu.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
         panel_left_bottom.add(labelCongCu);
-
+    
         JButton btnChonThoiDiem = new JButton("Chọn Thời Điểm");
         btnChonThoiDiem.setBackground(new Color(51, 51, 51));
         btnChonThoiDiem.setForeground(Color.WHITE);
@@ -173,18 +173,18 @@ public class NhanVienFrame2 extends JFrame {
         addHoverEffect(btnChonThoiDiem, new Color(70, 70, 70), new Color(51, 51, 51));
         panel_left_bottom.add(Box.createRigidArea(new Dimension(0, 10)));
         panel_left_bottom.add(btnChonThoiDiem);
-
+    
         btnChonThoiDiem.addActionListener(e -> {
             handleButtonClick(btnChonThoiDiem);
             showDateRangePickerDialog();
         });
-
+    
         panel_right = new JPanel();
         panel_right.setBackground(Color.BLACK);
         panel_right.setLayout(new BoxLayout(panel_right, BoxLayout.Y_AXIS));
         panel_right.setPreferredSize(new Dimension(1470, 0));
         add(panel_right, BorderLayout.CENTER);
-
+    
         panel_right.add(Box.createRigidArea(new Dimension(0, 10)));
         panel_topright = new JPanel();
         panel_topright.setBackground(new Color(51, 51, 51));
@@ -192,14 +192,14 @@ public class NhanVienFrame2 extends JFrame {
         panel_topright.setPreferredSize(new Dimension(0, 150));
         panel_right.add(panel_topright);
         panel_right.add(Box.createRigidArea(new Dimension(0, 10)));
-
+    
         panel_bottomright = new JPanel();
         panel_bottomright.setBackground(new Color(51, 51, 51));
         panel_bottomright.setLayout(new BorderLayout());
         panel_right.add(panel_bottomright);
-
+    
         setupTable();
-
+    
         btnXemDonHang.addActionListener(e -> {
             handleButtonClick(btnXemDonHang);
             panel_bottomright.removeAll();
@@ -208,32 +208,30 @@ public class NhanVienFrame2 extends JFrame {
             panel_bottomright.revalidate();
             panel_bottomright.repaint();
         });
-
+    
         btnBaoCao.addActionListener(e -> handleButtonClick(btnBaoCao));
         handleButtonClick(btnXemDonHang);
-
+    
         setVisible(true);
     }
+    
+private void setupTable() {
+    // Khởi tạo đối tượng BUS
+    NhanVien_BUS bus = new NhanVien_BUS();
 
-    private void setupTable() {
-        DefaultTableModel tableModel = DonHang_DAO.getInstance().loadDataToTable("DonHang");
-        tableModel.addColumn("Chi Tiết Đơn Hàng");
-        JTable table = new JTable(tableModel) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
-            }
-        };
+    // Gọi phương thức từ BUS để tải dữ liệu
+    DefaultTableModel tableModel = bus.loadTableData();
+    bus.handleUnprocessedOrders(tableModel); // Xử lý các đơn hàng có tình trạng "Chưa Xử Lý"
+    tableModel.addColumn("Chi Tiết Đơn Hàng");
 
-            // Kiểm tra và xử lý các đơn hàng có tình trạng "Chưa Xử Lý"
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            String tinhTrang = tableModel.getValueAt(i, 6).toString();
-            if ("Chưa Xử Lý".equalsIgnoreCase(tinhTrang)) {
-                tableModel.setValueAt(null, i, 2); // Đặt mã nhân viên là null
-            }
+    JTable table = new JTable(tableModel) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
         }
+    };
 
-          // Thêm MouseListener để xử lý sự kiện nhấp chuột vào cột "Tình Trạng"
+    // Thêm MouseListener để xử lý sự kiện nhấp chuột vào cột "Tình Trạng"
     table.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -243,30 +241,13 @@ public class NhanVienFrame2 extends JFrame {
             // Kiểm tra nếu người dùng nhấn vào cột "Tình Trạng" (cột 6)
             if (column == 6) {
                 String currentStatus = table.getValueAt(row, column).toString();
-                String[] options = {"Chưa Xử Lý", "Đã Xử Lý", "Đã Hủy"};
-                String newStatus = (String) JOptionPane.showInputDialog(
-                        null,
-                        "Chọn trạng thái mới:",
-                        "Thay Đổi Tình Trạng",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        options,
-                        currentStatus
-                );
-
-                // Nếu người dùng chọn trạng thái mới
+                String newStatus = bus.changeStatus(currentStatus); // Gọi BUS để thay đổi trạng thái
                 if (newStatus != null && !newStatus.equals(currentStatus)) {
                     table.setValueAt(newStatus, row, column); // Cập nhật giá trị trong bảng
 
                     // Cập nhật trạng thái trong cơ sở dữ liệu
                     String maDon = table.getValueAt(row, 0).toString();
-                    boolean updated = false;
-                    try {
-                        updated = DonHang_DAO.getInstance().updateTinhTrang(maDon, newStatus);
-                    } catch (Exception e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
+                    boolean updated = bus.updateTinhTrang(maDon, newStatus); // Gọi BUS để cập nhật trạng thái
                     if (updated) {
                         JOptionPane.showMessageDialog(null, "Cập nhật tình trạng thành công!", "Thành Công", JOptionPane.INFORMATION_MESSAGE);
                     } else {
@@ -277,139 +258,143 @@ public class NhanVienFrame2 extends JFrame {
         }
     });
 
+    // Cấu hình giao diện bảng
+    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
+    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
 
-        
+    table.setBackground(new Color(51, 51, 51));
+    table.setForeground(Color.WHITE);
+    table.setGridColor(Color.BLACK);
+    table.setRowHeight(30);
+    table.getTableHeader().setBackground(new Color(51, 51, 51));
+    table.getTableHeader().setForeground(Color.WHITE);
+    table.setSelectionBackground(new Color(100, 149, 237));
+    table.setSelectionForeground(Color.WHITE);
 
-        
-
-        table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
-        table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
-
-
-
-        table.setBackground(new Color(51, 51, 51));
-        table.setForeground(Color.WHITE);
-        table.setGridColor(Color.BLACK);
-        table.setRowHeight(30);
-        table.getTableHeader().setBackground(new Color(51, 51, 51));
-        table.getTableHeader().setForeground(Color.WHITE);
-        table.setSelectionBackground(new Color(100, 149, 237));
-        table.setSelectionForeground(Color.WHITE);
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    String maDon = table.getValueAt(selectedRow, 0).toString();
-                    String maKH = table.getValueAt(selectedRow, 1).toString();
-                    String maNV = table.getValueAt(selectedRow, 2).toString();
-                    String diaChiDat = table.getValueAt(selectedRow, 3).toString();
-                    String ngayDat = table.getValueAt(selectedRow, 4).toString();
-                    String pttt = table.getValueAt(selectedRow, 5).toString();
-                    String tinhTrang = table.getValueAt(selectedRow, 6).toString();
-                    String tongTien = table.getValueAt(selectedRow, 7).toString();
-                    showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
-                }
+    // Thêm sự kiện nhấp chuột để hiển thị chi tiết đơn hàng
+    table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String maDon = table.getValueAt(selectedRow, 0).toString();
+                String maKH = table.getValueAt(selectedRow, 1).toString();
+                String maNV = table.getValueAt(selectedRow, 2).toString();
+                String diaChiDat = table.getValueAt(selectedRow, 3).toString();
+                String ngayDat = table.getValueAt(selectedRow, 4).toString();
+                String pttt = table.getValueAt(selectedRow, 5).toString();
+                String tinhTrang = table.getValueAt(selectedRow, 6).toString();
+                String tongTien = table.getValueAt(selectedRow, 7).toString();
+                showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
             }
-        });
-
-        JScrollPane scrollPane_table = new JScrollPane(table);
-        scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
-        scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        scrollPane_table.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
-        panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
-
-        if (tableModel.getRowCount() > 0) {
-            String maDon = tableModel.getValueAt(0, 0).toString();
-            String maKH = tableModel.getValueAt(0, 1).toString();
-            String maNV = tableModel.getValueAt(0, 2).toString();
-            String diaChiDat = tableModel.getValueAt(0, 3).toString();
-            String ngayDat = tableModel.getValueAt(0, 4).toString();
-            String pttt = tableModel.getValueAt(0, 5).toString();
-            String tinhTrang = tableModel.getValueAt(0, 6).toString();
-            String tongTien = tableModel.getValueAt(0, 7).toString();
-            showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
         }
+    });
+
+    // Thêm bảng vào giao diện
+    JScrollPane scrollPane_table = new JScrollPane(table);
+    scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
+    scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+    scrollPane_table.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+    panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
+
+    // Hiển thị thông tin chi tiết của dòng đầu tiên (nếu có)
+    if (tableModel.getRowCount() > 0) {
+        String maDon = tableModel.getValueAt(0, 0).toString();
+        String maKH = tableModel.getValueAt(0, 1).toString();
+        String maNV = tableModel.getValueAt(0, 2).toString();
+        String diaChiDat = tableModel.getValueAt(0, 3).toString();
+        String ngayDat = tableModel.getValueAt(0, 4).toString();
+        String pttt = tableModel.getValueAt(0, 5).toString();
+        String tinhTrang = tableModel.getValueAt(0, 6).toString();
+        String tongTien = tableModel.getValueAt(0, 7).toString();
+        showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
+    }
+}
+
+private void setupTableByDateRange(Date startDate, Date endDate) {
+    // Khởi tạo đối tượng BUS
+    NhanVien_BUS bus = new NhanVien_BUS();
+
+    // Gọi phương thức từ BUS để tải dữ liệu theo khoảng thời gian
+    DefaultTableModel tableModel = bus.loadTableDataByDateRange(startDate, endDate);
+    if (tableModel == null || tableModel.getRowCount() == 0) {
+        // Nếu không có dữ liệu, hiển thị thông báo và xóa nội dung panel_topright
+        panel_topright.removeAll();
+        panel_topright.revalidate();
+        panel_topright.repaint();
+        ShowNotification("Không có đơn hàng trong khoảng thời gian đã chọn!", "Thông Báo");
+        return;
     }
 
-    private void setupTableByDateRange(Date startDate, Date endDate) {
-        DefaultTableModel tableModel = DonHang_DAO.getInstance().loadDataToTableByDateRange("DonHang", startDate, endDate);
-        tableModel.addColumn("Chi Tiết Đơn Hàng");
-        JTable table = new JTable(tableModel) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-          return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
-            }
-        };
+    // Thêm cột "Chi Tiết Đơn Hàng"
+    tableModel.addColumn("Chi Tiết Đơn Hàng");
 
-            // Kiểm tra và xử lý các đơn hàng có tình trạng "Chưa Xử Lý"
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            String tinhTrang = tableModel.getValueAt(i, 6).toString();
-            if ("Chưa Xử Lý".equalsIgnoreCase(tinhTrang)) {
-                tableModel.setValueAt(null, i, 2); // Đặt mã nhân viên là null
+    // Tạo bảng hiển thị dữ liệu
+    JTable table = new JTable(tableModel) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return column == 6 || column == tableModel.getColumnCount() - 1; // Tình Trạng (6) and Chi Tiết
+        }
+    };
+
+    // Cấu hình giao diện bảng
+    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
+    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
+    table.setBackground(new Color(51, 51, 51));
+    table.setForeground(Color.WHITE);
+    table.setGridColor(Color.BLACK);
+    table.setRowHeight(30);
+    table.getTableHeader().setBackground(new Color(51, 51, 51));
+    table.getTableHeader().setForeground(Color.WHITE);
+    table.setSelectionBackground(new Color(100, 149, 237));
+    table.setSelectionForeground(Color.WHITE);
+
+    // Thêm sự kiện nhấp chuột để hiển thị chi tiết đơn hàng
+    table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String maDon = table.getValueAt(selectedRow, 0).toString();
+                String maKH = table.getValueAt(selectedRow, 1).toString();
+                String maNV = table.getValueAt(selectedRow, 2).toString();
+                String diaChiDat = table.getValueAt(selectedRow, 3).toString();
+                String ngayDat = table.getValueAt(selectedRow, 4).toString();
+                String pttt = table.getValueAt(selectedRow, 5).toString();
+                String tinhTrang = table.getValueAt(selectedRow, 6).toString();
+                String tongTien = table.getValueAt(selectedRow, 7).toString();
+                showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
             }
         }
+    });
 
+    // Thêm bảng vào giao diện
+    JScrollPane scrollPane_table = new JScrollPane(table);
+    scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
+    scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+    scrollPane_table.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+    panel_bottomright.removeAll();
+    panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
+    panel_bottomright.revalidate();
+    panel_bottomright.repaint();
 
-        table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
-        table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(new ButtonEditor(table));
-
-        table.setBackground(new Color(51, 51, 51));
-        table.setForeground(Color.WHITE);
-        table.setGridColor(Color.BLACK);
-        table.setRowHeight(30);
-        table.getTableHeader().setBackground(new Color(51, 51, 51));
-        table.getTableHeader().setForeground(Color.WHITE);
-        table.setSelectionBackground(new Color(100, 149, 237));
-        table.setSelectionForeground(Color.WHITE);
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    String maDon = table.getValueAt(selectedRow, 0).toString();
-                    String maKH = table.getValueAt(selectedRow, 1).toString();
-                    String maNV = table.getValueAt(selectedRow, 2).toString();
-                    String diaChiDat = table.getValueAt(selectedRow, 3).toString();
-                    String ngayDat = table.getValueAt(selectedRow, 4).toString();
-                    String pttt = table.getValueAt(selectedRow, 5).toString();
-                    String tinhTrang = table.getValueAt(selectedRow, 6).toString();
-                    String tongTien = table.getValueAt(selectedRow, 7).toString();
-                    showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
-                }
-            }
-        });
-
-        JScrollPane scrollPane_table = new JScrollPane(table);
-        scrollPane_table.getViewport().setBackground(new Color(51, 51, 51));
-        scrollPane_table.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        scrollPane_table.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane_table.getVerticalScrollBar().setUI(new CustomScrollBarUI());
-        panel_bottomright.removeAll();
-        panel_bottomright.add(scrollPane_table, BorderLayout.CENTER);
-        panel_bottomright.revalidate();
-        panel_bottomright.repaint();
-
-        if (tableModel.getRowCount() > 0) {
-            String maDon = tableModel.getValueAt(0, 0).toString();
-            String maKH = tableModel.getValueAt(0, 1).toString();
-            String maNV = tableModel.getValueAt(0, 2).toString();
-            String diaChiDat = tableModel.getValueAt(0, 3).toString();
-            String ngayDat = tableModel.getValueAt(0, 4).toString();
-            String pttt = tableModel.getValueAt(0, 5).toString();
-            String tinhTrang = tableModel.getValueAt(0, 6).toString();
-            String tongTien = tableModel.getValueAt(0, 7).toString();
-            showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
-        } else {
-            panel_topright.removeAll();
-            panel_topright.revalidate();
-            panel_topright.repaint();
-            ShowNotification("Không có đơn hàng trong khoảng thời gian đã chọn!", "Thông Báo");
-        }
+    // Hiển thị thông tin chi tiết của dòng đầu tiên (nếu có)
+    if (tableModel.getRowCount() > 0) {
+        String maDon = tableModel.getValueAt(0, 0).toString();
+        String maKH = tableModel.getValueAt(0, 1).toString();
+        String maNV = tableModel.getValueAt(0, 2).toString();
+        String diaChiDat = tableModel.getValueAt(0, 3).toString();
+        String ngayDat = tableModel.getValueAt(0, 4).toString();
+        String pttt = tableModel.getValueAt(0, 5).toString();
+        String tinhTrang = tableModel.getValueAt(0, 6).toString();
+        String tongTien = tableModel.getValueAt(0, 7).toString();
+        showProductInPanelTopRight(maDon, maKH, maNV, diaChiDat, ngayDat, pttt, tinhTrang, tongTien);
     }
+}
+
+
 
     private void showDateRangePickerDialog() {
         JDialog dateDialog = new JDialog(this, "Chọn Khoảng Thời Gian", true);
@@ -419,7 +404,7 @@ public class NhanVienFrame2 extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
+    
         JLabel startLabel = new JLabel("Ngày Bắt Đầu:");
         startLabel.setForeground(Color.WHITE);
         JSpinner startDateSpinner = new JSpinner(new SpinnerDateModel());
@@ -429,7 +414,7 @@ public class NhanVienFrame2 extends JFrame {
         startField.setBackground(new Color(51, 51, 51));
         startField.setForeground(Color.WHITE);
         startField.setBorder(BorderFactory.createLineBorder(new Color(130, 130, 130)));
-
+    
         JLabel endLabel = new JLabel("Ngày Kết Thúc:");
         endLabel.setForeground(Color.WHITE);
         JSpinner endDateSpinner = new JSpinner(new SpinnerDateModel());
@@ -439,17 +424,17 @@ public class NhanVienFrame2 extends JFrame {
         endField.setBackground(new Color(51, 51, 51));
         endField.setForeground(Color.WHITE);
         endField.setBorder(BorderFactory.createLineBorder(new Color(130, 130, 130)));
-
+    
         JButton confirmButton = new JButton("Xác Nhận");
         confirmButton.setBackground(new Color(70, 130, 180));
         confirmButton.setForeground(Color.WHITE);
         confirmButton.setFocusPainted(false);
-
+    
         JButton cancelButton = new JButton("Hủy");
         cancelButton.setBackground(new Color(70, 130, 180));
         cancelButton.setForeground(Color.WHITE);
         cancelButton.setFocusPainted(false);
-
+    
         gbc.gridx = 0; gbc.gridy = 0;
         dateDialog.add(startLabel, gbc);
         gbc.gridx = 1;
@@ -462,52 +447,65 @@ public class NhanVienFrame2 extends JFrame {
         dateDialog.add(cancelButton, gbc);
         gbc.gridx = 1;
         dateDialog.add(confirmButton, gbc);
-
+    
         confirmButton.addActionListener(e -> {
-            Date startDate = (Date) startDateSpinner.getValue();
-            Date endDate = (Date) endDateSpinner.getValue();
-            if (startDate == null || endDate == null) {
+            // Lấy giá trị từ spinner
+            java.util.Date startDateUtil = (java.util.Date) startDateSpinner.getValue();
+            java.util.Date endDateUtil = (java.util.Date) endDateSpinner.getValue();
+        
+            // Kiểm tra null
+            if (startDateUtil == null || endDateUtil == null) {
                 ShowNotification("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc!", "Lỗi");
                 return;
             }
-            if (startDate.after(endDate)) {
+        
+            // Kiểm tra ngày bắt đầu phải trước ngày kết thúc
+            if (startDateUtil.after(endDateUtil)) {
                 ShowNotification("Ngày bắt đầu phải trước ngày kết thúc!", "Lỗi");
                 return;
             }
+        
+            // Sử dụng trực tiếp java.sql.Date
+            java.sql.Date startDate = new java.sql.Date(startDateUtil.getTime());
+            java.sql.Date endDate = new java.sql.Date(endDateUtil.getTime());
+        
+            // Gọi phương thức setupTableByDateRange với java.sql.Date
             setupTableByDateRange(startDate, endDate);
+        
+            // Đóng dialog
             dateDialog.dispose();
         });
-
+    
         cancelButton.addActionListener(e -> dateDialog.dispose());
-
+    
         dateDialog.getContentPane().setBackground(new Color(51, 51, 51));
         dateDialog.setVisible(true);
     }
-
+    
     private void addHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(hoverColor);
             }
-
+    
             @Override
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(defaultColor);
             }
-
+    
             @Override
             public void mousePressed(MouseEvent evt) {
                 button.setBounds(button.getX() + 2, button.getY() + 2, button.getWidth() - 4, button.getHeight() - 4);
             }
-
+    
             @Override
             public void mouseReleased(MouseEvent evt) {
                 button.setBounds(button.getX() - 2, button.getY() - 2, button.getWidth() + 4, button.getHeight() + 4);
             }
         });
     }
-
+    
     private void handleButtonClick(JButton button) {
         if (activeButton != null) {
             activeButton.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -519,7 +517,7 @@ public class NhanVienFrame2 extends JFrame {
         button.revalidate();
         activeButton = button;
     }
-
+    
     private void addLabelAndTextField(JPanel parentPanel, String labelText, String valueText) {
         JLabel label = new JLabel(labelText);
         label.setForeground(Color.WHITE);
@@ -534,7 +532,7 @@ public class NhanVienFrame2 extends JFrame {
         parentPanel.add(label);
         parentPanel.add(textField);
     }
-
+    
     private void showProductInPanelTopRight(String MaDon, String MaKH, String MaNV, String DiaChiDat, String NgayDat, String PTTT, String TinhTrang, String TongTien) {
         panel_topright.removeAll();
         addLabelAndTextField(panel_topright, "Mã Đơn Hàng:", MaDon);
@@ -548,7 +546,7 @@ public class NhanVienFrame2 extends JFrame {
         panel_topright.revalidate();
         panel_topright.repaint();
     }
-
+    
     private void ShowNotification(String message, String title) {
         JPanel panelThongBao = new JPanel();
         panelThongBao.setLayout(new BoxLayout(panelThongBao, BoxLayout.Y_AXIS));
@@ -562,7 +560,7 @@ public class NhanVienFrame2 extends JFrame {
         panelThongBao.add(Box.createRigidArea(new Dimension(0, 10)));
         JOptionPane.showMessageDialog(this, panelThongBao, title, JOptionPane.INFORMATION_MESSAGE);
     }
-
+    
     public static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -573,7 +571,7 @@ public class NhanVienFrame2 extends JFrame {
             setFocusPainted(false);
             setBorderPainted(false);
         }
-
+    
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if (isSelected) {
@@ -584,12 +582,12 @@ public class NhanVienFrame2 extends JFrame {
             return this;
         }
     }
-
+    
     public static class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
         private JTable table;
         private JButton button;
         private boolean isPushed;
-
+    
         public ButtonEditor(JTable table) {
             this.table = table;
             button = new JButton("Chi Tiết");
@@ -601,13 +599,13 @@ public class NhanVienFrame2 extends JFrame {
             button.setBorderPainted(false);
             button.addActionListener(e -> fireEditingStopped());
         }
-
+    
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             isPushed = true;
             return button;
         }
-
+    
         @Override
         public Object getCellEditorValue() {
             if (isPushed) {
@@ -620,13 +618,13 @@ public class NhanVienFrame2 extends JFrame {
             isPushed = false;
             return null;
         }
-
+    
         @Override
         public boolean stopCellEditing() {
             isPushed = false;
             return super.stopCellEditing();
         }
-
+    
         private void showChiTietDonHang(String maDon) {
             DefaultTableModel chiTietTableModel = ChiTietDonHang_DAO.getInstance().loadDataToTableByMaDon(maDon);
             if (chiTietTableModel.getRowCount() == 0) {

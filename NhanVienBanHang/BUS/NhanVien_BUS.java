@@ -10,6 +10,7 @@ public class NhanVien_BUS {
     private DonHang_DAO donHangDAO;
     private ChiTietDonHang_DAO chiTietDonHangDAO;
 
+
     public NhanVien_BUS() {
         donHangDAO = DonHang_DAO.getInstance();
         chiTietDonHangDAO = ChiTietDonHang_DAO.getInstance();
@@ -19,11 +20,14 @@ public class NhanVien_BUS {
         return donHangDAO.loadDataToTable("DonHang");
     }
 
-    // Tải dữ liệu đơn hàng theo khoảng thời gian
     public DefaultTableModel loadTableDataByDateRange(Date startDate, Date endDate) {
-        return donHangDAO.loadDataToTableByDateRange("DonHang", startDate, endDate);
+        try {
+            return DonHang_DAO.getInstance().loadDataToTableByDateRange("DonHang", startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Trả về null nếu có lỗi
+        }
     }
-
 
 
     // Cập nhật trạng thái đơn hàng

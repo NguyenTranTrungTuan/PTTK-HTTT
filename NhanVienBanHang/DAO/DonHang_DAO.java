@@ -9,7 +9,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -164,53 +163,50 @@ public class DonHang_DAO implements DAOInterface<DonHang> {
     
 
 
-    public DefaultTableModel loadDataToTableByDateRange(String tableName, Date startDate, Date endDate) {
-    DefaultTableModel tableModel = new DefaultTableModel();
-    Connection con = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try {
-        con = getConnection();
-        String query = "SELECT * FROM " + tableName + " WHERE ngaydat BETWEEN ? AND ?";
-        stmt = con.prepareStatement(query);
-        stmt.setDate(1, new java.sql.Date(startDate.getTime()));
-        stmt.setDate(2, new java.sql.Date(endDate.getTime()));
-        rs = stmt.executeQuery();
-
-        ResultSetMetaData metaData = rs.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        String[] columnNames = new String[columnCount];
-        for (int i = 1; i <= columnCount; i++) {
-            columnNames[i - 1] = metaData.getColumnName(i);
-        }
-        tableModel.setColumnIdentifiers(columnNames);
-
-        while (rs.next()) {
-            Object[] row = new Object[columnCount];
-            for (int i = 1; i <= columnCount; i++) {
-                row[i - 1] = rs.getObject(i);
-            }
-            tableModel.addRow(row);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Lỗi khi tải dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-    } finally {
+    public DefaultTableModel loadDataToTableByDateRange(String tableName, java.sql.Date startDate, java.sql.Date endDate) {
+        DefaultTableModel tableModel = new DefaultTableModel();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         try {
-            if (rs != null) rs.close();
-            if (stmt != null) stmt.close();
-            if (con != null) con.close();
+            con = getConnection();
+            String query = "SELECT * FROM " + tableName + " WHERE ngaydat BETWEEN ? AND ?";
+            stmt = con.prepareStatement(query);
+    
+            // Sử dụng trực tiếp java.sql.Date
+            stmt.setDate(1, startDate);
+            stmt.setDate(2, endDate);
+            rs = stmt.executeQuery();
+    
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            String[] columnNames = new String[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                columnNames[i - 1] = metaData.getColumnName(i);
+            }
+            tableModel.setColumnIdentifiers(columnNames);
+    
+            while (rs.next()) {
+                Object[] row = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    row[i - 1] = rs.getObject(i);
+                }
+                tableModel.addRow(row);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi tải dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return tableModel;
     }
-    return tableModel;
-}
-
-
-
-
-
 
     
 
