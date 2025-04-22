@@ -88,6 +88,9 @@ public class TrangChu extends JFrame {
             } else if (confirmFrame != null && source == confirmFrame.confirmbtn && !header.accountLabel.getText().equals("")) {
                 header.accountLabel.setText("");
                 confirmFrame.dispose();
+                gioHangGUI.resetGioHang();
+                header.kh = null;
+                header.nv = null;
                 SwitchToShop();
             } else if (confirmFrame != null && source == confirmFrame.cancelbtn) {
                 confirmFrame.dispose();
@@ -143,13 +146,15 @@ public class TrangChu extends JFrame {
     public void SwitchToCart() {
         if(!header.accountLabel.getText().equals("")) {
             gioHangGUI.kh = header.kh;
+            gioHangGUI.ql = header.nv;
         } 
         cardLayout.show(ContentPanel, "Cart");
     }
 
     public void SwitchToUserMenu() {
         UserInfo.khachhang = header.kh;
-        UserInfo.initComponents(header.kh);
+        UserInfo.BtnPanel = new JPanel();
+        UserInfo.updateUserInfo(header.kh, header.nv);
         UserInfo.revalidate();
         UserInfo.repaint();
 

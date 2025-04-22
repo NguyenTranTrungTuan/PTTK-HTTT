@@ -4,9 +4,11 @@ import javax.swing.*;
 
 import BLL.KhachHang_BLL;
 import DTO.KhachHang_DTO;
+import DTO.NhanVien_DTO;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.util.regex.Pattern;;
+import java.util.regex.Pattern;
 
 public class UserInfoPanel extends JPanel{
     protected JPanel headerPanel = new JPanel();
@@ -45,10 +47,13 @@ public class UserInfoPanel extends JPanel{
 
     protected MyButton EditInfoButton = new MyButton("SỬA THÔNG TIN");
     protected MyButton EditPasswordButton = new MyButton("ĐỔI MẬT KHẨU");
+    protected MyButton ChangeToAdminButton = new MyButton("ĐẾN ADMIN");
     protected EditUserInfo EditInfo;
     protected ChangePassword ChangePasswordFrame;
     protected KhachHang_DTO khachhang;
     protected KhachHang_BLL khbll;
+
+    protected NhanVien_DTO quanly;
 
     // Regex cho email
     private static final String EMAIL_PATTERN = 
@@ -72,6 +77,9 @@ public class UserInfoPanel extends JPanel{
                     ChangePasswordFrame.dispose();
                 ChangePasswordFrame = new ChangePassword();
                 addChangePasswordEvent();
+           }
+           else if(e.getSource() == ChangeToAdminButton){
+            System.out.println("to Admin");
            }
         }
         @Override
@@ -170,15 +178,41 @@ public class UserInfoPanel extends JPanel{
         });
     }
 
+    public void updateUserInfo(KhachHang_DTO kh, NhanVien_DTO ql){
+        if(kh!=null){
+            PasswordInfo.setText(kh.getPass_KhachHang());
+            NameInfo.setText(kh.getTen_KhachHang());
+            PhoneInfo.setText(kh.getSdt_KhachHang());
+            EmailInfo.setText(kh.getEmail_KhachHang());
+            AddressInfo.setText(kh.getDiaChi_KhachHang());
+
+            AddressPanel.setVisible(true);
+            EditInfoButton.setVisible(true);
+            EditPasswordButton.setVisible(true);
+            ChangeToAdminButton.setVisible(false);
+        }else{
+            PasswordInfo.setText(ql.getPassword());
+            NameInfo.setText(ql.getTenNV());
+            PhoneInfo.setText(ql.getSdt());
+            EmailInfo.setText(ql.getEmail());
+
+            AddressPanel.setVisible(false);
+            EditInfoButton.setVisible(false);
+            EditPasswordButton.setVisible(false);
+            ChangeToAdminButton.setVisible(true);
+        }
+    }
+
 
     public UserInfoPanel(){
         khbll = new KhachHang_BLL();
         EditInfoButton.addMouseListener(mouseListener);
         EditPasswordButton.addMouseListener(mouseListener);
-        // initComponents(kh);
+        ChangeToAdminButton.addMouseListener(mouseListener);
+        initComponents();
     }
 
-    protected void initComponents(KhachHang_DTO kh){
+    protected void initComponents(){
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         headerLabel.setForeground(Color.BLACK);
         headerLabel.setOpaque(false);
@@ -204,31 +238,25 @@ public class UserInfoPanel extends JPanel{
         PasswordInfo.setEditable(false);
         PasswordInfo.setPreferredSize(new Dimension(200, 15));
         PasswordInfo.setBackground(Color.WHITE);
-        PasswordInfo.setText(kh.getPass_KhachHang());
-
-        NameInfo.setText(kh.getTen_KhachHang());
+        
         NamePanel.setLayout(new BorderLayout());
         NamePanel.setPreferredSize(new Dimension(740, 15));
         NamePanel.setBackground(Color.WHITE);
         NamePanel.add(NameLabel, BorderLayout.WEST);
         NamePanel.add(NameInfo, BorderLayout.EAST);
 
-
-        PhoneInfo.setText(kh.getSdt_KhachHang());
         PhonePanel.setLayout(new BorderLayout());
         PhonePanel.setPreferredSize(new Dimension(740, 15));
         PhonePanel.setBackground(Color.WHITE);
         PhonePanel.add(PhoneNumberLabel, BorderLayout.WEST);
         PhonePanel.add(PhoneInfo, BorderLayout.EAST);
-
-        EmailInfo.setText(kh.getEmail_KhachHang());
+        
         EmailPanel.setLayout(new BorderLayout());
         EmailPanel.setPreferredSize(new Dimension(740, 15));
         EmailPanel.setBackground(Color.WHITE);
         EmailPanel.add(EmailLabel, BorderLayout.WEST);
         EmailPanel.add(EmailInfo, BorderLayout.EAST);
 
-        AddressInfo.setText(kh.getDiaChi_KhachHang());
         AddressPanel.setLayout(new BorderLayout());
         AddressPanel.setPreferredSize(new Dimension(740, 15));
         AddressPanel.setBackground(Color.WHITE);
@@ -244,7 +272,6 @@ public class UserInfoPanel extends JPanel{
         InfoPanel.setLayout(new BoxLayout(InfoPanel, BoxLayout.Y_AXIS));
         for(JPanel panel : PanelList){
             InfoPanel.add(panel);
-            // InfoPanel.add(Box.createVerticalStrut(15));
         }
         InfoPanel.setBackground(Color.WHITE);
         InfoPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 20, 50));
@@ -252,7 +279,7 @@ public class UserInfoPanel extends JPanel{
         logoutButton.setBackground(Color.RED);
         logoutButton.setForeground(Color.WHITE);
         logoutButton.setPreferredSize(new Dimension(100,50));
-
+ 
         EditInfoButton.setBackground(Color.GRAY);
         EditInfoButton.setForeground(Color.WHITE);
         EditInfoButton.setPreferredSize(new Dimension(150,50));
@@ -261,13 +288,20 @@ public class UserInfoPanel extends JPanel{
         EditPasswordButton.setForeground(Color.WHITE);
         EditPasswordButton.setPreferredSize(new Dimension(150,50));
 
-        BtnPanel.setLayout(new BoxLayout(BtnPanel, BoxLayout.X_AXIS));
-        BtnPanel.setBackground(Color.WHITE);
-        BtnPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
+        ChangeToAdminButton.setBackground(Color.BLACK);
+        ChangeToAdminButton.setForeground(Color.WHITE);
+        ChangeToAdminButton.setPreferredSize(new Dimension(150,50));
+
         BtnPanel.add(EditInfoButton);
         BtnPanel.add(Box.createHorizontalStrut(10));
         BtnPanel.add(EditPasswordButton);
         BtnPanel.add(Box.createHorizontalStrut(10));
+        BtnPanel.add(ChangeToAdminButton);
+        BtnPanel.add(Box.createHorizontalStrut(10));
+        
+        BtnPanel.setLayout(new BoxLayout(BtnPanel, BoxLayout.X_AXIS));
+        BtnPanel.setBackground(Color.WHITE);
+        BtnPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
         BtnPanel.add(logoutButton);
         BtnPanel.add(Box.createHorizontalGlue());
 
