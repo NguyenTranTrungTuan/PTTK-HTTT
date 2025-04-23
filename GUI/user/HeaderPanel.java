@@ -3,7 +3,9 @@ package GUI.user;
 import javax.swing.*;
 
 import BLL.KhachHang_BLL;
+import BLL.NhanVien_BLL;
 import DTO.KhachHang_DTO;
+import DTO.NhanVien_DTO;
 import GUI.giohang.GioHangGUI;
 
 import java.awt.*;
@@ -19,7 +21,9 @@ public class HeaderPanel extends JPanel {
     protected DangKy dangkyFrame;
     protected DangNhap dangnhapFrame;
     private KhachHang_BLL khbll;
+    private NhanVien_BLL nvbll;
     public KhachHang_DTO kh;
+    public NhanVien_DTO nv;
 
     // Regex cho email
     private static final String EMAIL_PATTERN = 
@@ -148,12 +152,19 @@ public class HeaderPanel extends JPanel {
                 String email = dangnhapFrame.txtEmail.getText().trim();
                 String matKhau = new String(dangnhapFrame.txtMatKhau.getPassword()).trim();
                 kh = khbll.getKhachHangFromAccount(email, matKhau);
+                nv = nvbll.getNhanVienFromAccount(email, matKhau);
                 if (kh != null) {
                     JOptionPane.showMessageDialog(dangnhapFrame, "Đăng nhập thành công!");
                     accountLabel.setText(kh.getTen_KhachHang());
                     dangnhapFrame.dispose();
                     
-                } else {
+                }
+                else if(nv != null){
+                    JOptionPane.showMessageDialog(dangnhapFrame, "Đăng nhập thành công!");
+                    accountLabel.setText(nv.getTenNV());
+                    dangnhapFrame.dispose();
+                } 
+                else {
                     JOptionPane.showMessageDialog(dangnhapFrame, "Sai email hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -171,6 +182,7 @@ public class HeaderPanel extends JPanel {
 
     private void initComponents() {
         khbll = new KhachHang_BLL();
+        nvbll = new NhanVien_BLL();
         // Header panel settings
         setPreferredSize(new Dimension(1000, 100));
         setBackground(Color.decode("#0083B0"));

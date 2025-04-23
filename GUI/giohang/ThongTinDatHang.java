@@ -7,6 +7,7 @@ import BLL.DonHang_BLL;
 import DTO.ChiTietDon_DTO;
 import DTO.DonHang_DTO;
 import DTO.KhachHang_DTO;
+import DTO.NhanVien_DTO;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +22,9 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     private JButton btnThanhtoan;
     private JButton btnQuayLai;
     private JLabel lblPhuongThuc;
-    private JLabel lblTen, lblTag, lblSdt, lblEmail, lblAddress; 
+    // private JLabel lblTen, lblTag, lblSdt, lblEmail, lblAddress; 
+    private JTextField tfTen, tfSDT, tfEmail;
+    private JComboBox<String> cbDiaChi;
 
     private JPanel panelDanhSachSanPham;
     private GioHangGUI giohang;
@@ -31,7 +34,26 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     private DonHang_DTO ThongTinDonHang;
     private DonHang_BLL dhbll;
 
-    public ThongTinDatHang(CardLayout cardLayout, JPanel contentPanel,KhachHang_DTO kh, DonHang_DTO ThongTinDonHang, GioHangGUI giohang) {
+    // public KhachHang_DTO kh;
+    // public NhanVien_DTO ql;
+
+    private String[] diaChiList = {
+        "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu",
+        "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước",
+        "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng",
+        "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp",
+        "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh",
+        "Hải Dương", "Hải Phòng", "Hậu Giang", "TP.HCM", "Hòa Bình",
+        "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu",
+        "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định",
+        "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên",
+        "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị",
+        "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên",
+        "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang",
+        "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+    };
+
+    public ThongTinDatHang(CardLayout cardLayout, JPanel contentPanel,KhachHang_DTO kh, NhanVien_DTO ql, DonHang_DTO ThongTinDonHang, GioHangGUI giohang) {
         this.ThongTinDonHang = ThongTinDonHang;
         this.giohang = giohang;
         this.dhbll = new DonHang_BLL();
@@ -66,45 +88,47 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        // Dòng 1: Họ tên + Tag + SĐT
-        JPanel topRow = new JPanel(new BorderLayout());
-        topRow.setOpaque(false);
-        topRow.setMaximumSize(new Dimension(300,30));
-
         // Tên
-        lblTen = new JLabel(kh.getTen_KhachHang());
-        lblTen.setFont(new Font("Arial", Font.BOLD, 15));
+        infoPanel.add(Box.createVerticalStrut(10));
+        JLabel lbnameTag = new JLabel("HỌ VÀ TÊN");
+        lbnameTag.setFont(new Font("Arial", Font.PLAIN, 12));
+        lbnameTag.setForeground(Color.GRAY);
+        lbnameTag.setAlignmentX(SwingConstants.LEFT);
 
-        // Tag hồng
-        lblTag = new JLabel("");
-        lblTag.setOpaque(true);
-        lblTag.setBackground(new Color(255, 105, 180));
-        lblTag.setForeground(Color.WHITE);
-        lblTag.setFont(new Font("Arial", Font.BOLD, 11));
-        lblTag.setBorder(new EmptyBorder(2, 6, 2, 6));
-        lblTag.setAlignmentY(Component.CENTER_ALIGNMENT);
+        // System.out.println(kh.getTen_KhachHang());
+        if(kh!=null){
+            tfTen = new JTextField(kh.getTen_KhachHang());
+        }else{
+            tfTen = new JTextField(ql.getTenNV());
+        }
+        tfTen.setFont(new Font("Arial", Font.BOLD, 15));
 
-        // Tên + tag trong 1 dòng
-        JPanel nameTagPanel = new JPanel();
-        nameTagPanel.setOpaque(false);
-        nameTagPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        nameTagPanel.add(lblTen);
-        nameTagPanel.add(lblTag);
-
-        // Đặt kích thước tối đa cho nameTagPanel để tránh tên quá dài
-        nameTagPanel.setMaximumSize(new Dimension(300, 20)); // Giới hạn chiều rộng tối đa
-        nameTagPanel.setPreferredSize(new Dimension(300, 20)); // Đảm bảo chiều rộng cố định
-
-        topRow.add(nameTagPanel, BorderLayout.WEST);
+        JPanel nameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        nameRow.setOpaque(false);
+        nameRow.add(lbnameTag);
+        nameRow.add(tfTen);
+        infoPanel.add(nameRow);
 
         // SĐT
-        lblSdt = new JLabel(kh.getSdt_KhachHang());
-        lblSdt.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblSdt.setForeground(new Color(60, 120, 180));
+        infoPanel.add(Box.createVerticalStrut(10));
+        JLabel lbsdtTag = new JLabel("SỐ ĐIỆN THOẠI");
+        lbsdtTag.setFont(new Font("Arial", Font.PLAIN, 12));
+        lbsdtTag.setForeground(Color.GRAY);
+        lbsdtTag.setAlignmentX(SwingConstants.LEFT);
 
-        topRow.add(lblSdt, BorderLayout.EAST);
+        if(kh!=null){
+            tfSDT = new JTextField(kh.getSdt_KhachHang());
+        }else{
+            tfSDT = new JTextField(ql.getSdt());
+        }
+        tfSDT.setFont(new Font("Arial", Font.PLAIN, 15));
+        // lblSdt.setForeground(new Color(60, 120, 180));
 
-        infoPanel.add(topRow);
+        JPanel sdtRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        sdtRow.setOpaque(false);
+        sdtRow.add(lbsdtTag);
+        sdtRow.add(tfSDT);
+        infoPanel.add(sdtRow);
 
         // Dòng EMAIL
         infoPanel.add(Box.createVerticalStrut(10));
@@ -113,13 +137,17 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lblEmailTag.setForeground(Color.GRAY);
         lblEmailTag.setAlignmentX(SwingConstants.LEFT);
 
-        lblEmail = new JLabel(kh.getEmail_KhachHang());
-        lblEmail.setFont(new Font("Arial", Font.PLAIN, 13));
+        if(kh!=null){
+            tfEmail = new JTextField(kh.getEmail_KhachHang());
+        }else{
+            tfEmail = new JTextField(ql.getTenNV());
+        }
+        tfEmail.setFont(new Font("Arial", Font.PLAIN, 13));
 
         JPanel emailRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
         emailRow.setOpaque(false);
         emailRow.add(lblEmailTag);
-        emailRow.add(lblEmail);
+        emailRow.add(tfEmail);
         infoPanel.add(emailRow);
 
         // Dòng ĐỊA CHỈ
@@ -129,11 +157,13 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lblAddressTag.setForeground(Color.GRAY);
         lblAddressTag.setAlignmentX(SwingConstants.LEFT);
 
-        lblAddress = new JLabel(kh.getDiaChi_KhachHang());
+        cbDiaChi = new JComboBox<>(diaChiList);
+        if(kh!=null)
+            cbDiaChi.setSelectedItem(kh.getDiaChi_KhachHang());
         JPanel addressRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addressRow.setOpaque(false);
         addressRow.add(lblAddressTag);
-        addressRow.add(lblAddress);
+        addressRow.add(cbDiaChi);
         infoPanel.add(addressRow);
 
         formPanel.add(infoPanel);
@@ -266,19 +296,36 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnThanhtoan) {
+            String hoTen = tfTen.getText().trim();
+            String sdt = tfSDT.getText().trim();
+            String email = tfEmail.getText().trim();
+            String diaChi = (String) cbDiaChi.getSelectedItem();
             if (phuongThucThanhToan == null) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phương thức thanh toán!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
+            if (hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi == null) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Vui lòng điền đầy đủ thông tin!", 
+                        "Cảnh báo", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-            ThongTinDonHang.setPTTT(phuongThucThanhToan);
-            ThongTinDonHang.setDiaChiDat(lblAddress.getText());
+            if(phuongThucThanhToan.equals("Thanh toán khi nhận hàng")){
+                ThongTinDonHang.setPTTT("COD");
+            }
+            else{
+                ThongTinDonHang.setPTTT("Chuyển khoản");
+            }
+            ThongTinDonHang.setDiaChiDat(diaChi);
             ThongTinDonHang.output();
 
             dhbll.addDonHang(ThongTinDonHang); // thêm đơn hàng mới vào csdl
 
             JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
             giohang.resetGioHang();
+            cardLayout.show(contentPanel, "GioHang");
         }
         if (e.getSource() == btnQuayLai) {
             cardLayout.show(contentPanel, "GioHang");

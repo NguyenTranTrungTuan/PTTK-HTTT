@@ -1,7 +1,6 @@
 package DAO;
 
 import DTO.DienThoai_DTO;
-import DTO.KhachHang_DTO;
 
 import java.sql.*;
 import java.util.ArrayList;

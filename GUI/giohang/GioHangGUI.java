@@ -4,7 +4,7 @@ import DTO.ChiTietDon_DTO;
 import DTO.DienThoai_DTO;
 import DTO.DonHang_DTO;
 import DTO.KhachHang_DTO;
-import BLL.DonHang_BLL;
+import DTO.NhanVien_DTO;
 import BLL.PhieuNhap_BLL;
 
 import javax.swing.*;
@@ -25,15 +25,15 @@ public class GioHangGUI extends JPanel {
     private JPanel contentPanel;
     private JButton btnDatHang;
 
+    protected ThongTinDatHang thongTinDatHang;
     protected DonHang_DTO ThongTinDonHang;
-    private DonHang_BLL dhbll;
     private PhieuNhap_BLL pnbll;
     public KhachHang_DTO kh;
+    public NhanVien_DTO ql;
 
     private Double total = 0.0;
 
     public GioHangGUI() {
-        this.dhbll = new DonHang_BLL();
         this.pnbll = new PhieuNhap_BLL();
         this.setLayout(new BorderLayout());
         this.products = new ArrayList<>();
@@ -129,7 +129,7 @@ public class GioHangGUI extends JPanel {
                 break;
             }
         }
-        ChiTietDon_DTO chitiet = new ChiTietDon_DTO(dhbll.getNextCTDHID(), dt, 1, dt.getGia_SanPham(), pnbll.getAllIDCTPhieuNhapFromIDDienThoai(dt.getID_SanPham()).get(0));
+        ChiTietDon_DTO chitiet = new ChiTietDon_DTO("", dt, 1, dt.getGia_SanPham(), pnbll.getAllIDCTPhieuNhapFromIDDienThoai(dt.getID_SanPham()).get(0));
         if (!daTonTai) {
             products.add(chitiet);
         }
@@ -184,8 +184,8 @@ public class GioHangGUI extends JPanel {
         }
 
         ThongTinDonHang = new DonHang_DTO(
-                dhbll.getNextDHID(), 
-                kh.getId_KhachHang(), 
+                "", 
+                "", 
                 "", 
                 "", 
                 layNgayHienTai(), 
@@ -194,8 +194,11 @@ public class GioHangGUI extends JPanel {
                 products, 
                 total
                 );
+        if (kh!=null)
+            ThongTinDonHang.setIdKhachHang(kh.getId_KhachHang());
+        ThongTinDonHang.setIdKhachHang(null);
 
-        ThongTinDatHang thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel,kh,ThongTinDonHang,this);
+        thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel,kh,ql,ThongTinDonHang,this);
         thongTinDatHang.updateItems(products);
 
         contentPanel.add(thongTinDatHang, "ThongTinNhanHang");
@@ -205,7 +208,9 @@ public class GioHangGUI extends JPanel {
     public void resetGioHang() {
         products.clear();
         refreshProductList();
-        cardLayout.show(contentPanel, "GioHang");
+        if(thongTinDatHang!= null)
+            contentPanel.remove(thongTinDatHang);
+        // cardLayout.show(contentPanel, "GioHang");
     }
     
 

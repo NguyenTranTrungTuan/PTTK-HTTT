@@ -2,7 +2,6 @@ package GUI.user;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class UserMenuPanel extends JPanel{
     protected JPanel UsernamePanel;
