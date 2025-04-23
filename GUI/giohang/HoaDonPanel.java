@@ -1,9 +1,9 @@
 package GUI.giohang;
-import GUI.user.Model_ProductItem;
-import javax.swing.*;
 
+import GUI.user.Model_ProductItem;
 import DTO.DonHang_DTO;
 
+import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +12,8 @@ public class HoaDonPanel extends JPanel {
 
     public HoaDonPanel(String hoTen, String sdt, String diaChi,
                        DonHang_DTO thongtindonhang,
+                       List<Model_ProductItem> products, // Added products parameter
+                       String paymentMethod, // Added paymentMethod parameter
                        CardLayout cardLayout, JPanel contentPanel) {
 
         setLayout(new BorderLayout());
@@ -43,10 +45,8 @@ public class HoaDonPanel extends JPanel {
             total = total.add(subTotal); // Cộng dồn vào tổng tiền
         }
 
-
-
-        receipt.append("\nPhương thức thanh toán: ").append(paymentMethod);
-        receipt.append(String.format("\n\nTỔNG CỘNG: %,d₫", total.intValue())); 
+        receipt.append("\nPhương thức thanh toán: ").append(paymentMethod); // Use paymentMethod parameter
+        receipt.append(String.format("\n\nTỔNG CỘNG: %,d₫", total.intValue()));
 
         receiptArea.setText(receipt.toString());
 

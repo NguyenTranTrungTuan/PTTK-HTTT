@@ -99,23 +99,8 @@ public class ThanhToanUIDesigner extends JPanel implements PaymentMethodDialog.P
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phương thức thanh toán!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-    
-            // Kiểm tra nếu `HoaDonPanel` đã tồn tại
-            if (hoaDonPanel == null) {
-                hoaDonPanel = new HoaDonPanel(
-                    hoTen,
-                    sdt,
-                    diaChi,
-                    products,
-                    phuongThucThanhToan,
-                    cardLayout,
-                    contentPanel
-                );
-                contentPanel.add(hoaDonPanel, "HoaDon");
-            }
-    
-            // Chuyển sang giao diện hóa đơn
-            cardLayout.show(contentPanel, "HoaDon");
+            
+            
         });
     
         wrapper.add(Box.createVerticalStrut(30));
