@@ -26,7 +26,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
             String password = "123";
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
-            String sql = "INSERT INTO DienThoai VALUES ('" + obj.getMaNCC() + "', N'" + obj.getTenNCC() + "', N'"
+            String sql = "INSERT INTO NhaCungCap VALUES ('" + obj.getMaNCC() + "', N'" + obj.getTenNCC() + "', N'"
                     + obj.getQuocGia() + "')";
             st.executeUpdate(sql);
             con.close();
@@ -168,6 +168,30 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
             e.printStackTrace();
         }
         return tableModel;
+    }
+
+    public String autoUpdateMaNCC() {
+        String maDt = null;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT TOP 1 MaNCC FROM NhaCungCap ORDER BY MaNCC DESC");
+            if (rs.next()) {
+                maDt = rs.getString("MaNCC");
+                int newMaDt = Integer.parseInt(maDt.substring(3)) + 1;
+                maDt = String.format("NCC%03d", newMaDt);
+            } else {
+                maDt = "NCC001";
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maDt;
     }
 
 }

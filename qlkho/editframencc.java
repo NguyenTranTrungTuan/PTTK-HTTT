@@ -31,7 +31,7 @@ public class editframencc extends JFrame implements ActionListener {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
-        JLabel lb_mancc = new JLabel("Ma NCC:");
+        JLabel lb_mancc = new JLabel("Mã NCC:");
         lb_mancc.setForeground(Color.white);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -53,7 +53,7 @@ public class editframencc extends JFrame implements ActionListener {
         gbc.weighty = 1;
         add(tf_mancc, gbc);
 
-        JLabel lb_tenncc = new JLabel("Ten NCC:");
+        JLabel lb_tenncc = new JLabel("Tên NCC:");
         lb_tenncc.setForeground(Color.white);
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -75,7 +75,7 @@ public class editframencc extends JFrame implements ActionListener {
         gbc.weighty = 1;
         add(tf_tenncc, gbc);
 
-        JLabel lb_quocgia = new JLabel("Quoc Gia:");
+        JLabel lb_quocgia = new JLabel("Quốc Gia:");
         lb_quocgia.setForeground(Color.white);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -103,10 +103,10 @@ public class editframencc extends JFrame implements ActionListener {
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
-        btn_xacnhan = new JButton("Xac nhan");
+        btn_xacnhan = new JButton("Xác nhận");
         btn_xacnhan.addActionListener(this);
         panel_btn.add(btn_xacnhan);
-        btn_huy = new JButton("Huy");
+        btn_huy = new JButton("Hủy");
         btn_huy.addActionListener(this);
         panel_btn.add(btn_huy);
         add(panel_btn, gbc);

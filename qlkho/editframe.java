@@ -96,7 +96,7 @@ public class editframe extends JFrame implements ActionListener {
         panel_top.add(lb_trongluongshowsp);
         panel_top.add(tf_trongluongshowsp);
         JLabel lb_kichthuocmanhinhshowsp = new JLabel();
-        lb_kichthuocmanhinhshowsp.setText("<html>Kich thuoc man hinh: </html>");
+        lb_kichthuocmanhinhshowsp.setText("<html>Kích thước màn hình: </html>");
         lb_kichthuocmanhinhshowsp.setForeground(Color.white);
         tf_kichthuocmanhinhshowsp = new JTextField(String.valueOf(dt.getKichThuocManHinh()));
         tf_kichthuocmanhinhshowsp.setBackground(Color.BLACK);
@@ -105,7 +105,7 @@ public class editframe extends JFrame implements ActionListener {
         panel_top.add(lb_kichthuocmanhinhshowsp);
         panel_top.add(tf_kichthuocmanhinhshowsp);
         JLabel lb_dungluongdtshowsp = new JLabel();
-        lb_dungluongdtshowsp.setText("Dung luong dt: ");
+        lb_dungluongdtshowsp.setText("Dung lượng dt: ");
         lb_dungluongdtshowsp.setForeground(Color.white);
         tf_dungluongdtshowsp = new JTextField(String.valueOf(dt.getDungLuong()));
         tf_dungluongdtshowsp.setBackground(Color.BLACK);
@@ -123,7 +123,7 @@ public class editframe extends JFrame implements ActionListener {
         panel_top.add(lb_ramshowsp);
         panel_top.add(tf_ramshowsp);
         JLabel lb_baohanhshowsp = new JLabel();
-        lb_baohanhshowsp.setText("Bao hanh: ");
+        lb_baohanhshowsp.setText("Bảo hành: ");
         lb_baohanhshowsp.setForeground(Color.white);
         tf_baohanhshowsp = new JTextField(String.valueOf(dt.getBaoHanh()));
         tf_baohanhshowsp.setBackground(Color.BLACK);
@@ -132,7 +132,7 @@ public class editframe extends JFrame implements ActionListener {
         panel_top.add(lb_baohanhshowsp);
         panel_top.add(tf_baohanhshowsp);
         JLabel lb_manccshowsp = new JLabel();
-        lb_manccshowsp.setText("Ma NCC: ");
+        lb_manccshowsp.setText("Mã NCC: ");
         lb_manccshowsp.setForeground(Color.white);
         tf_manccshowsp = new JTextField(dt.getMaNcc());
         tf_manccshowsp.setBackground(Color.BLACK);
@@ -147,7 +147,7 @@ public class editframe extends JFrame implements ActionListener {
         btn_xacnhan.setFocusPainted(false);
         btn_xacnhan.addActionListener(this);
         panel_bottom.add(btn_xacnhan);
-        btn_huy = new JButton("Huy");
+        btn_huy = new JButton("Hủy");
         btn_huy.addActionListener(this);
         btn_huy.setFocusPainted(false);
         panel_bottom.add(btn_huy);

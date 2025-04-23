@@ -222,7 +222,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
             for (int i = 1; i <= columnCount; i++) {
                 columnNames[i - 1] = metaData.getColumnName(i);
             }
-            columnNames[columnCount] = "Chi tiet hoa don";
+            columnNames[columnCount] = "Chi tiết hóa đơn";
             tableModel.setColumnIdentifiers(columnNames);
 
             while (rs.next()) {
@@ -230,7 +230,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
                 for (int i = 1; i <= columnCount; i++) {
                     row[i - 1] = rs.getObject(i);
                 }
-                row[columnCount] = "Chi tiet";
+                row[columnCount] = "Chi tiết";
                 tableModel.addRow(row);
             }
             con.close();

@@ -2,6 +2,7 @@ package qlkho.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
@@ -112,6 +113,29 @@ public class ChiTietPhieuNhapDAO implements DAOInterface<ChiTietPhieuNhap> {
             Statement st = con.createStatement();
             ResultSet rs = st
                     .executeQuery("SELECT * FROM ChiTietPhieuNhap WHERE MaCTPnhap = '" + obj.getMaCTPnhap() + "'");
+            if (rs.next()) {
+                ChiTietPhieuNhap ctpn = new ChiTietPhieuNhap(rs.getString("MaCTPnhap"), rs.getString("MaHDNhap"),
+                        rs.getInt("DonGia"),
+                        rs.getInt("ThanhTien"), rs.getInt("SoLuongNhap"), rs.getString("MaDT"));
+                return ctpn;
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ChiTietPhieuNhap selectById1(String obj) {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ChiTietPhieuNhap WHERE MaCTPnhap = ?");
+            ps.setString(1, obj);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 ChiTietPhieuNhap ctpn = new ChiTietPhieuNhap(rs.getString("MaCTPnhap"), rs.getString("MaHDNhap"),
                         rs.getInt("DonGia"),
