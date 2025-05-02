@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             tf_manccshowsp, tf_madt, tf_tendt, tf_giaban, tf_gianhap, tf_maton, tf_xuatxu,
             tf_trongluong, tf_kichthuocmanhinh, tf_dungluongdt, tf_ram, tf_baohanh,
             tf_mancc, tf_search, tf_nccmancc, tf_ncctenncc, tf_nccquocgia, tf_sl;
-    boolean isSanPhamPanel, isNCCPanel, isPhieuNhap, isDonHangPanel;
+    boolean isSanPhamPanel, isNCCPanel, isPhieuNhap, isDonHangPanel, isThongKeNhapKhoPanel, isThongKeDonHangPanel;
 
     public class CustomScrollBarUI extends BasicScrollBarUI {
 
@@ -137,7 +138,7 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
                     String mahdnhap = table.getValueAt(selectedRow, 0).toString();
                     cthdframe cthd = new cthdframe(mahdnhap);
                     System.out.println("Button clicked1: " + label);
-                } else if (isDonHangPanel) {
+                } else if (isDonHangPanel || isThongKeDonHangPanel) {
                     int selectedRow = table.getSelectedRow();
                     String madhnhap = table.getValueAt(selectedRow, 0).toString();
                     ctdhframe ctdh = new ctdhframe(madhnhap);
@@ -721,6 +722,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isNCCPanel = false;
             isPhieuNhap = false;
             isDonHangPanel = false;
+            isThongKeDonHangPanel = false;
+            isThongKeNhapKhoPanel = false;
             panel_right_top.removeAll();
             panel_right_top.add(lb_search, BorderLayout.WEST);
             panel_right_top.add(tf_search, BorderLayout.CENTER);
@@ -749,6 +752,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isSanPhamPanel = false;
             isPhieuNhap = false;
             isDonHangPanel = false;
+            isThongKeDonHangPanel = false;
+            isThongKeNhapKhoPanel = false;
             panel_right_top.removeAll();
             panel_right_top.add(lb_search, BorderLayout.WEST);
             panel_right_top.add(tf_search, BorderLayout.CENTER);
@@ -776,6 +781,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isSanPhamPanel = false;
             isPhieuNhap = true;
             isDonHangPanel = false;
+            isThongKeDonHangPanel = false;
+            isThongKeNhapKhoPanel = false;
             panel_right_top.removeAll();
             panel_right_top.add(lb_search, BorderLayout.WEST);
             panel_right_top.add(tf_search, BorderLayout.CENTER);
@@ -804,6 +811,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isSanPhamPanel = false;
             isPhieuNhap = false;
             isDonHangPanel = false;
+            isThongKeDonHangPanel = false;
+            isThongKeNhapKhoPanel = true;
             panel_right.removeAll();
             panel_thongkebottom_top.removeAll();
             lb_tongtiennhap = new JLabel();
@@ -830,6 +839,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isSanPhamPanel = false;
             isPhieuNhap = false;
             isDonHangPanel = false;
+            isThongKeDonHangPanel = true;
+            isThongKeNhapKhoPanel = false;
             panel_right.removeAll();
             panel_thongkebottom_top.removeAll();
             lb_tongdoanhthu = new JLabel();
@@ -856,6 +867,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isSanPhamPanel = false;
             isPhieuNhap = false;
             isDonHangPanel = true;
+            isThongKeDonHangPanel = false;
+            isThongKeNhapKhoPanel = false;
             panel_right_top.removeAll();
             panel_right_top.add(lb_search, BorderLayout.WEST);
             panel_right_top.add(tf_search, BorderLayout.CENTER);
@@ -910,6 +923,8 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             isSanPhamPanel = false;
             isPhieuNhap = false;
             isDonHangPanel = false;
+            isThongKeDonHangPanel = false;
+            isThongKeNhapKhoPanel = false;
             panel_right_top.removeAll();
             panel_right_top.add(lb_search, BorderLayout.WEST);
             panel_right_top.add(tf_search, BorderLayout.CENTER);
@@ -1361,10 +1376,9 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
             }
             ArrayList<NhaCungCap> dsNCC = new ArrayList<>();
             dsNCC = NhaCungCapDAO.getInstance().selectAll();
-            cb_tenncc.removeAllItems();
             for (NhaCungCap ncc : dsNCC) {
                 if (ncc.getMaNCC().equals(maNCC)) {
-                    cb_tenncc.addItem(ncc.getTenNCC());
+                    cb_tenncc.setSelectedItem(ncc.getTenNCC());
                 }
             }
         } else if (e.getSource() == btn_refresh) {
@@ -1512,32 +1526,55 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
         }
 
         else if (e.getSource() == btn_thongke) {
-            String selectedMonth = (String) cb_thang.getSelectedItem();
-            String selectedYear = (String) cb_nam.getSelectedItem();
-            panel_thongkebottom_top.removeAll();
-            lb_tongtiennhap.setText("Tổng tiền nhập: "
-                    + PhieuNhapDAO.getInstance().countSumCondition(selectedMonth, selectedYear) + " VND");
-            lb_tongtiennhap.setForeground(Color.white);
-            lb_tongtiennhap.setFont(new Font("Arial", Font.BOLD, 20));
-            lb_tongtiennhap.setHorizontalAlignment(SwingConstants.CENTER);
-            panel_thongkebottom_top.add(lb_tongtiennhap, BorderLayout.CENTER);
-            panel_thongkebottom_mid.removeAll();
-            tableModel = PhieuNhapDAO.getInstance().loadDataToTableCondition(selectedMonth, selectedYear);
-            table.setModel(tableModel);
-            table.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
-            table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor());
-            panel_thongkebottom_mid.add(scrollPane_table, BorderLayout.CENTER);
-            panel_thongkebottom_mid.revalidate();
-            panel_thongkebottom_mid.repaint();
+            if (isThongKeNhapKhoPanel) {
+                String selectedMonth = (String) cb_thang.getSelectedItem();
+                String selectedYear = (String) cb_nam.getSelectedItem();
+                panel_thongkebottom_top.removeAll();
+                lb_tongtiennhap.setText("Tổng tiền nhập: "
+                        + PhieuNhapDAO.getInstance().countSumCondition(selectedMonth, selectedYear) + " VND");
+                lb_tongtiennhap.setForeground(Color.white);
+                lb_tongtiennhap.setFont(new Font("Arial", Font.BOLD, 20));
+                lb_tongtiennhap.setHorizontalAlignment(SwingConstants.CENTER);
+                panel_thongkebottom_top.add(lb_tongtiennhap, BorderLayout.CENTER);
+                panel_thongkebottom_mid.removeAll();
+                tableModel = PhieuNhapDAO.getInstance().loadDataToTableCondition(selectedMonth, selectedYear);
+                table.setModel(tableModel);
+                table.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+                table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor());
+                panel_thongkebottom_mid.add(scrollPane_table, BorderLayout.CENTER);
+                panel_thongkebottom_mid.revalidate();
+                panel_thongkebottom_mid.repaint();
 
-            chartPanel.setChart(
-                    PhieuNhapDAO.getInstance().createBarChart(selectedMonth, selectedYear));
-            panel_thongkebottom_bottom.removeAll();
-            panel_thongkebottom_bottom.add(chartPanel, BorderLayout.CENTER);
-            panel_thongkebottom_bottom.revalidate();
-            panel_thongkebottom_bottom.repaint();
-            panel_thongkenhapkhobottom.revalidate();
-            panel_thongkenhapkhobottom.repaint();
+                chartPanel.setChart(
+                        PhieuNhapDAO.getInstance().createBarChart(selectedMonth, selectedYear));
+                panel_thongkebottom_bottom.removeAll();
+                panel_thongkebottom_bottom.add(chartPanel, BorderLayout.CENTER);
+                panel_thongkebottom_bottom.revalidate();
+                panel_thongkebottom_bottom.repaint();
+                panel_thongkenhapkhobottom.revalidate();
+                panel_thongkenhapkhobottom.repaint();
+            } else if (isThongKeDonHangPanel) {
+                String selectedMonth = (String) cb_thang.getSelectedItem();
+                String selectedYear = (String) cb_nam.getSelectedItem();
+                panel_thongkebottom_top.removeAll();
+                lb_tongdoanhthu = new JLabel();
+                lb_tongdoanhthu.setText("Tổng doanh thu: "
+                        + DonHangDAO.getInstance().countSumCondition(selectedMonth, selectedYear) + " VND");
+                lb_tongdoanhthu.setForeground(Color.white);
+                lb_tongdoanhthu.setFont(new Font("Arial", Font.BOLD, 20));
+                lb_tongdoanhthu.setHorizontalAlignment(SwingConstants.CENTER);
+                panel_thongkebottom_top.add(lb_tongdoanhthu, BorderLayout.CENTER);
+                panel_thongkebottom_mid.removeAll();
+                tableModel = DonHangDAO.getInstance().loadDataToTableCondition(selectedMonth, selectedYear);
+                table.setModel(tableModel);
+                table.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
+                table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor());
+                panel_thongkebottom_mid.add(scrollPane_table, BorderLayout.CENTER);
+                panel_thongkebottom_mid.revalidate();
+                panel_thongkebottom_mid.repaint();
+                panel_thongkenhapkhobottom.revalidate();
+            }
+
         } else if (e.getSource() == btn_edit) {
             if (isSanPhamPanel) {
                 int rowSelected = table.getSelectedRow();
@@ -1756,6 +1793,35 @@ public class qlkhoframe extends JFrame implements MouseListener, ActionListener,
                 int tongTien = Integer.parseInt(String.valueOf(table.getValueAt(rowSelected, 7)));
                 DonHang dh = new DonHang(maDon, maKH, maNV, diaChi, ngayDat, pttt, tinhTrang, tongTien);
                 DonHangDAO.getInstance().updateHuy(dh, nhanVien);
+            }
+        } else if (e.getSource() == btn_xuatfilepn) {
+            if (isDonHangPanel) {
+                try {
+                    int selectedRow = table.getSelectedRow();
+                    if (selectedRow == -1) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng chọn đơn hàng để xuất file!");
+                        return;
+                    }
+                    String maDonHang = (String) table.getValueAt(selectedRow, 0);
+                    String maKH = (String) table.getValueAt(selectedRow, 1);
+                    ChiTietDonHangDAO.getInstance().exportPDF(maDonHang, maKH);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            } else if (isPhieuNhap) {
+                try {
+                    int selectedRow = table.getSelectedRow();
+                    if (selectedRow == -1) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu nhập để xuất file!");
+                        return;
+                    }
+                    String maPhieuNhap = (String) table.getValueAt(selectedRow, 0);
+                    String maNCC = (String) table.getValueAt(selectedRow, 1);
+                    String ngayNhap = (String) table.getValueAt(selectedRow, 3);
+                    ChiTietPhieuNhapDAO.getInstance().exportPDF(maPhieuNhap, maNCC, ngayNhap);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }

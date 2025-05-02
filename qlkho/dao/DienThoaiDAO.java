@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
@@ -113,6 +114,32 @@ public class DienThoaiDAO implements DAOInterface<DienThoai> {
             Connection con = DriverManager.getConnection(url, username, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM DienThoai WHERE MaDT = '" + obj.getMaDt() + "'");
+            if (rs.next()) {
+                DienThoai dt = new DienThoai(rs.getString("MaDT"), rs.getString("TenDT"), rs.getInt("GiaBan"),
+                        rs.getInt("GiaNhap"),
+                        rs.getString("MaTon"),
+                        rs.getString("XuatXu"), rs.getFloat("TrongLuong"), rs.getFloat("KichThuocManHinh"),
+                        rs.getInt("DungLuong"), rs.getInt("RAM"), rs.getInt("BaoHanh"),
+                        rs.getString("MaNCC"));
+                return dt;
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public DienThoai selectById1(String obj) {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM DienThoai WHERE MaDT = ?");
+            ps.setString(1, obj);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 DienThoai dt = new DienThoai(rs.getString("MaDT"), rs.getString("TenDT"), rs.getInt("GiaBan"),
                         rs.getInt("GiaNhap"),

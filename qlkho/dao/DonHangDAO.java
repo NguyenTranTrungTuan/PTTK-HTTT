@@ -271,4 +271,68 @@ public class DonHangDAO implements DAOInterface<DonHang> {
         return String.valueOf(tong);
     }
 
+    public DefaultTableModel loadDataToTableCondition(String thang, String nam) {
+        DefaultTableModel tableModel = new DefaultTableModel();
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            if (thang.equals("Tất cả") && nam.equals("Tất cả")) {
+                return loadDataToTable("DonHang");
+            }
+            ResultSet rs = st.executeQuery("SELECT * FROM DonHang WHERE SUBSTRING(NgayDat, 4, 2) = '" + thang
+                    + "' AND SUBSTRING(NgayDat, 7, 4) = '" + nam + "'");
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            String[] columnNames = new String[columnCount + 1];
+
+            for (int i = 1; i <= columnCount; i++) {
+                columnNames[i - 1] = metaData.getColumnName(i);
+            }
+            columnNames[columnCount] = "Chi tiet don hang";
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (rs.next()) {
+                Object[] row = new Object[columnCount + 1];
+                for (int i = 1; i <= columnCount; i++) {
+                    row[i - 1] = rs.getObject(i);
+                }
+                row[columnCount] = "Chi tiet";
+                tableModel.addRow(row);
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tableModel;
+    }
+
+    public String countSumCondition(String thang, String nam) {
+        int tong = 0;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=Pttkhttt;encrypt=true;trustServerCertificate=true";
+            String username = "sa";
+            String password = "123";
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            if (thang.equals("Tất cả") && nam.equals("Tất cả")) {
+                return countSum();
+            }
+            ResultSet rs = st.executeQuery("SELECT TongTien FROM DonHang WHERE SUBSTRING(NgayDat, 4, 2) = '" + thang
+                    + "' AND SUBSTRING(NgayDat, 7, 4) = '" + nam + "'");
+            while (rs.next()) {
+                tong += rs.getInt("TongTien");
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(tong);
+    }
+
 }

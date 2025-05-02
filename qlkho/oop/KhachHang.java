@@ -57,7 +57,7 @@ public class KhachHang {
     String password;
     String diaChi;
 
-    public KhachHang(String maKH, String tenKH, String sdt, String email, String password, String diaChi) {
+    public KhachHang(String maKH, String tenKH, String sdt, String email, String diaChi, String password) {
         this.maKH = maKH;
         this.tenKH = tenKH;
         this.sdt = sdt;
