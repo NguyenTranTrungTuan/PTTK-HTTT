@@ -2,6 +2,8 @@ package GUI.user;
 import GUI.giohang.GioHangGUI;
 import javax.swing.*;
 import BLL.DienThoai_BLL;
+import BLL.Kho_BLL;
+import DTO.ChiTietDon_DTO;
 import DTO.DienThoai_DTO;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,6 +16,7 @@ public class ProductPanel extends JScrollPane {
     private ArrayList<Model_Product_Description> DescriptionList;
     private ProductDescription CurrentDescription;
     protected DienThoai_BLL dtbll;
+    private Kho_BLL kho_BLL;
     private GioHangGUI gioHangGUI;
     private HeaderPanel header;
     
@@ -254,17 +257,45 @@ public class ProductPanel extends JScrollPane {
 
     private void handleAddToCart(ProductItem item) {
         // Thêm sản phẩm vào giỏ hàng
-        gioHangGUI.themSanPhamVaoGio(dtbll.getDTFromID(item.data.getID()));
+        // if(gioHangGUI.products.isEmpty()){
+        //     gioHangGUI.themSanPhamVaoGio(dtbll.getDTFromID(item.data.getID()));
+        // }
+        ChiTietDon_DTO ct = null;
+        DienThoai_DTO dt = dtbll.getDTFromID(item.data.getID());
+        for(ChiTietDon_DTO product:gioHangGUI.products){
+            if(product.getThongTinSanPham().getID_SanPham().equals(dt.getID_SanPham())){
+                ct = product;
+                break;
+            }
+        }
+        if(ct != null){
+            if(ct.getSoLuongMua() < kho_BLL.getSoLuongTon(ct.getThongTinSanPham().getID_Tonkho())){
+                gioHangGUI.themSanPhamVaoGio(dtbll.getDTFromID(item.data.getID()));
 
-        // Hiển thị thông báo
-        JOptionPane.showMessageDialog(this,
-            "Sản phẩm \"" + item.Namelb.getText() + "\" đã được thêm vào giỏ hàng!",
-            "Thông báo",
-            JOptionPane.INFORMATION_MESSAGE);
+                // Hiển thị thông báo
+                JOptionPane.showMessageDialog(this,
+                    "Sản phẩm \"" + item.Namelb.getText() + "\" đã được thêm vào giỏ hàng!",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this,
+                    "Hết số lượng sản phẩm!",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        }else{
+            gioHangGUI.themSanPhamVaoGio(dtbll.getDTFromID(item.data.getID()));
+            // Hiển thị thông báo
+            JOptionPane.showMessageDialog(this,
+                "Sản phẩm \"" + item.Namelb.getText() + "\" đã được thêm vào giỏ hàng!",
+                "Thông báo",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void initComponents() {
         dtbll = new DienThoai_BLL();
+        kho_BLL = new Kho_BLL();
         // ItemPanel = new JPanel(new GridLayout(0, 3, 35, 35));
         ItemPanel = new JPanel(new WrapLayout(WrapLayout.LEADING, 30, 30));
         ItemPanel.setBackground(Color.decode("#cfdef3"));

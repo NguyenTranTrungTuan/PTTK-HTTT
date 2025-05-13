@@ -5,6 +5,7 @@ import DTO.DienThoai_DTO;
 import DTO.DonHang_DTO;
 import DTO.KhachHang_DTO;
 import DTO.NhanVien_DTO;
+import GUI.user.TrangChu;
 import BLL.PhieuNhap_BLL;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class GioHangGUI extends JPanel {
 
-    private ArrayList<ChiTietDon_DTO> products;
+    public ArrayList<ChiTietDon_DTO> products;
 
     private JLabel labelTongTienValue;
     private JPanel itemPanel;
@@ -32,11 +33,13 @@ public class GioHangGUI extends JPanel {
     public NhanVien_DTO ql;
 
     private Double total = 0.0;
+    private TrangChu parent;
 
-    public GioHangGUI() {
+    public GioHangGUI(TrangChu parent) {
         this.pnbll = new PhieuNhap_BLL();
         this.setLayout(new BorderLayout());
         this.products = new ArrayList<>();
+        this.parent = parent;
 
         this.cardLayout = new CardLayout();
         this.contentPanel = new JPanel(cardLayout);
@@ -196,7 +199,9 @@ public class GioHangGUI extends JPanel {
                 );
         if (kh!=null)
             ThongTinDonHang.setIdKhachHang(kh.getId_KhachHang());
-        ThongTinDonHang.setIdKhachHang(null);
+        else{
+            ThongTinDonHang.setIdKhachHang(null);
+        }
 
         thongTinDatHang = new ThongTinDatHang(cardLayout, contentPanel,kh,ql,ThongTinDonHang,this);
         thongTinDatHang.updateItems(products);
@@ -206,11 +211,11 @@ public class GioHangGUI extends JPanel {
     }
 
     public void resetGioHang() {
+        parent.updateShopPanel("All");
         products.clear();
         refreshProductList();
         if(thongTinDatHang!= null)
             contentPanel.remove(thongTinDatHang);
-        // cardLayout.show(contentPanel, "GioHang");
     }
     
 

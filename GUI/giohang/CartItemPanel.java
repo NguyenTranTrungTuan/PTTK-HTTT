@@ -2,6 +2,7 @@ package GUI.giohang;
 
 import javax.swing.*;
 
+import BLL.Kho_BLL;
 import DTO.ChiTietDon_DTO;
 import DTO.DienThoai_DTO;
 
@@ -18,6 +19,7 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
 
     private JButton btnMinus;
     private JButton btnPlus;
+    private Kho_BLL kho_BLL;
 
     public CartItemPanel(ChiTietDon_DTO chitiet, Runnable onUpdate, ActionListener onDelete) {
         super(20);
@@ -25,6 +27,7 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
         this.product = chitiet.getThongTinSanPham();
         this.onUpdate = onUpdate;
         this.onDelete = onDelete;
+        this.kho_BLL = new Kho_BLL();
 
         setLayout(new BorderLayout(15, 10));
         setBackground(Color.WHITE);
@@ -137,9 +140,13 @@ public class CartItemPanel extends RoundedPanel implements ActionListener {
                 onUpdate.run(); // cập nhật tổng tiền
             }
         } else if (source == btnPlus) {
-            chitiet.setSoLuongMua(chitiet.getSoLuongMua() + 1);
-            lbSoLuong.setText(String.valueOf(chitiet.getSoLuongMua()));
-            onUpdate.run(); // cập nhật tổng tiền
+            if(kho_BLL.getSoLuongTon(chitiet.getThongTinSanPham().getID_Tonkho()) > chitiet.getSoLuongMua()){
+                chitiet.setSoLuongMua(chitiet.getSoLuongMua() + 1);
+                lbSoLuong.setText(String.valueOf(chitiet.getSoLuongMua()));
+                onUpdate.run(); // cập nhật tổng tiền
+            }else{
+                JOptionPane.showMessageDialog(this, "Đạt tối đa số lượng!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 }

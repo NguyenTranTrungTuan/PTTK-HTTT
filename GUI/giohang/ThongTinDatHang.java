@@ -15,7 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 
 public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMethodDialog.PaymentMethodCallback {
@@ -24,8 +23,8 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     private JButton btnThanhtoan;
     private JButton btnQuayLai;
     private JLabel lblPhuongThuc;
-    // private JLabel lblTen, lblTag, lblSdt, lblEmail, lblAddress; 
-    private JTextField tfTen, tfSDT, tfEmail;
+    private JLabel lblTen, lblSdt, lblEmail; 
+    // private JTextField tfTen, tfSDT, tfEmail;
     private JComboBox<String> cbDiaChi;
 
     private JPanel panelDanhSachSanPham;
@@ -39,14 +38,6 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
 
     // public KhachHang_DTO kh;
     // public NhanVien_DTO ql;
-
-    // Regex cho email
-    private static final String EMAIL_PATTERN = 
-        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    
-    // Regex cho số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 số)
-    private static final String PHONE_PATTERN = 
-        "^0[35789][0-9]{8}$";
 
 
     private String[] diaChiList = {
@@ -110,16 +101,16 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
 
         // System.out.println(kh.getTen_KhachHang());
         if(kh!=null){
-            tfTen = new JTextField(kh.getTen_KhachHang());
+            lblTen = new JLabel(kh.getTen_KhachHang());
         }else{
-            tfTen = new JTextField(ql.getTenNV());
+            lblTen = new JLabel(ql.getTenNV());
         }
-        tfTen.setFont(new Font("Arial", Font.BOLD, 15));
+        lblTen.setFont(new Font("Arial", Font.BOLD, 15));
 
         JPanel nameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
         nameRow.setOpaque(false);
         nameRow.add(lbnameTag);
-        nameRow.add(tfTen);
+        nameRow.add(lblTen);
         infoPanel.add(nameRow);
 
         // SĐT
@@ -130,17 +121,17 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lbsdtTag.setAlignmentX(SwingConstants.LEFT);
 
         if(kh!=null){
-            tfSDT = new JTextField(kh.getSdt_KhachHang());
+            lblSdt = new JLabel(kh.getSdt_KhachHang());
         }else{
-            tfSDT = new JTextField(ql.getSdt());
+            lblSdt = new JLabel(ql.getSdt());
         }
-        tfSDT.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblSdt.setFont(new Font("Arial", Font.PLAIN, 15));
         // lblSdt.setForeground(new Color(60, 120, 180));
 
         JPanel sdtRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
         sdtRow.setOpaque(false);
         sdtRow.add(lbsdtTag);
-        sdtRow.add(tfSDT);
+        sdtRow.add(lblSdt);
         infoPanel.add(sdtRow);
 
         // Dòng EMAIL
@@ -151,16 +142,16 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         lblEmailTag.setAlignmentX(SwingConstants.LEFT);
 
         if(kh!=null){
-            tfEmail = new JTextField(kh.getEmail_KhachHang());
+            lblEmail = new JLabel(kh.getEmail_KhachHang());
         }else{
-            tfEmail = new JTextField(ql.getTenNV());
+            lblEmail = new JLabel(ql.getTenNV());
         }
-        tfEmail.setFont(new Font("Arial", Font.PLAIN, 13));
+        lblEmail.setFont(new Font("Arial", Font.PLAIN, 13));
 
         JPanel emailRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
         emailRow.setOpaque(false);
         emailRow.add(lblEmailTag);
-        emailRow.add(tfEmail);
+        emailRow.add(lblEmail);
         infoPanel.add(emailRow);
 
         // Dòng ĐỊA CHỈ
@@ -309,38 +300,18 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnThanhtoan) {
-            String hoTen = tfTen.getText().trim();
-            String sdt = tfSDT.getText().trim();
-            String email = tfEmail.getText().trim();
             String diaChi = (String) cbDiaChi.getSelectedItem();
             if (phuongThucThanhToan == null) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phương thức thanh toán!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if (hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi == null) {
+            if (diaChi == null) {
                     JOptionPane.showMessageDialog(this, 
                         "Vui lòng điền đầy đủ thông tin!", 
                         "Cảnh báo", 
                         JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-            // Kiểm tra định dạng số điện thoại
-            if (!Pattern.matches(PHONE_PATTERN, sdt)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Số điện thoại không đúng định dạng!", 
-                    "Lỗi", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Kiểm tra định dạng email
-            if (!Pattern.matches(EMAIL_PATTERN, email)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Email không đúng định dạng!", 
-                    "Lỗi", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
 
             if(phuongThucThanhToan.equals("Thanh toán khi nhận hàng")){
                 ThongTinDonHang.setPTTT("COD");

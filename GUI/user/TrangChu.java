@@ -21,7 +21,7 @@ public class TrangChu extends JFrame {
     private CardLayout cardLayout; 
 
     public TrangChu() {
-        gioHangGUI = new GioHangGUI();
+        gioHangGUI = new GioHangGUI(this);
         initComponents();
         setTitle("Trang Chủ");
         setResizable(false);
@@ -45,21 +45,27 @@ public class TrangChu extends JFrame {
 
             if (source == catalogPanel.headerLabel) {
                 updateShopPanel("All");
+                SwitchToShop();
             } else if (source == catalogPanel.SamsungLabel) {
                 catalogPanel.paintLabel("SAMSUNG");
                 updateShopPanel("Samsung");
+                SwitchToShop();
             } else if (source == catalogPanel.AppleLabel) {
                 catalogPanel.paintLabel("APPLE");
                 updateShopPanel("Apple");
+                SwitchToShop();
             } else if (source == catalogPanel.XiaomiLabel) {
                 catalogPanel.paintLabel("XIAOMI");
                 updateShopPanel("Xiaomi");
+                SwitchToShop();
             } else if (source == catalogPanel.OppoLabel) {
                 catalogPanel.paintLabel("OPPO");
                 updateShopPanel("Oppo");
+                SwitchToShop();
             } else if (source == catalogPanel.NokiaLabel) {
                 catalogPanel.paintLabel("NOKIA");
                 updateShopPanel("Nokia");
+                SwitchToShop();
             } else if (source == header.accountLabel && !header.accountLabel.getText().equals("")) {
                 SwitchToUserMenu();
             } else if (source == header.logoIcon) {
@@ -177,7 +183,7 @@ public class TrangChu extends JFrame {
 
         shopPanel.revalidate();
         shopPanel.repaint();
-        cardLayout.show(ContentPanel, "Shop");
+        // cardLayout.show(ContentPanel, "Shop");
     }
 
     public void updateSearchPanel(String category, String keyword, FilterPanel filter){
