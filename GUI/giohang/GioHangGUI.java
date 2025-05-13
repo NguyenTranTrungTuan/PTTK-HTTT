@@ -221,7 +221,7 @@ public class GioHangGUI extends JPanel {
 
     public String layNgayHienTai() {
         LocalDate ngayHienTai = LocalDate.now();
-        DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return ngayHienTai.format(dinhDang);
     }
 }
