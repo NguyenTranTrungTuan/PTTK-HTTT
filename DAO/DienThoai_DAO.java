@@ -8,35 +8,11 @@ import java.util.ArrayList;
 public class DienThoai_DAO {
     private Connection con;
 
-    public boolean OpenConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
-            return true;
-        } catch (ClassNotFoundException e) {
-            System.out.println("JDBC Driver not found: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        } catch (SQLException e) {
-            System.out.println("SQL Error: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public void closeConnection() {
-        try {
-            if (con != null){
-                con.close();
-            }
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
 
     public ArrayList<DienThoai_DTO> getAllDT(){
         ArrayList<DienThoai_DTO> arr = new  ArrayList<>();
-        if (OpenConnection()){
+        con = DatabaseConnection.OpenConnection();
+        if (con != null){
             try{
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM DIENTHOAI");
@@ -60,14 +36,15 @@ public class DienThoai_DAO {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally{
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return arr;
     }
 
     public DienThoai_DTO getDTFromID(String id){
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();
+        if (con != null) {
             try {            
                 String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT='"+id+"'";
                 Statement stmt = con.createStatement();
@@ -92,7 +69,7 @@ public class DienThoai_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return null;
@@ -100,7 +77,8 @@ public class DienThoai_DAO {
 
     public ArrayList<DienThoai_DTO> getAllType(String typename){
         ArrayList<DienThoai_DTO> arr = new  ArrayList<>();
-        if (OpenConnection()){
+        con = DatabaseConnection.OpenConnection();
+        if (con != null){
             try{
                 String query = 
                         "SELECT * FROM DIENTHOAI, KHO, NHACUNGCAP " +
@@ -130,14 +108,15 @@ public class DienThoai_DAO {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally{
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return arr;
     }
 
     public int getSoLuongDienThoai(String id) {
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();
+        if (con != null) {
             try {
                 String query = "SELECT * FROM KHO WHERE KHO.MaTon = ?";
                 PreparedStatement pstmt = con.prepareStatement(query);
@@ -149,14 +128,15 @@ public class DienThoai_DAO {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally {
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return 0;
     }
     
     public String getThuongHieu(String id) {
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();
+        if (con != null) {
             try {
                 String query = "SELECT * FROM NHACUNGCAP WHERE NHACUNGCAP.MaNCC = ?";
                 PreparedStatement pstmt = con.prepareStatement(query);
@@ -168,7 +148,7 @@ public class DienThoai_DAO {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally {
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return "N/A";
@@ -176,7 +156,8 @@ public class DienThoai_DAO {
 
     public boolean addDienThoai(DienThoai_DTO dt){
         boolean result = false;
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();
+        if (con != null) {
             try {                    
                 String query = "INSERT INTO DIENTHOAI VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement stmt = con.prepareStatement(query);
@@ -197,7 +178,7 @@ public class DienThoai_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally{
-                closeConnection();  
+                DatabaseConnection.closeConnection(con);  
             } 
         }
         return result;
@@ -205,7 +186,8 @@ public class DienThoai_DAO {
 
     public boolean removeDienThoai(String id){
         boolean result = false;
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();
+        if (con != null) {
             try {                    
                 String query1 = "DELETE FROM DIENTHOAI WHERE DIENTHOAI.MaDT = ?";
                 PreparedStatement stmt1 = con.prepareStatement(query1);
@@ -215,14 +197,15 @@ public class DienThoai_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally{
-                closeConnection();  
+                DatabaseConnection.closeConnection(con);  
             } 
         }
         return result;
     }
 
-    public boolean hasDienThoaiID(String id){                        
-        if (OpenConnection()) {
+    public boolean hasDienThoaiID(String id){    
+        con = DatabaseConnection.OpenConnection();                    
+        if (con != null) {
             try {            
             String sql = "SELECT * FROM DIENTHOAI WHERE DIENTHOAI.MaDT='"+id+"'";
             Statement stmt = con.createStatement();
@@ -232,7 +215,7 @@ public class DienThoai_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return false;

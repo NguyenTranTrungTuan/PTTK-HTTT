@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import BLL.DonHang_BLL;
+import BLL.Kho_BLL;
 import DTO.ChiTietDon_DTO;
 import DTO.DonHang_DTO;
 import DTO.KhachHang_DTO;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 
 public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMethodDialog.PaymentMethodCallback {
@@ -33,9 +35,19 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
 
     private DonHang_DTO ThongTinDonHang;
     private DonHang_BLL dhbll;
+    private Kho_BLL kho_BLL;
 
     // public KhachHang_DTO kh;
     // public NhanVien_DTO ql;
+
+    // Regex cho email
+    private static final String EMAIL_PATTERN = 
+        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    
+    // Regex cho số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 số)
+    private static final String PHONE_PATTERN = 
+        "^0[35789][0-9]{8}$";
+
 
     private String[] diaChiList = {
         "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu",
@@ -57,6 +69,7 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
         this.ThongTinDonHang = ThongTinDonHang;
         this.giohang = giohang;
         this.dhbll = new DonHang_BLL();
+        this.kho_BLL = new Kho_BLL();
 
         this.cardLayout = cardLayout;
         this.contentPanel = contentPanel;
@@ -311,6 +324,23 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
                         JOptionPane.WARNING_MESSAGE);
                     return;
                 }
+            // Kiểm tra định dạng số điện thoại
+            if (!Pattern.matches(PHONE_PATTERN, sdt)) {
+                JOptionPane.showMessageDialog(this, 
+                    "Số điện thoại không đúng định dạng!", 
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Kiểm tra định dạng email
+            if (!Pattern.matches(EMAIL_PATTERN, email)) {
+                JOptionPane.showMessageDialog(this, 
+                    "Email không đúng định dạng!", 
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             if(phuongThucThanhToan.equals("Thanh toán khi nhận hàng")){
                 ThongTinDonHang.setPTTT("COD");
@@ -320,6 +350,11 @@ public class ThongTinDatHang extends JPanel implements ActionListener, PaymentMe
             }
             ThongTinDonHang.setDiaChiDat(diaChi);
             ThongTinDonHang.output();
+
+            for(ChiTietDon_DTO product:ThongTinDonHang.getDsSanPhamMua()){
+                int soluongMua = product.getSoLuongMua();
+                kho_BLL.updateKho(product.getThongTinSanPham().getID_Tonkho(), soluongMua);
+            }
 
             dhbll.addDonHang(ThongTinDonHang); // thêm đơn hàng mới vào csdl
 

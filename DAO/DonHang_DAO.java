@@ -13,26 +13,6 @@ public class DonHang_DAO{
     private Connection con;
     private DienThoai_BLL dtbll = new DienThoai_BLL();
 
-    public boolean OpenConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
-            return true;
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
-    public void closeConnection() {
-        try {
-            if (con != null){
-                con.close();
-            }
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
 
     public String getNextDHID(Connection con){
         String latestID = "";
@@ -80,7 +60,8 @@ public class DonHang_DAO{
 
     public ArrayList<DonHang_DTO> getAllDonHang(){
         ArrayList<DonHang_DTO> arr = new  ArrayList<>();
-        if (OpenConnection()){
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null){
             try{
                 Statement stmt1 = con.createStatement();
                 ResultSet rs = stmt1.executeQuery("SELECT * FROM DONHANG");
@@ -100,7 +81,7 @@ public class DonHang_DAO{
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally{
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return arr;
@@ -108,7 +89,8 @@ public class DonHang_DAO{
 
     public ArrayList<ChiTietDon_DTO> getAllChiTietForDH(String id){
         ArrayList<ChiTietDon_DTO> arr = new  ArrayList<>();
-        if (OpenConnection()){
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null){
             try{
                 String query = "SELECT * FROM CHITIETDONHANG, CHITIETPHIEUNHAP WHERE CHITIETDONHANG.MaCTPnhap = CHITIETPHIEUNHAP.MaCTPnhap AND CHITIETDONHANG.MaDon = ?";
                 PreparedStatement prstmt = con.prepareStatement(query);
@@ -128,7 +110,7 @@ public class DonHang_DAO{
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally{
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return arr;
@@ -136,7 +118,8 @@ public class DonHang_DAO{
 
     public ArrayList<ChiTietDon_DTO> getAllCTDH(){
         ArrayList<ChiTietDon_DTO> arr = new  ArrayList<>();
-        if (OpenConnection()){
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null){
             try{
                 String query = "SELECT * FROM CHITIETDONHANG, CHITIETPHIEUNHAP WHERE CHITIETDONHANG.MaCTPnhap = CHITIETPHIEUNHAP.MaCTPnhap";
                 Statement stmt = con.createStatement();
@@ -155,7 +138,7 @@ public class DonHang_DAO{
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally{
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return arr;
@@ -164,7 +147,8 @@ public class DonHang_DAO{
     public boolean addDonHang(DonHang_DTO dh){
         boolean result = false;
         int success_count = 0;
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {                    
                 String query1 = "INSERT INTO DONHANG VALUES(?,?,?,?,?,?,?,?)";
                 PreparedStatement stmt1 = con.prepareStatement(query1);
@@ -202,14 +186,15 @@ public class DonHang_DAO{
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally{
-                closeConnection();  
+                DatabaseConnection.closeConnection(con);  
             } 
         }
         return result;
     }
 
-    public boolean hasDonHangID(String id){                        
-        if (OpenConnection()) {
+    public boolean hasDonHangID(String id){   
+        con = DatabaseConnection.OpenConnection();                       
+        if (con != null) {
             try {            
                 String sql = "SELECT * FROM DONHANG WHERE DONHANG.MaDon='"+id+"'";
                 Statement stmt = con.createStatement();
@@ -219,7 +204,7 @@ public class DonHang_DAO{
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return false;

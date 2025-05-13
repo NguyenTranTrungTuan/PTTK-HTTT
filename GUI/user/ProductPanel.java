@@ -96,13 +96,15 @@ public class ProductPanel extends JScrollPane {
                 thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
                 baoHanh = dt.getBaoHanh();
                 
-                  // Truyền gioHangGUI vào ProductItem
-                ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
-                ProductList.add(item);
-                ItemPanel.add(item);
+                if(soLuong > 0){
+                    // Truyền gioHangGUI vào ProductItem
+                    ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
+                    ProductList.add(item);
+                    ItemPanel.add(item);
 
-                Model_Product_Description description = new Model_Product_Description(ten, soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
-                DescriptionList.add(description);
+                    Model_Product_Description description = new Model_Product_Description(ten, soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+                    DescriptionList.add(description);
+                }
             }
             else{
                 DienThoai_DTO dth = filter.Filter(dt);
@@ -119,13 +121,15 @@ public class ProductPanel extends JScrollPane {
                     thuongHieu = dtbll.getThuongHieu(dth.getID_NCC());
                     baoHanh = dth.getBaoHanh();
 
-                      // Truyền gioHangGUI vào ProductItem
-                    ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
-                    ProductList.add(item);
-                    ItemPanel.add(item);
+                    if(soLuong > 0){
+                        // Truyền gioHangGUI vào ProductItem
+                        ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
+                        ProductList.add(item);
+                        ItemPanel.add(item);
 
-                    Model_Product_Description description = new Model_Product_Description(ten, soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
-                    DescriptionList.add(description);  
+                        Model_Product_Description description = new Model_Product_Description(ten, soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+                        DescriptionList.add(description);  
+                    }
                 }
             }
         }
@@ -160,12 +164,14 @@ public class ProductPanel extends JScrollPane {
                     thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
                     baoHanh = dt.getBaoHanh();
 
-                    ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
-                    ProductList.add(item);
-                    ItemPanel.add(item);
+                    if(soLuong > 0){
+                        ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
+                        ProductList.add(item);
+                        ItemPanel.add(item);
 
-                    Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
-                    DescriptionList.add(description);
+                        Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+                        DescriptionList.add(description);
+                    }
                 }
                 else{
                     DienThoai_DTO dth = Filter.Filter(dt);
@@ -182,12 +188,14 @@ public class ProductPanel extends JScrollPane {
                         thuongHieu = dtbll.getThuongHieu(dth.getID_NCC());
                         baoHanh = dth.getBaoHanh();
 
-                        ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
-                        ProductList.add(item);
-                        ItemPanel.add(item);
+                        if(soLuong > 0){
+                            ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
+                            ProductList.add(item);
+                            ItemPanel.add(item);
 
-                        Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
-                        DescriptionList.add(description);
+                            Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+                            DescriptionList.add(description);
+                        }
                     }
                 }
 
@@ -212,12 +220,14 @@ public class ProductPanel extends JScrollPane {
             String thuongHieu = dtbll.getThuongHieu(dt.getID_NCC());
             int baoHanh = dt.getBaoHanh();
 
-              // Truyền gioHangGUI vào ProductItem
-            ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
-            ProductList.add(item);
-            ItemPanel.add(item);
-            Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
-            DescriptionList.add(description);
+            if(soLuong > 0){
+                // Truyền gioHangGUI vào ProductItem
+                ProductItem item = new ProductItem(new Model_ProductItem(id,ten, id.toUpperCase(), BigDecimal.valueOf(gia), soLuong));
+                ProductList.add(item);
+                ItemPanel.add(item);
+                Model_Product_Description description = new Model_Product_Description(ten,soLuong, xuatXu, trongLuong, kichThuocManHinh, dungLuong, ram, thuongHieu, baoHanh);
+                DescriptionList.add(description);
+            }
         }
     }
 

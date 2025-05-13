@@ -7,31 +7,12 @@ import DTO.NhanVien_DTO;
 public class NhanVien_DAO {
     private Connection con;
 
-    public boolean OpenConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
-            return true;
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
 
-    public void closeConnection() {
-        try {
-            if (con != null){
-                con.close();
-            }
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public boolean hasKhachHangID(String id){                        
-        if (OpenConnection()) {
+    public boolean hasNHANVIENID(String id){           
+        con = DatabaseConnection.OpenConnection();             
+        if (con != null) {
             try {            
-                String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH='"+id+"'";
+                String sql = "SELECT * FROM NHANVIEN WHERE NHANVIEN.MaNV='"+id+"'";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next())
@@ -39,14 +20,15 @@ public class NhanVien_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return false;
     }
 
     public NhanVien_DTO getNhanVienFromAccount(String email, String password){
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();
+        if (con != null) {
             try {            
                 String query = "SELECT * FROM NHANVIEN WHERE Email = ? AND Passwordnv = ?";
                 PreparedStatement prestmt = con.prepareStatement(query);
@@ -67,7 +49,7 @@ public class NhanVien_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return null;

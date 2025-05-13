@@ -8,26 +8,6 @@ import DTO.KhachHang_DTO;
 public class KhachHang_DAO {
     private Connection con;
 
-    public boolean OpenConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pttkhttt", "root", "123456789");
-            return true;
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
-    public void closeConnection() {
-        try {
-            if (con != null){
-                con.close();
-            }
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
 
     public String getLatestID(){
         ArrayList<KhachHang_DTO> arr = getAllKhachHang();
@@ -36,7 +16,8 @@ public class KhachHang_DAO {
 
     public ArrayList<KhachHang_DTO> getAllKhachHang(){
         ArrayList<KhachHang_DTO> arr = new  ArrayList<>();
-        if (OpenConnection()){
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null){
             try{
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM KHACHHANG");
@@ -53,14 +34,15 @@ public class KhachHang_DAO {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally{
-                closeConnection();
+                DatabaseConnection.closeConnection(con);
             }
         }
         return arr;
     }
 
     public KhachHang_DTO getKhachHangfromID(String id){
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {            
                 String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH='"+id+"'";
                 Statement stmt = con.createStatement();
@@ -78,7 +60,7 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return null;
@@ -86,7 +68,8 @@ public class KhachHang_DAO {
 
     public boolean changeKhachHangData(KhachHang_DTO newdata){
         boolean result = false;
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {                    
                 String query1 = "UPDATE KHACHHANG "+
                                 "SET TenKH = ?, SDT = ?, Email = ?, DiaChiKH = ?, Passwordkh = ? "+
@@ -104,7 +87,7 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally{
-                closeConnection();  
+                DatabaseConnection.closeConnection(con);  
             } 
         }
         return result;
@@ -112,7 +95,8 @@ public class KhachHang_DAO {
 
     public boolean addKhachHang(KhachHang_DTO kh){
         boolean result = false;
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {                    
                 String query1 = "INSERT INTO KHACHHANG VALUES(?,?,?,?,?,?)";
                 PreparedStatement stmt1 = con.prepareStatement(query1);
@@ -128,7 +112,7 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally{
-                closeConnection();  
+                DatabaseConnection.closeConnection(con);  
             } 
         }
         return result;
@@ -136,7 +120,8 @@ public class KhachHang_DAO {
 
     public boolean removeKhachHang(String id){
         boolean result = false;
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {                    
                 String query1 = "DELETE FROM KHACHHANG WHERE KHACHHANG.MaKH = ?";
                 PreparedStatement stmt1 = con.prepareStatement(query1);
@@ -147,14 +132,15 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally{
-                closeConnection();  
+                DatabaseConnection.closeConnection(con);  
             } 
         }
         return result;
     }
 
     public boolean hasKhachHangEmail(String email){
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {            
                 String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.Email='"+email+"'";
                 Statement stmt = con.createStatement();
@@ -164,14 +150,15 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return false;
     }
 
-    public boolean hasKhachHangID(String id){                        
-        if (OpenConnection()) {
+    public boolean hasKhachHangID(String id){   
+        con = DatabaseConnection.OpenConnection();                       
+        if (con != null) {
             try {            
                 String sql = "SELECT * FROM KHACHHANG WHERE KHACHHANG.MaKH='"+id+"'";
                 Statement stmt = con.createStatement();
@@ -181,14 +168,15 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return false;
     }
 
     public KhachHang_DTO getKhachHangFromAccount(String email, String password){
-        if (OpenConnection()) {
+        con = DatabaseConnection.OpenConnection();  
+        if (con != null) {
             try {            
                 String query = "SELECT * FROM KHACHHANG WHERE Email = ? AND Passwordkh = ?";
                 PreparedStatement prestmt = con.prepareStatement(query);
@@ -208,7 +196,7 @@ public class KhachHang_DAO {
             } catch (SQLException ex) {
                 System.out.println(ex);            
             } finally {     
-                closeConnection(); 
+                DatabaseConnection.closeConnection(con); 
             }   
         }
         return null;
